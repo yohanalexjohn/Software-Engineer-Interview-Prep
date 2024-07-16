@@ -24,6 +24,9 @@ Sonarqube scans through for the code quality results from each of the tools and 
 - However over my career 
 - I have found it inevitable so I have learned 
 - How to manage this 
-- 
+- and with proper planning
+- and better time management
+- I have always been able to perform at a high 
+- level regardless of what's been thrown at me
 
 
