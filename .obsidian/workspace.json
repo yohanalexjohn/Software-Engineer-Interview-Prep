@@ -13,21 +13,20 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Job Training/Interview Behaviour questions and answers.md",
+                "file": "Job Training/DSA questions and training.md",
                 "mode": "source",
                 "source": true
               }
-            },
-            "group": "9ef1924a0fd2c716"
+            }
           }
         ]
       },
       {
-        "id": "2231c96098937744",
+        "id": "c5d1e02ed083e55e",
         "type": "tabs",
         "children": [
           {
-            "id": "02b06c27a1d6a6c9",
+            "id": "b45538a227cf2170",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -36,8 +35,7 @@
                 "mode": "preview",
                 "source": true
               }
-            },
-            "group": "9ef1924a0fd2c716"
+            }
           }
         ]
       }
@@ -105,7 +103,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Job Training/Interview Behaviour questions and answers.md",
+                "file": "Job Training/DSA questions and training.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +120,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Job Training/Interview Behaviour questions and answers.md",
+                "file": "Job Training/DSA questions and training.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +143,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Job Training/Interview Behaviour questions and answers.md"
+                "file": "Job Training/DSA questions and training.md"
               }
             }
           }
@@ -169,10 +167,12 @@
   },
   "active": "c1491b7d6daba257",
   "lastOpenFiles": [
+    "Job Training/Embedded Questions.md",
+    "Job Training/Interview Behaviour questions and answers.md",
+    "Job Training/what_are_C_questions.md",
     "README.md",
     "Job Interview Prep/Cyden.md",
     "Job Hunt learning.md",
-    "Job Training/Interview Behaviour questions and answers.md",
     "Job Training/DSA - Questions and answers/Untitled.md",
     "Job Interview Prep",
     "Job Training/DSA - Questions and answers/Longest substring without repeating characters.md",
@@ -181,7 +181,6 @@
     "Job Training/DSA/Arrays.md",
     "Job Training/DSA - Questions and answers",
     "Job Training/DSA questions and training.md",
-    "Job Training/Embedded Questions.md",
     "Job Training/DSA",
     "Job Training/\"What are\" - C questions.md",
     "Job Training/\"Differences \" - C questions.md",
