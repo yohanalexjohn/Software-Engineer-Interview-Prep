@@ -24,6 +24,48 @@ Sonarqube scans through for the code quality results from each of the tools and 
 - However over my career 
 - I have found it inevitable so I have learned 
 - How to manage this 
-- 
+- and with proper planning
+- and better time management
+- I have always been able to perform at a high 
+- level regardless of what's been thrown at me
+
+# Why are you interested in working in this field?
+
+- Just answer whatever depending on the field it is in, e.g. for consultancy, talk about diversity of projects
+- Mention interests, tie it back to an example of something in the field
+- Always mention communication/teamwork (every field has it pretty much)
+
+# Why are you interested in this role specifically?
+
+- Mention what you can learn from this role, tie it to the skills you have
+- If big company, mention the prestige, the chance to work with many other talented people, other countries etc.
+- If small company, mention getting to know everyone in the company, the environment, etc.
+
+# Where do you see yourself in 5 years' time?
+
+- Super common question, always prepare for this
+- Tie it back to your skills and knowledge, and what you want to improve on
+- DO NOT TALK ABOUT MONEY OR PROMOTIONS
+- Talk about new skills you want to learn
+
+
+# How do you handle stress/pressure
+
+- Don't care if you handle it well or not, just give an example of a time you had to handle it (STAR)
+
+# How do you think someone else would describe you?
+
+- Mention a few traits that you think you possess
+- Back up with a relevant experience/example (STAR)
+
+# What motivates you?
+
+- Meeting targets, helping others, sense of achievement
+- Working in teams, setting up team for success
+
+# What are your strengths/weaknesses?
+
+- Strengths: Idk just think up one or two then back it up with an example (STAR)
+- Weaknesses: Emphasize skills; what programming languages you want to learn or improve at/DSA?
 
 
