@@ -1,51 +1,21 @@
 {
   "main": {
-    "id": "575d5407357bc14a",
+    "id": "8cd9e0aa97655d99",
     "type": "split",
     "children": [
       {
-        "id": "039cbd9b38b2b702",
+        "id": "a7c6e65a4fbccd62",
         "type": "tabs",
         "children": [
           {
-            "id": "c1491b7d6daba257",
+            "id": "58e875285ebbc755",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Job Training/Competency Questions (STAR).md",
+                "file": "DSA/Arrays.md",
                 "mode": "source",
-                "source": true
-              }
-            }
-          },
-          {
-            "id": "dc01c199df16f142",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Job Training/Competency Questions (STAR).md",
-                "mode": "source",
-                "source": true
-              }
-            }
-          }
-        ]
-      },
-      {
-        "id": "894c1ad6147204b8",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "803c530e185e9e7f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Job Training/Competency Questions (STAR).md",
-                "mode": "preview",
-                "source": true
+                "source": false
               }
             }
           }
@@ -55,15 +25,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "3716b71274babf10",
+    "id": "405a2c1cff08ce2a",
     "type": "split",
     "children": [
       {
-        "id": "44efd086e54ce650",
+        "id": "f363565755e3d2cb",
         "type": "tabs",
         "children": [
           {
-            "id": "80a9ca0e99a99fac",
+            "id": "f66683b9960b17db",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -73,7 +43,7 @@
             }
           },
           {
-            "id": "82207284760384dd",
+            "id": "eb25f3ead261f4de",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -88,7 +58,7 @@
             }
           },
           {
-            "id": "ae7308ed09751035",
+            "id": "10e46dd2925c8b83",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -99,24 +69,25 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
-    "id": "f82f5193ebade100",
+    "id": "15e31e1b0f175e67",
     "type": "split",
     "children": [
       {
-        "id": "4237c33e20a3f2be",
+        "id": "c7c7cc93f7e93e50",
         "type": "tabs",
         "children": [
           {
-            "id": "c653d4a5eb413766",
+            "id": "4c9938f5b1eedc17",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Job Training/Competency Questions (STAR).md",
-                "collapseAll": true,
+                "file": "DSA/Arrays.md",
+                "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
                 "showSearch": false,
@@ -127,19 +98,19 @@
             }
           },
           {
-            "id": "cd822346dae6dff7",
+            "id": "880e44e59adc8f16",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Job Training/Competency Questions (STAR).md",
+                "file": "DSA/Arrays.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
             }
           },
           {
-            "id": "46d5b15d6b6ddd76",
+            "id": "2b4f99b4b1a24c4f",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -150,17 +121,16 @@
             }
           },
           {
-            "id": "b5d69ad971bac1d2",
+            "id": "35c12bffbf0d961e",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "Job Training/Competency Questions (STAR).md"
+                "file": "DSA/Arrays.md"
               }
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "horizontal",
@@ -177,27 +147,16 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "c1491b7d6daba257",
+  "active": "58e875285ebbc755",
   "lastOpenFiles": [
-    "Job Training/Differences-C-questions.md",
-    "Job Interview Prep/Cyden.md",
-    "Job Training/DSA - Questions and answers/Longest substring without repeating characters.md",
-    "Job Training/DSA - Questions and answers/2 sum.md",
-    "Job Training/Interview Behaviour questions and answers.md",
-    "Job Training/Competency Questions (STAR).md",
-    "Job Training/Embedded Questions.md",
-    "Job Hunt learning.md",
-    "Job Training/what_are_C_questions.md",
-    "Job Training/DSA questions and training.md",
-    "README.md",
-    "Job Training/DSA - Questions and answers/Untitled.md",
-    "Job Interview Prep",
-    "Job Training/DSA/Linked List.md",
-    "Job Training/DSA/Arrays.md",
-    "Job Training/DSA - Questions and answers",
-    "Job Training/DSA",
-    "Job Training/\"What are\" - C questions.md",
-    "Job Training/\"Differences \" - C questions.md",
-    "Job Training"
+    "DSA/Linked List.md",
+    "DSA - Questions and answers/2 sum.md",
+    "DSA - Questions and answers/Longest substring without repeating characters.md",
+    "DSA - Questions and answers/Untitled.md",
+    "Differences-C-questions.md",
+    "Embedded Questions.md",
+    "what_are_C_questions.md",
+    "Interview Behaviour questions and answers.md",
+    "DSA questions and training.md"
   ]
 }
