@@ -1,30 +1,22 @@
-def solution(data: str) -> bool:
-    clean_string = [] 
+def solution(data:str) -> str:
+    # Reverse the input string 
+    # [::-1] start at the end position and slice each value until the first 
+    reversed_data = data[::-1]
 
-    for char in data.lower():
-        if char.isalpha(): 
-            clean_string.append("".join(char))
-    
-    # 2 pointer technique 
     start = 0
-    end = len(clean_string) - 1
+    end = len(data)
 
-    print(clean_string)
+    final_string = []
 
-    if end == 1:
-        return True
-    
     while start < end:
-        if clean_string[start] == clean_string[end]:
-            start += 1
-            end -= 1
-        else:
-            return False
+        if data[start] == reversed_data[start]:
+            final_string.append(data[start])
 
-    return True
+        start += 1
 
-# Example usage
-print(solution("A man, a plan, a canal: Panama")) # Output: True
-print(solution("race a car")) # Output: False
-print(solution("r")) # Output: False
+    return "".join(final_string)
 
+print(solution("caba"))
+
+caba
+abac

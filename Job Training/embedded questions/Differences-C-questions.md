@@ -78,7 +78,7 @@
 | Cannot modify the character that p points to | Cannot modify the character that p points to  | Can modify the character that p points to | Cannot modify what P points to nor change what the character is |
 | P can change what it points to  | P can change what it points to | Cannot change the pointer to point to itself or another character | Cannot modify what P points to nor change what the character is |
 
-### Examples
+#### Examples
 ``` c
 const char *p = "Hello";
 *p = 'h'; // Error: cannot modify the value pointed to by p
@@ -99,14 +99,14 @@ const char * const p = &ch;
 p = &anotherChar; // Error: cannot change the pointer itself
 ```
 
-## Are the expressions *ptr ++ and ++ *ptr same?
+### Are the expressions *ptr ++ and ++ *ptr same?
 
 | *ptr ++ | ++ *ptr |
 | --- | --- |
 | post - increment operatrion. The value of the ptr is used first and then incremented by 1 | The value of the ptr is used and added(pre -increment) by 1
 | the value of the pointer changes by 1 or now points to the next pointer in the array  | The pointer remains unchanged
 
-### Example 
+#### Example 
 ``` c
 #include <stdio.h>
 
@@ -124,8 +124,47 @@ int main() {
 }
 ```
 
-# compilers vs interpreters
+## compilers vs interpreters
 | compilers | interpreters|
 | --- | --- |
 | Take the whole program as a whole and convert to object code before execution| Execute code line by line|
 | All syntax errors can be caught before code execution | Errors are only caught during execution |
+
+
+## Mutexes vs Semaphores
+
+| Mutexes | Semaphores |
+| --- | --- |
+| Mutual exclusion | Signal and resource counting |
+| The locking thread must unlock |  Any thread can signal and wait   |
+| Binary can either be in a lock or unlocked state | Each time a thread is passed a count is decremented |
+| Blocking state as if locked cant move till unlocked  | Blocks if counter is zero  |
+| Can be recursive | Typically not recursive |
+| Protect critical sections | Synhchronise access to resources or limit concurrent access |
+| faster and lightweight simple lock and unlock  | Flexible as can handle multiple instances |
+
+
+## MPU vs MCU
+
+| MPU | MCU |
+| -- | -- |
+| Micro Processor Unit typically has a very powerful cpu | Contains a system on chip with hardware pheripheals like ram, rom, flash, watchdog timer, clock, adc  |
+| Higher power consumption  | lower power consumption |
+| more expensive | cheaper |
+| can run more complex tasks | can run simpler task on products  |
+
+## RTOS vs General OS
+
+| RTOS | General OS |
+| -- | -- |
+| Provides deterministic and predictable timing for task execution. | Timing may be less predictable; not designed for strict real-time constraints. |
+| Priority-based and deterministic scheduling algorithms. | Often uses non-deterministic, time-sharing scheduling. |
+| Designed to handle interrupts with minimal latency and jitter. | May have higher latency in handling interrupts due to complex task scheduling. |
+| Optimized for minimal resource usage and guaranteed timing. | Optimized for overall resource efficiency and user experience. |
+| Used in embedded systems, industrial control, automotive, medical devices. | Used in desktop computers, servers, and general-purpose applications. |
+| Often lacks a graphical user interface (GUI); primarily command-line or simple interfaces. | Typically provides a comprehensive GUI for user interaction. |
+| Generally simpler to reduce overhead and ensure predictability. | More complex to support a wide range of applications and hardware.|
+
+
+
+

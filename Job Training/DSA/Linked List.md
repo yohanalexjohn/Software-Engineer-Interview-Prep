@@ -1,3 +1,11 @@
+# Linked Lists
+
+## Advantages
+- Do not need to specify memory when creating the list
+- Grows in size when each new node is added to the end of the list
+
+## Theory basic
+
 - Series of nodes 
 - Each node has a pointer to the next node
 - Last nodes next is **null**
@@ -233,3 +241,4 @@ void reverseTraversal(struct ListNode* head, struct ListNode* tail) {
     }
 }
 ```
+

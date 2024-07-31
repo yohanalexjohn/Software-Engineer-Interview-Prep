@@ -26,6 +26,7 @@ for window_length in range(length_of_string):
 	# If character is in the unique list
 	# Update the start index count
 	if input[window_length] in seen:
+		# seen["get_char_for_fast_pointer_index"]
 		start_of_index = max(
 		start_of_index, seen[input[window_length]] + 1)
 	# Update the unique element found with the index it was found 

@@ -1,1 +1,0 @@
-[Github link for the questions](https://github.com/theEmbeddedGeorge/theEmbeddedNewTestament.github.io/tree/master/Interview)
