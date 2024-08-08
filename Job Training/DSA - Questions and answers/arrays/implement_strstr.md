@@ -40,8 +40,8 @@ print(solution("hello", "ll"))  # Output: True
 print(solution("hello", "llhshs"))  # Output: False 
 print(solution("hello", "lo"))  # Output: True 
 print(solution("hello", "he"))  # Output: True 
-
 ```
+
 ```python
 def strstr(haystack, needle):
     # Edge case: if needle is an empty string, return 0
@@ -78,6 +78,4 @@ print(strstr(haystack, needle))  # Output: 4
 
 needle = ""
 print(strstr(haystack, needle))  # Output: 0 (empty needle is considered to be found at the start)
-
 ```
-

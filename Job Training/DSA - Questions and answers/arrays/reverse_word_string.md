@@ -48,7 +48,7 @@ def solution(data: str) -> str:
 
 print(solution("the sky is blue"))
 print(solution(" hello"))
-print(solution("hi "))```
+print(solution("hi "))
 ```
 
 ```python

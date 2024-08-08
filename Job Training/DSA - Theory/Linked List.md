@@ -1,12 +1,13 @@
 # Linked Lists
 
 ## Advantages
+
 - Do not need to specify memory when creating the list
 - Grows in size when each new node is added to the end of the list
 
 ## Theory basic
 
-- Series of nodes 
+- Series of nodes
 - Each node has a pointer to the next node
 - Last nodes next is **null**
 
@@ -14,7 +15,8 @@
 2. Deletion O(n)
 3. Searching O(n)
 
-# Singly Linked List
+## Singly Linked List
+
 ```c
 struct ListNode {
     int data;
@@ -29,10 +31,13 @@ struct ListNode* newNode(int data) {
     return node;
 }
 ```
-## Insertion 
+
+### Insertion
+
 ```c
 // Function to insert a new node at the end of the list
-void insertNode(struct ListNode** head, int data) {
+void insertNode(struct ListNode** head, int data) 
+{
 	// Create a new node
     struct ListNode* new_node = newNode(data);
 	// If list is empty 
@@ -50,8 +55,10 @@ void insertNode(struct ListNode** head, int data) {
 }
 ```
 
-## Searching
-Traverse the list checking the value we are looking for 
+### Searching
+
+Traverse the list checking the value we are looking for
+
 ```c
 // Function to search for a node with a specific value
 
@@ -66,14 +73,16 @@ bool search_for_node(struct ListNode *node, int data) {
 }
 ```
 
-## Deletion
+### Deletion
+
 The list is empty cannot delete
 The node to remove is the only node in the linked list
-Removing the tail node 
+Removing the tail node
 Removing the head node
 Removing the node in between the linked list
 The item to remove doesn't exist
-```c 
+
+```c
 // Function to delete a node with a specific value
 bool deleteNode(struct ListNode** head, int data) {
     if (*head == NULL) {
@@ -116,7 +125,8 @@ bool deleteNode(struct ListNode** head, int data) {
 }
 ```
 
-## Traverse a Linked list
+### Traverse a Linked list
+
 ```c
 // Function to reverse traverse the list and print the values.
 void ReverseTraversal(struct ListNode* head, struct ListNode* tail) {
@@ -136,9 +146,10 @@ void ReverseTraversal(struct ListNode* head, struct ListNode* tail) {
 }
 ```
 
-# Double Linked List
+## Double Linked List
 
-## Insert Node
+### Insert Node
+
 ```c
 // Function to create a new node
 struct ListNode* newNode(int data) {
@@ -167,7 +178,8 @@ void insertNode(struct ListNode** head, int data) {
 }
 ```
 
-## Search
+### Search
+
 ```c
 // Function to search for a node with a specific value
 bool search_for_node(struct ListNode *node, int data) {
@@ -181,7 +193,8 @@ bool search_for_node(struct ListNode *node, int data) {
 }
 ```
 
-## Deletion
+### Deletion double linked list
+
 ```c
 // Function to delete a node with a specific value
 bool deleteNode(struct ListNode** head, int data) {
@@ -228,6 +241,7 @@ bool deleteNode(struct ListNode** head, int data) {
 ```
 
 ## Traversal reverse linked
+
 ```c
 // Function to perform reverse traversal and print values.
 void reverseTraversal(struct ListNode* head, struct ListNode* tail) {
@@ -241,4 +255,3 @@ void reverseTraversal(struct ListNode* head, struct ListNode* tail) {
     }
 }
 ```
-

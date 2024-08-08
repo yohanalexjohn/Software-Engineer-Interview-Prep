@@ -9,12 +9,12 @@
 
 ## malloc() and calloc()
 
-| Malloc() | calloc() |
-| --- | --- |
-| takes one argument malloc(a) | Takes two arguments calloc(b,c) |
-| Where a is the number of bytes  | Where b is the no of objects and c is the size of those objects |
-| Memory allocated contains garbage values | It initialises the contains of block of memory to zero |
-| It allocates contiguous(shared) memory locations | Memory allocated is not contiguous |
+| Malloc()                                         | calloc()                                                        |
+| ------------------------------------------------ | --------------------------------------------------------------- |
+| takes one argument malloc(a)                     | Takes two arguments calloc(b,c)                                 |
+| Where a is the number of bytes                   | Where b is the no of objects and c is the size of those objects |
+| Memory allocated contains garbage values         | It initialises the contains of block of memory to zero          |
+| It allocates contiguous(shared) memory locations | Memory allocated is not contiguous                              |
 
 ## Pass by reference vs pass by value 
 
@@ -25,26 +25,26 @@
 
 ## Arrays vs Pointers  
 
-| Arrays | Pointers |
-| --- | --- |
-| Size is allocated space automatically | Explicitly assigned to point to an allocated space |
-| It cannot be resized | It can be sized using realloc()|
-| It cannot be reassigned | It can be reassigned|
+| Arrays                                                 | Pointers                                                                                             |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Size is allocated space automatically                  | Explicitly assigned to point to an allocated space                                                   |
+| It cannot be resized                                   | It can be sized using realloc()                                                                      |
+| It cannot be reassigned                                | It can be reassigned                                                                                 |
 | sizeof() returns number of bytes occupied by the array | Number of bytes used to store the pointer variable which depending the architecture can be different |
 
 ## Arrays vs Linked list  
 
-| Arrays | Linked List |
-| --- | --- |
-| Repeated pattern of variables in contiguous storage | Set of structures scattered through memory held together by pointers in each element that point to the next element |
-| Move from one element to the next through a fixed constant integer in a repeatable way  | Use the **next** pointer in each structure which says what the next element is  |
+| Arrays                                                                                 | Linked List                                                                                                         |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Repeated pattern of variables in contiguous storage                                    | Set of structures scattered through memory held together by pointers in each element that point to the next element |
+| Move from one element to the next through a fixed constant integer in a repeatable way | Use the **next** pointer in each structure which says what the next element is                                      |
 
 ## Enums vs Macros  
 
-| Enums | Macros |
-| --- | --- |
-| They are a list of named integer-valued constants  | Abbreviations for lengthy and frequently used statements |
-| Enums declare a type, hence can be type checked | Types are not defined can be anything as the entire code is substituted by a single line. Only used as it is faster for control transfer |
+| Enums                                             | Macros                                                                                                                                   |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| They are a list of named integer-valued constants | Abbreviations for lengthy and frequently used statements                                                                                 |
+| Enums declare a type, hence can be type checked   | Types are not defined can be anything as the entire code is substituted by a single line. Only used as it is faster for control transfer |
 
 ## Enums vs Pre-processor defines  
 
