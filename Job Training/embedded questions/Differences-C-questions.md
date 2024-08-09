@@ -48,19 +48,19 @@
 
 ## Enums vs Pre-processor defines  
 
-| Enums | Defines |
-| --- | --- |
-| Have a default behaviour and type | value has to be explicitly defined  |
-| local effect to the enum block | Global effect to the file
-| Sizes are fixed for the enumeration variables | No size as its a text subsitution
+| Enums                                         | Defines                            |
+| --------------------------------------------- | ---------------------------------- |
+| Have a default behaviour and type             | value has to be explicitly defined |
+| local effect to the enum block                | Global effect to the file          |
+| Sizes are fixed for the enumeration variables | No size as its a text subsitution  |
 
 ## Array name and a pointer variable
 
-| Array Name | Pointer variable |
-| --- | --- |
-| Fixed address and is not a variable  | pointer variable is a variable  |
-| Array name cannot be initialised | Must be initialised  |
-| Name begins with a constant | ++ and -- operators cannot be applied to it  |
+| Array Name                          | Pointer variable                            |
+| ----------------------------------- | ------------------------------------------- |
+| Fixed address and is not a variable | pointer variable is a variable              |
+| Array name cannot be initialised    | Must be initialised                         |
+| Name begins with a constant         | ++ and -- operators cannot be applied to it |
 
 ## Array  of pointers and a pointer to an array 
 

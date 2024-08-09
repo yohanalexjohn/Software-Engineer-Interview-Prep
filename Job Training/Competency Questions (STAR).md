@@ -1,10 +1,12 @@
-STAR:
+# STAR
+
 Situation = Brief the scenario
 Task = What was your overall role in the scenario
 Action = What actions did you take
 Result = What were the results of your actions
 
-Examples of Competency based questions
+## Examples of Competency based questions
+
 - Describe a situation in which you led a team.
 - Give an example of a time you handled conflict in the workplace.
 - How do you maintain good working relationships with your colleagues?

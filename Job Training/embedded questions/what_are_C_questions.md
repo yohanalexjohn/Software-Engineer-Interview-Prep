@@ -1,10 +1,11 @@
-# what are questions 
+
+# What are questions
 
 ## What is a static function with its usage
 
-Functions with **static** keyword prefixed to the function declaraion / definition. Called in the source code of the file. 
+Functions with **static** keyword prefixed to the function declaraion / definition. Called in the source code of the file.
 
-## What is the header file and its usage in C 
+## What is the header file and its usage in C
 
 File containing defintions and prototypes of the function begin used in the program are called a header file.
 
@@ -24,96 +25,130 @@ If the variable is not given an initial value it can lead to unpredictable outpu
 
 ## What modifier is used to store 32768
 
-Ints can only store between -32768 to 32767 to store 32768 use long int or unsigned int 
+Ints can only store between -32768 to 32767 to store 32768 use long int or unsigned int
 
 ## What are preprocessor directives
+
 Preprocessor directives are placed at the beginning of every C program. Library files are specified, declaration of constants
 
 ## What is the order of precedence with regards to operators in C
+
 In C, the order of precedence of operators determines the sequence in which operations are performed in expressions. Operators with higher precedence are evaluated before those with lower precedence. When operators have the same precedence, associativity determines the direction of evaluation (left-to-right or right-to-left).
 
 Here is a summary of the operators in C, ordered from highest to lowest precedence:
 
 1. **Primary operators**:
-	- [ ] (array subscript)
-	- ( ) (function call)
-	- . (structure member)
-	- -> (structure pointer)
-	- ++ (postfix increment)
-	- -- (postfix decrement)
-	- ( ) (parentheses for grouping)
+
+   - \[ ] (array subscript)
+   - ( ) (function call)
+   - . (structure member)
+   - -> (structure pointer)
+   - ++ (postfix increment)
+   - -- (postfix decrement)
+   - ( ) (parentheses for grouping)
+
 2. **Unary operators**:
-	- \+ (unary plus)
-	- \- (unary minus)
-	- ! (logical NOT)
-	- ~ (bitwise NOT)
-	- ++ (prefix increment)
-	- -- (prefix decrement)
-	- \* (dereference)
-	- & (address of)
-	- sizeof (size in bytes)
-	- _Alignof (alignment requirement)
-	- typeof (type of a variable)
+
+   - \+ (unary plus)
+   - \- (unary minus)
+   - ! (logical NOT)
+   - ~ (bitwise NOT)
+   - ++ (prefix increment)
+   - -- (prefix decrement)
+   - \* (dereference)
+   - & (address of)
+   - sizeof (size in bytes)
+   - _Alignof (alignment requirement)
+   - typeof (type of a variable)
+
 3. **Cast**:
-	- (type)
+
+   - (type)
+
 4. **Multiplicative operators**:
-	- \* (multiplication)
-	- / (division)
-	- % (modulus)
+
+   - \* (multiplication)
+   - / (division)
+   - % (modulus)
+
 5. **Additive operators**:
-	- \+ (addition)
-	- \- (subtraction)
+
+   - \+ (addition)
+   - \- (subtraction)
+
 6. **Shift operators**:
-	- \<< (left shift)
-	- \>> (right shift)
+
+   - \<< (left shift)
+   - \>> (right shift)
+
 7. **Relational operators**:
-	- < (less than)
-	- <= (less than or equal to)
-	- \> (greater than)
-	- \>= (greater than or equal to)
+
+   - < (less than)
+   - <= (less than or equal to)
+   - \> (greater than)
+   - \>= (greater than or equal to)
+
 8. **Equality operators**:
-	- == (equal to)
-	- != (not equal to)
+
+   - == (equal to)
+   - != (not equal to)
+
 9. **Bitwise AND**:
-	- &
+
+   - &
+
 10. **Bitwise XOR**:
-	- ^
+
+    - ^
+
 11. **Bitwise OR**:
-	- |
+
+    - |
+
 12. **Logical AND**:
-	- &&
-1. **Logical OR**:
-	- ||
-1. **Conditional (ternary) operator**:
-	- ? :
+
+    - &&
+
+13. **Logical OR**:
+
+    - ||
+
+14. **Conditional (ternary) operator**:
+
+    - ? :
+
 15. **Assignment operators**:
-	- = (assignment)
-	- += (add and assign)
-	- -= (subtract and assign)
-	- *= (multiply and assign)
-	- /= (divide and assign)
-	- %= (modulus and assign)
-	- \<<= (left shift and assign)
-	- \>>= (right shift and assign)
-	- &= (bitwise AND and assign)
-	- ^= (bitwise XOR and assign)
-	- |= (bitwise OR and assign)
+
+    - = (assignment)
+    - += (add and assign)
+    - -= (subtract and assign)
+    - *= (multiply and assign)
+    - /= (divide and assign)
+    - %= (modulus and assign)
+    - \<<= (left shift and assign)
+    - \>>= (right shift and assign)
+    - &= (bitwise AND and assign)
+    - ^= (bitwise XOR and assign)
+    - |= (bitwise OR and assign)
 
 16. **Comma operator**:
-	- ,
+
+    - ,
 
 **Associativity**:
+
 - Most binary operators (those that operate on two operands) are left-to-right associative.
 - Assignment operators and the conditional operator are right-to-left associative.
   
 Here’s a brief overview of the associativity rules:
   
 • **Left-to-right**: *, /, %, +, -, <<, >>, <, <=, >, >=, \==, !=, &, ^, |, &&, ||, ,
-• **Right-to-left**: =, +=, -=, *=, /=, %=, <<=, >>=, &=, ^=, |=, ? :, unary operators (like !, ~, ++, --, - (unary minus), + (unary plus)), cast, sizeof, _Alignof
+• **Right-to-left**: =, +=, -=,*=, /=, %=, <<=, >>=, &=, ^=, |=, ? :, unary operators (like !, ~, ++, --, - (unary minus), + (unary plus)), cast, sizeof, _Alignof
   
 Understanding the precedence and associativity of operators is crucial for writing correct and predictable C programs, as it dictates the order in which parts of an expression are evaluated.
 
 ### Examples
+
 ```c
 #include <stdio.h>
 
@@ -153,6 +188,7 @@ int main() {
 C provides a mechanism to work directly with memory addresses through pointers. Here’s a basic outline of how you can access memory-mapped I/O using pointers:
 
 1. Declare a Pointer to the Desired Memory Location:
+
 ```c
 volatile uint32_t *ptr = (volatile uint32_t *)0xADDRESS;
 ```
@@ -160,13 +196,17 @@ volatile uint32_t *ptr = (volatile uint32_t *)0xADDRESS;
 Replace 0xADDRESS with the actual memory address you want to access. The volatile keyword ensures that reads and writes through ptr are not optimized away by the compiler, which is crucial for memory-mapped I/O.
 
 2. Read and write Operations:
+
 - **Reading from the Memory Location:**
+
 ```c
 uint32_t value = *ptr;
 ```
+
 This writes new_value to the memory location pointed to by ptr.
 
 ### Example
+
 Suppose you want to toggle an LED connected to a microcontroller via a memory-mapped register. Here’s how you might do it:
 
 ```c
@@ -201,7 +241,6 @@ int main() {
 
 • **Memory Access:** Be cautious when accessing memory directly, as incorrect accesses can lead to system instability or crashes, especially on embedded systems.
 
-
 By utilizing pointers and type casting in C, you can effectively access direct memory structures, enabling you to interact with hardware components or memory-mapped peripherals, which is essential for tasks like device drivers, embedded systems programming, and low-level system programming.
 
 ## What are the advantages and disadvantages of using a  Heap
@@ -211,18 +250,18 @@ By utilizing pointers and type casting in C, you can effectively access direct m
 |Memory in this structure can be allocated and deallocated in any order | Slower than a stack |
 |Heaps allow for quick access to the minimum or maximum element | Slower than a stack |
 
-## What are the uses of the keyword **static** 
+## What are the uses of the keyword **static**
 
 1. A variable declared within the body of a function and can maintain its value between function calls
-2. A variable declared outside a function or within a module is not accessible to any other functions outside this module. 
+2. A variable declared outside a function or within a module is not accessible to any other functions outside this module.
    Global only to that file
-3. Functions declared static within the module are only accessible within that module and it is declared, defined and called within that module 
+3. Functions declared static within the module are only accessible within that module and it is declared, defined and called within that module
 
-## What does the work **const** 
+## What does the work **const**
 
 const : *read-only*
 
-1. Used to define values that should not be changed after initialisation. 
+1. Used to define values that should not be changed after initialisation.
 
 2. Function parameters: the function will not modify the parameter. This can be particularly useful for pointers or references to large data structures, improving performance by avoiding unnecessary copies.
 
@@ -234,13 +273,14 @@ void processData(const int *data, int size) {
     }
 }
 ```
+
 3. Compiler Optimisation probabilities as the data is not mutable
 
-## what does the **volatile** keyword 
+## what does the **volatile** keyword
 
-1. A volatile variable is one that can change unexpectedly. 
-2. The compiler can make no assumptions about the value of the variable. 
-3. The optimizer must be careful to reload the variable every time it is used instead of holding a copy in a register. 
+1. A volatile variable is one that can change unexpectedly.
+2. The compiler can make no assumptions about the value of the variable.
+3. The optimizer must be careful to reload the variable every time it is used instead of holding a copy in a register.
 
 Examples of volatile variables are:
 
@@ -251,6 +291,7 @@ Examples of volatile variables are:
 1. Can a parameter be both const and volatile? Explain your answer.
 2. Can a pointer be volatile? Explain your answer.
 3. What is wrong with the following function?:
+
 ```c
 int square(volatile int *ptr)
 {
@@ -264,15 +305,15 @@ The answers are as follows:
 
 (b) Yes. Although this is not very common. An example is when an interrupt service routine modifies a pointer to a buffer.
 
-(c) This one is wicked. The intent of the code is to return the square of the value pointed to by *ptr. However, since *ptr points to a volatile parameter, the compiler will generate code that looks something like this:
+(c) This one is wicked. The intent of the code is to return the square of the value pointed to by *ptr. However, since*ptr points to a volatile parameter, the compiler will generate code that looks something like this:
 
 ```c
 int square(volatile int *ptr)
 {
-	int a,b;
-	a = *ptr;
-	b = *ptr;
-	return a * b;
+ int a,b;
+ a = *ptr;
+ b = *ptr;
+ return a * b;
 }
 ```
 
@@ -281,39 +322,43 @@ Since it is possible for the value of *ptr to change unexpectedly, it is possibl
 ```c
 long square(volatile int *ptr)
 {
-	int a;
-	a = *ptr;
-	return a * a;
+ int a;
+ a = *ptr;
+ return a * a;
 }
 ```
 
 ## if there are unsigned and signed int in a single conditional check between what happens
 
-all ints (singed) are promoted to unsinged hence no negative values 
+all ints (singed) are promoted to unsinged hence no negative values
 
 ## What are the problems with dynamic memory allocation in embedded systems?
 
-### Memory Fragmentation 
+### Memory Fragmentation
+
 Description: Over time, dynamic memory allocation can lead to fragmentation, where free memory is split into small,
 non-contiguous blocks.
 
-Impact: Fragmentation can cause memory allocation requests to fail even when there is sufficient total free memory, 
+Impact: Fragmentation can cause memory allocation requests to fail even when there is sufficient total free memory,
 just not in a single contiguous block. This is particularly problematic in systems with limited memory resources.
 
 ### Unpredictable Allocation Times
+
 Description: The time required to allocate or free memory dynamically can be unpredictable.
 
-Impact: Embedded systems, especially those with real-time requirements, need predictable and deterministic behavior. 
+Impact: Embedded systems, especially those with real-time requirements, need predictable and deterministic behavior.
 Unpredictable allocation times can lead to missed deadlines or erratic system behavior
 
 ### Memory Leaks
+
 Description: Memory leaks occur when allocated memory is not properly deallocated, leading to a gradual increase in used memory.
 
 Impact: Over time, memory leaks can exhaust available memory, leading to system crashes or malfunctions. Detecting and debugging
 memory leaks can be particularly challenging in embedded systems.
 
 ### Increased Complexity
-Description: Complexity dealing with dynamic memory allocation over static memory 
+
+Description: Complexity dealing with dynamic memory allocation over static memory
 Impact: This complexity can lead to bugs and make the system more difficult to develop, maintain, and test. The additional overhead
 can also strain limited processing resources.
 
@@ -336,11 +381,10 @@ can also strain limited processing resources.
 
 - Registers: Fast, volatile memory located on the CPU, used for immediate data storage and processing.
 
-## What are the different thread states in rtos 
+## What are the different thread states in rtos
 
 - Running: Actively being executed.
 - Ready: Waiting to be executed.
 - Blocked/Waiting: Awaiting an event or condition.
 - Suspended: Temporarily paused.
 - Terminated: Completed or terminated.
-
