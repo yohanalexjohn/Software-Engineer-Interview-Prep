@@ -189,21 +189,23 @@ C provides a mechanism to work directly with memory addresses through pointers. 
 
 1. Declare a Pointer to the Desired Memory Location:
 
-```c
-volatile uint32_t *ptr = (volatile uint32_t *)0xADDRESS;
-```
+   ```c
+   volatile uint32_t *ptr = (volatile uint32_t *)0xADDRESS;
+   ```
 
-Replace 0xADDRESS with the actual memory address you want to access. The volatile keyword ensures that reads and writes through ptr are not optimized away by the compiler, which is crucial for memory-mapped I/O.
+   Replace 0xADDRESS with the actual memory address you want to access. The
+   volatile keyword ensures that reads and writes through ptr are not optimized
+   away by the compiler, which is crucial for memory-mapped I/O.
 
 2. Read and write Operations:
 
-- **Reading from the Memory Location:**
+   - **Reading from the Memory Location:**
 
-```c
-uint32_t value = *ptr;
-```
+      ```c
+      uint32_t value = *ptr;
+      ```
 
-This writes new_value to the memory location pointed to by ptr.
+   This writes new_value to the memory location pointed to by ptr.
 
 ### Example
 
@@ -233,7 +235,7 @@ int main() {
 }
 ```
 
-**Considerations**
+### Considerations
 
 • **Type Safety:** Ensure that the type of pointer (uint32_t * in this example) matches the data width of the memory location you are accessing.
 
@@ -263,16 +265,18 @@ const : *read-only*
 
 1. Used to define values that should not be changed after initialisation.
 
-2. Function parameters: the function will not modify the parameter. This can be particularly useful for pointers or references to large data structures, improving performance by avoiding unnecessary copies.
+2. Function parameters: the function will not modify the parameter. This can be
+   particularly useful for pointers or references to large data structures,
+   improving performance by avoiding unnecessary copies.
 
-```c
-void processData(const int *data, int size) {
-    // Cannot modify *data
-    for (int i = 0; i < size; ++i) {
-        printf("%d\n", data[i]);
-    }
-}
-```
+   ```c
+   void processData(const int *data, int size) {
+       // Cannot modify *data
+       for (int i = 0; i < size; ++i) {
+           printf("%d\n", data[i]);
+       }
+   }
+   ```
 
 3. Compiler Optimisation probabilities as the data is not mutable
 
@@ -288,9 +292,13 @@ Examples of volatile variables are:
 2. Non-stack variables referenced within an interrupt service routine.
 3. Variables shared by multiple tasks in a multi-threaded application.
 
+...
+
 1. Can a parameter be both const and volatile? Explain your answer.
 2. Can a pointer be volatile? Explain your answer.
 3. What is wrong with the following function?:
+
+...
 
 ```c
 int square(volatile int *ptr)
