@@ -1,66 +1,22 @@
-from typing import List
+def solution(prices: list[int]) -> int:
+    max_proft = 0
+    # Create the largest number 
+    # So that the first iteration is set properly
+    # maybe just use max(prices + 1) ?
+    buy_price = float("inf")
+
+    for i in range(len(prices)):
+        if prices[i] < buy_price:
+            buy_price = prices[i]
+
+        profit = prices[i] - buy_price
+        print(profit, buy_price)
+
+        if profit > max_proft:
+            max_proft = profit
+
+    return int(max_proft)
 
 
-def solution(data: List[int], k: int) -> List[int]:
-    new_element = []
-    repeating_element_count = {}
-
-    if len(data) == 1:
-        new_element.append(data[0])
-        return new_element
-
-    for i in range(len(data)):
-        repeating_element_count[data[i]] = (
-            (repeating_element_count[data[i]] + 1)
-            if data[i] in repeating_element_count.keys()
-            else 1
-        )
-
-    repeating_element_count = dict(
-        sorted(repeating_element_count.items(),
-               key=lambda item: item[1], reverse=True)
-    )
-
-    new_element = list(repeating_element_count.keys())
-
-    return (data[:k]) if not new_element else new_element[:k]
-
-
-print(solution([1, 1, 1, 2, 2, 2, 3], 2))
-print(solution([1], 1))
-print(solution([3, 0, 1, 0], 1))
-print(solution([1, 2], 2))
-print(
-    solution(
-        [
-            3,
-            2,
-            3,
-            1,
-            2,
-            4,
-            5,
-            5,
-            6,
-            7,
-            7,
-            8,
-            2,
-            3,
-            1,
-            1,
-            1,
-            10,
-            11,
-            5,
-            6,
-            2,
-            4,
-            7,
-            8,
-            5,
-            6,
-        ],
-        10,
-    )
-)
+print(solution([7, 1, 5, 3, 6, 4]))
+print(solution([7, 6, 4, 3, 2, 1]))

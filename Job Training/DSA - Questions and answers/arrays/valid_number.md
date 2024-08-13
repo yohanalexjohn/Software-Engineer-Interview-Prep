@@ -50,7 +50,4 @@ print(solution("123 "))
 print(solution("1.23 "))
 print(solution("1.2.3 "))
 print(solution("1. 2.3 "))
-
-
-    
 ```

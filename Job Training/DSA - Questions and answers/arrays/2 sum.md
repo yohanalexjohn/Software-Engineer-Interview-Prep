@@ -8,7 +8,7 @@ The function twoSum should return indices of the two numbers such that they add 
 def twoSum(nums, target):
     # Create a dictionary to store the number and its index
     num_dict = {}
-	# Loop to get the index and the value all at one go 
+    # Loop to get the index and the value all at one go 
     for i, num in enumerate(nums):
         # Calculate the complement of the current number
         complement = target - num
@@ -30,4 +30,4 @@ print(result)  # Output: (1, 2)
 
 The key algorithm to remember here is `target - x` this gives the resulting value we need to search for that exists in the dictionary.
 
-If it doesn't we store it to the hash map or dictionary 
+If it doesn't we store it to the hash map or dictionary

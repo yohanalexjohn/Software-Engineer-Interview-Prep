@@ -70,5 +70,4 @@ def solution(data: str) -> bool:
 print(solution("A man, a plan, a canal: Panama")) # Output: True
 print(solution("race a car")) # Output: False
 print(solution("r")) # Output: False
-
 ```
