@@ -15,3 +15,5 @@
 
 ## Sliding window Variable Size
 
+
+## Kadanes Algorithm
