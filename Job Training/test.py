@@ -1,22 +1,14 @@
-def solution(prices: list[int]) -> int:
-    max_proft = 0
-    # Create the largest number 
-    # So that the first iteration is set properly
-    # maybe just use max(prices + 1) ?
-    buy_price = float("inf")
-
-    for i in range(len(prices)):
-        if prices[i] < buy_price:
-            buy_price = prices[i]
-
-        profit = prices[i] - buy_price
-        print(profit, buy_price)
-
-        if profit > max_proft:
-            max_proft = profit
-
-    return int(max_proft)
+from typing import DefaultDict, List
 
 
-print(solution([7, 1, 5, 3, 6, 4]))
-print(solution([7, 6, 4, 3, 2, 1]))
+def solution(strs: List[str]) -> List[List[str]]:
+    ans = DefaultDict(list)
+    for word in strs:
+        sorted_word = "".join(sorted(word))
+        ans[sorted_word].append(word)
+
+    # print(list(ans.values()))
+    return list(ans.values())
+
+
+solution(["act", "pots", "tops", "cat", "stop", "hat"])
