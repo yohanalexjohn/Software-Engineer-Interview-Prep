@@ -7,7 +7,6 @@ def solution(strs: List[str]) -> List[List[str]]:
         sorted_word = "".join(sorted(word))
         ans[sorted_word].append(word)
 
-    # print(list(ans.values()))
     return list(ans.values())
 
 
