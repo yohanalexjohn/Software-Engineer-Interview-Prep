@@ -1,13 +1,19 @@
 from typing import DefaultDict, List
 
 
-def solution(strs: List[str]) -> List[List[str]]:
-    ans = DefaultDict(list)
-    for word in strs:
-        sorted_word = "".join(sorted(word))
-        ans[sorted_word].append(word)
+def solution(nums: List[int]) -> List[int]:
+    ans: list[int] = []
 
-    return list(ans.values())
+    for i in range(len(nums)):
+        product = 1
+        for j in range(len(nums)):
+            if i != j:
+                product *= nums[j]
+
+        ans.append(product)
+
+    return ans
 
 
-solution(["act", "pots", "tops", "cat", "stop", "hat"])
+print(solution([1, 2, 4, 6]))
+print(solution([-1, 0, 1, 2, 3]))

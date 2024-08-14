@@ -43,4 +43,3 @@ def solution(strs: List[str]) -> List[List[str]]:
 
 solution(["act", "pots", "tops", "cat", "stop", "hat"])
 ```
-
