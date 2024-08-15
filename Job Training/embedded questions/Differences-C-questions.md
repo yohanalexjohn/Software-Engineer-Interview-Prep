@@ -1,11 +1,11 @@
 # Differences 
 ## Structure vs Unions
 
-| Structure    | Unions      |
-| --- | --- |
-| Contains each of the named members  | Contains one of the named variables at any given time|
-| Size is large enough to hold all members| Size is large enough to hold the largest member |
-| Structure elements are of the same size| Unions elements can be of different sizes |
+| Structure                                | Unions                                                |
+| ---------------------------------------- | ----------------------------------------------------- |
+| Contains each of the named members       | Contains one of the named variables at any given time |
+| Size is large enough to hold all members | Size is large enough to hold the largest member       |
+| Structure elements are of the same size  | Unions elements can be of different sizes             |
 
 ## malloc() and calloc()
 
@@ -72,11 +72,11 @@
 
 ## Constant Pointer  and a pointer to a constant  
 
-| const char *p | char const *p | char* const p | const char * const p |
-| --- | --- | --- | --- |
-| p is a pointer to a const char | p is a pointer to a const char | p is a const pointer to a char | p is a const pointer to a const character |
-| Cannot modify the character that p points to | Cannot modify the character that p points to  | Can modify the character that p points to | Cannot modify what P points to nor change what the character is |
-| P can change what it points to  | P can change what it points to | Cannot change the pointer to point to itself or another character | Cannot modify what P points to nor change what the character is |
+| const char *p                                | char const *p                                | char* const p                                                     | const char * const p                                            |
+| -------------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------- |
+| p is a pointer to a const char               | p is a pointer to a const char               | p is a const pointer to a char                                    | p is a const pointer to a const character                       |
+| Cannot modify the character that p points to | Cannot modify the character that p points to | Can modify the character that p points to                         | Cannot modify what P points to nor change what the character is |
+| P can change what it points to               | P can change what it points to               | Cannot change the pointer to point to itself or another character | Cannot modify what P points to nor change what the character is |
 
 #### Examples
 ``` c
@@ -101,10 +101,10 @@ p = &anotherChar; // Error: cannot change the pointer itself
 
 ### Are the expressions *ptr ++ and ++ *ptr same?
 
-| *ptr ++ | ++ *ptr |
-| --- | --- |
-| post - increment operatrion. The value of the ptr is used first and then incremented by 1 | The value of the ptr is used and added(pre -increment) by 1
-| the value of the pointer changes by 1 or now points to the next pointer in the array  | The pointer remains unchanged
+| *ptr ++                                                                                   | ++ *ptr                                                     |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| post - increment operatrion. The value of the ptr is used first and then incremented by 1 | The value of the ptr is used and added(pre -increment) by 1 |
+| the value of the pointer changes by 1 or now points to the next pointer in the array      | The pointer remains unchanged                               |
 
 #### Example 
 ``` c

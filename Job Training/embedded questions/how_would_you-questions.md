@@ -123,5 +123,75 @@ address = (volatile uint16_t *)0x67a9;
 ```
 
 
+## Implement a Circular/Ring Buffer in C
 
+```c
+#include <stdio.h>
+#include <stdbool.h>
 
+#define BUFFER_SIZE 8  // Define the size of the circular buffer
+
+// Global circular buffer structure
+struct CircularBuffer {
+    int buffer[BUFFER_SIZE];
+    int head;
+    int tail;
+    int max;  // Maximum size of the buffer
+    bool full;
+} cb;  // Global instance of the circular buffer
+
+// Initialize the circular buffer
+void circular_buffer_init() {
+    cb.head = 0;
+    cb.tail = 0;
+    cb.max = BUFFER_SIZE;
+    cb.full = false;
+}
+
+// Add an element to the buffer
+void circular_buffer_put(int data) {
+    cb.buffer[cb.head] = data;
+    if (cb.full) {
+        cb.tail = (cb.tail + 1) % cb.max;
+    }
+    cb.head = (cb.head + 1) % cb.max;
+    cb.full = (cb.head == cb.tail);
+}
+
+// Get an element from the buffer
+int circular_buffer_get(int *data) {
+    int r = -1;
+
+    if (!circular_buffer_empty()) {
+        *data = cb.buffer[cb.tail];
+        cb.tail = (cb.tail + 1) % cb.max;
+        cb.full = false;
+        r = 0;
+    }
+
+    return r;
+}
+
+// Check if the buffer is empty
+bool circular_buffer_empty() {
+    return (!cb.full && (cb.head == cb.tail));
+}
+
+// Check if the buffer is full
+bool circular_buffer_full() {
+    return cb.full;
+}
+
+// Get the number of elements in the buffer
+int circular_buffer_size() {
+    if (cb.full) {
+        return cb.max;
+    }
+
+    if (cb.head >= cb.tail) {
+        return cb.head - cb.tail;
+    }
+
+    return cb.max + cb.head - cb.tail;
+}
+```
