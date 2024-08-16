@@ -2,7 +2,8 @@
 
 ## What makes a thread based system firm software or safe software
 
-The ability to handle missed events in an even driven system to mitigate losses or faults
+The ability to handle missed events in an even driven system to mitigate losses
+or faults
 
 ## Where was the ClassB safety standard derived from
 

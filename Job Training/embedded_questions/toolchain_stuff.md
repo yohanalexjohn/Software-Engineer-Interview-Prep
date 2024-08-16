@@ -6,13 +6,15 @@
 
 ## linker scripts
 
-- A linker script is a text file used by the linker to control the memory regions
-and layout of the executable
-- Tells what sections are placed where in the .text , .bss and how much should be allocated
+- A linker script is a text file used by the linker to control the memory
+regions and layout of the executable
+- Tells what sections are placed where in the .text , .bss and how much should
+be allocated
 
 ## Startup files
 
-- Startup files are written in assembly or C sets up at runtime to before the main call
+- Startup files are written in assembly or C sets up at runtime to before the
+main call
 - Initalise the hardware
 - setup the stack pointer vector table
 - Initalise the data and bss segments
