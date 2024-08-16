@@ -1,4 +1,5 @@
-# Differences 
+# Differences
+
 ## Structure vs Unions
 
 | Structure                                | Unions                                                |
@@ -16,7 +17,7 @@
 | Memory allocated contains garbage values         | It initialises the contains of block of memory to zero          |
 | It allocates contiguous(shared) memory locations | Memory allocated is not contiguous                              |
 
-## Pass by reference vs pass by value 
+## Pass by reference vs pass by value
 
 | Pass by reference | Pass by value |
 | --- | --- |
@@ -62,11 +63,11 @@
 | Array name cannot be initialised    | Must be initialised                         |
 | Name begins with a constant         | ++ and -- operators cannot be applied to it |
 
-## Array  of pointers and a pointer to an array 
+## Array  of pointers and a pointer to an array
 
 | Array of pointers | Pointer to an array |
 | --- | --- |
-| int *array_name[size] | int ( *array_name)[size] |
+| int *array_name[size] | int [*array_name](size) |
 | Size represents the row size | Size represents the column size |
 | Space may be dynamic | space is dependent on the architecture |
 
@@ -79,6 +80,7 @@
 | P can change what it points to               | P can change what it points to               | Cannot change the pointer to point to itself or another character | Cannot modify what P points to nor change what the character is |
 
 #### Examples
+
 ``` c
 const char *p = "Hello";
 *p = 'h'; // Error: cannot modify the value pointed to by p
@@ -99,14 +101,15 @@ const char * const p = &ch;
 p = &anotherChar; // Error: cannot change the pointer itself
 ```
 
-### Are the expressions *ptr ++ and ++ *ptr same?
+### Are the expressions *ptr ++ and ++*ptr same?
 
 | *ptr ++                                                                                   | ++ *ptr                                                     |
 | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | post - increment operatrion. The value of the ptr is used first and then incremented by 1 | The value of the ptr is used and added(pre -increment) by 1 |
 | the value of the pointer changes by 1 or now points to the next pointer in the array      | The pointer remains unchanged                               |
 
-#### Example 
+#### Example
+
 ``` c
 #include <stdio.h>
 
@@ -125,11 +128,11 @@ int main() {
 ```
 
 ## compilers vs interpreters
+
 | compilers | interpreters|
 | --- | --- |
 | Take the whole program as a whole and convert to object code before execution| Execute code line by line|
 | All syntax errors can be caught before code execution | Errors are only caught during execution |
-
 
 ## Mutexes vs Semaphores
 
@@ -142,7 +145,6 @@ int main() {
 | Can be recursive | Typically not recursive |
 | Protect critical sections | Synhchronise access to resources or limit concurrent access |
 | faster and lightweight simple lock and unlock  | Flexible as can handle multiple instances |
-
 
 ## MPU vs MCU
 
@@ -164,7 +166,3 @@ int main() {
 | Used in embedded systems, industrial control, automotive, medical devices. | Used in desktop computers, servers, and general-purpose applications. |
 | Often lacks a graphical user interface (GUI); primarily command-line or simple interfaces. | Typically provides a comprehensive GUI for user interaction. |
 | Generally simpler to reduce overhead and ensure predictability. | More complex to support a wide range of applications and hardware.|
-
-
-
-
