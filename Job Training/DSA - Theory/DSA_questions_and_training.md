@@ -4,7 +4,7 @@
 
 Run Time complexity
 
-Order of fastest to slowest 
+Order of fastest to slowest
 O(1) >> O(n) >> O(logn) >> O(nLogn) >> O(n^2) >> O(n ^3) >> O(2^n)
 
 Constant >> Linear >> logarithmic >> nlogn >> quadratic >> cubic >> exponential
@@ -31,4 +31,5 @@ stitches the results back together) >> bubble sort
 ## Data structures and algorithms by chapter
 
 1. [[Arrays]]
-2. [[Linked List]]
+2. [[Linked_List]]
+

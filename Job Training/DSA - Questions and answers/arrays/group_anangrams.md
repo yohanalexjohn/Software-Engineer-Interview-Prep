@@ -16,13 +16,13 @@ Output: [["hat"],["act", "cat"],["stop", "pots", "tops"]]
 
 Input: strs = ["x"]
 
-Output: [["x"]]
+Output: /[/["x"]]
 
 ## Example 3
 
 Input: strs = [""]
 
-Output: [[""]]
+Output: /[/[""]]
 
 ```python
 from typing import DefaultDict, List

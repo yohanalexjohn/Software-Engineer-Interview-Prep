@@ -7,13 +7,11 @@
   content we are looking for. The slow pointer jumps to the index of the fast
   pointer to where there is a match
 
-## Prefix Sums
-
+## Prefix Postfix Sums
 
 ## Sliding window Fixed Size
 
-
 ## Sliding window Variable Size
 
+## Kadane's Algorithm
 
-## Kadanes Algorithm
