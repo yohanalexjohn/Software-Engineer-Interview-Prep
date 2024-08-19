@@ -18,4 +18,3 @@ print(add(2,3))
 - readability
 - limited scope
 - debugging pain
-

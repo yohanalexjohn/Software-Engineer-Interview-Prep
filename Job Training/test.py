@@ -1,65 +1,44 @@
 from typing import DefaultDict, List
 
 
-def solution(board: List[List[str]]) -> bool:
-    # Check for repeats by checking if the value
-    # already exists in the dictionary
-    row_values = DefaultDict(set)
-    column_values = DefaultDict(set)
-    # The mini box will have a subset of row_values
-    # and column_values. We iterate through this
-    # set in r // 3 and c / /3(floor division because the size
-    # of the boz is 9 and equal parts is 3)
-    mini_box_values = DefaultDict(set)
+def solution(nums: List[int]) -> int:
+    nums.sort()
+    ans = []
+    compare_before_delete = []
+    prev = nums[0] if nums != [] else 0
 
-    for row in range(len(board)):
-        for column in range(len(board)):
-            if board[row][column] == ".":
-                continue
+    if nums != []:
+        ans.append(nums[0])
 
-            if (
-                board[row][column] in row_values[row]
-                or board[row][column] in column_values[column]
-                or board[row][column] in mini_box_values[(row // 3), (column // 3)]
-            ):
-                return False
+    for num in nums:
+        if (num - prev) == 1:
+            ans.append(num)
 
-            column_values[column].add(board[row][column])
-            row_values[row].add(board[row][column])
-            mini_box_values[((row // 3), (column // 3))
-                            ].add(board[row][column])
+        if len(ans) >= 2:
+            if (ans[len(ans) - 1] - ans[len(ans) - 2]) != 1:
+                temp = ans[len(ans) - 1]
+                if len(compare_before_delete) < len(ans):
+                    compare_before_delete = ans.copy()
+                    compare_before_delete.pop(len(compare_before_delete) - 1)
+                ans.clear()
+                ans.append(prev)
+                ans.append(temp)
 
-    return True
+        prev = num
 
-
-print(
-    solution(
-        [
-            ["1", "2", ".", ".", "3", ".", ".", ".", "."],
-            ["4", ".", ".", "5", ".", ".", ".", ".", "."],
-            [".", "9", "8", ".", ".", ".", ".", ".", "3"],
-            ["5", ".", ".", ".", "6", ".", ".", ".", "4"],
-            [".", ".", ".", "8", ".", "3", ".", ".", "5"],
-            ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
-            [".", ".", ".", ".", ".", ".", "2", ".", "."],
-            [".", ".", ".", "4", "1", "9", ".", ".", "8"],
-            [".", ".", ".", ".", "8", ".", ".", "7", "9"],
-        ]
+    return (
+        len(ans)
+        if len(ans) > len(compare_before_delete)
+        else len(compare_before_delete)
     )
-)
 
+
+print(solution([2, 20, 4, 10, 3, 4, 5]))
+print(solution([0, 3, 2, 5, 4, 6, 1, 1]))
+print(solution([]))
+print(solution([9, 1, 4, 7, 3, -1, 0, 5, 8, -1, 6]))
+print(solution([100, 4, 200, 1, 3, 2]))
 print(
-    solution(
-        [
-            ["1", "2", ".", ".", "3", ".", ".", ".", "."],
-            ["4", ".", ".", "5", ".", ".", ".", ".", "."],
-            [".", "9", "1", ".", ".", ".", ".", ".", "3"],
-            ["5", ".", ".", ".", "6", ".", ".", ".", "4"],
-            [".", ".", ".", "8", ".", "3", ".", ".", "5"],
-            ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
-            [".", ".", ".", ".", ".", ".", "2", ".", "."],
-            [".", ".", ".", "4", "1", "9", ".", ".", "8"],
-            [".", ".", ".", ".", "8", ".", ".", "7", "9"],
-        ]
-    )
+    solution([4, 0, -4, -2, 2, 5, 2, 0, -8, -8, -
+             8, -8, -1, 7, 4, 5, 5, -4, 6, 6, -3])
 )
