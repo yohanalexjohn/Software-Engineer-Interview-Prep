@@ -20,7 +20,8 @@ def solution(haystack: str, needle) -> bool:
                 sub_string.append(haystack[fast])
                 # print(sub_string)
             else:
-                if((len(sub_string) != 0) and (haystack[fast - 1] == needle[slow - 1])):
+                if((len(sub_string) != 0) 
+                       and (haystack[fast - 1] == needle[slow - 1])):
                     # print(sub_string)
                     slow -= 1
                     fast -= 1
@@ -77,5 +78,6 @@ needle = "o"
 print(strstr(haystack, needle))  # Output: 4
 
 needle = ""
-print(strstr(haystack, needle))  # Output: 0 (empty needle is considered to be found at the start)
+# (empty needle is considered to be found at the start)
+print(strstr(haystack, needle))  # Output: 0 
 ```
