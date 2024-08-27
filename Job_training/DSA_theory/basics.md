@@ -30,6 +30,5 @@ stitches the results back together) >> bubble sort
 
 ## Data structures and algorithms by chapter
 
-1. [[Arrays]]
-2. [[Linked_List]]
-
+1. [[arrays]]
+2. [[linked_list]]
