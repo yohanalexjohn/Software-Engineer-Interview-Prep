@@ -1,37 +1,35 @@
 from typing import DefaultDict, List
 
 
-def solution(height: List[int]) -> int:
-    if height == []:
-        return 0
+def solution(s: str) -> bool:
+    # Map the closing brackets to the opening
+    # use closing instead of opening to determine
+    # when to pop
+    bracket_map = {"}": "{", ")": "(", "]": "["}
 
-    # Two start and end pointer
-    start = 0
-    end = len(height) - 1
+    stack = []
 
-    ans = 0
+    for bracket in s:
+        if bracket in bracket_map:
+            top_element = stack.pop() if stack else "#"
 
-    # Need to calculate max heights of the left and right locations
-    # in order to determine how much water can be filled
-    max_start = height[start]
-    max_end = height[end]
+            # If the bracket is a closing bracket and
+            # if the popped element does not match the
+            # opening of the bracket it is not the top_element
+            # that should have popped
+            if bracket_map[bracket] != top_element:
+                return False
 
-    while start < end:
-        if max_start < max_end:
-            # Increment the left pointer
-            # once we know what the current max left height
-            # is we can subtract that from the current position
-            # to determine how much water can be filled
-            start += 1
-            max_start = max(max_start, height[start])
-            ans += max_start - height[start]
         else:
-            # Same as above
-            end -= 1
-            max_end = max(max_end, height[end])
-            ans += max_end - height[end]
+            # Append the opening bracket to the top of the
+            # stack
+            stack.append(bracket)
 
-    return ans
+    return not stack
 
 
-print(solution([0, 2, 0, 3, 1, 0, 1, 3, 2, 1]))
+print(solution("[]"))
+print(solution("([{}])"))
+print(solution("["))
+print(solution("[(])"))
+print(solution("{[]}"))
