@@ -24,6 +24,12 @@ Sliding Window algorithm consists of two pointers slow and fast. Fast increments
 via the main loop. The slow only increments here when there is a match.
 
 ```python
+length_of_string = len(input)
+
+start_of_index = 0
+count = 0
+seen = {}
+
 for window_length in range(length_of_string):
 
     # If character is in the unique list
@@ -41,4 +47,21 @@ for window_length in range(length_of_string):
     count = max(count, window_length - start_of_index + 1)
 
 return count
+```
+
+```python
+# Efficient
+def lengthOfLongestSubstring(self, s: str) -> int:
+    charSet = set()
+    l = 0
+    res = 0
+
+    for r in range(len(s)):
+        while s[r] in charSet:
+            charSet.remove(s[l])
+            l += 1
+        charSet.add(s[r])
+        res = max(res, r - l + 1)
+    return res
+
 ```
