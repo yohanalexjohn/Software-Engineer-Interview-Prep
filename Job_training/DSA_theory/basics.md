@@ -32,3 +32,4 @@ stitches the results back together) >> bubble sort
 
 1. [[arrays]]
 2. [[linked_list]]
+2. [[stack]]
