@@ -1,35 +1,43 @@
 from typing import DefaultDict, List
 
 
-def solution(s: str) -> bool:
-    # Map the closing brackets to the opening
-    # use closing instead of opening to determine
-    # when to pop
-    bracket_map = {"}": "{", ")": "(", "]": "["}
+class MinStack:
+    def __init__(self):
+        self.stack_nums = []
 
-    stack = []
+    def __isEmpty__(self) -> bool:
+        return not self.stack_nums
 
-    for bracket in s:
-        if bracket in bracket_map:
-            top_element = stack.pop() if stack else "#"
+    def push(self, val: int) -> None:
+        self.stack_nums.append(val)
 
-            # If the bracket is a closing bracket and
-            # if the popped element does not match the
-            # opening of the bracket it is not the top_element
-            # that should have popped
-            if bracket_map[bracket] != top_element:
-                return False
+    def pop(self) -> None:
+        # To call private method which only takes in the
+        # refernce object dont have to pass in anythin
+        if self.__isEmpty__():
+            return
+        self.stack_nums.pop()
 
-        else:
-            # Append the opening bracket to the top of the
-            # stack
-            stack.append(bracket)
+    def top(self) -> int:
+        return self.stack_nums[-1] if not self.__isEmpty__() else None
 
-    return not stack
+    def getMin(self) -> int:
+        return min(self.stack_nums)
 
 
-print(solution("[]"))
-print(solution("([{}])"))
-print(solution("["))
-print(solution("[(])"))
-print(solution("{[]}"))
+minStack = MinStack()
+
+minStack.push(1)
+minStack.push(2)
+minStack.push(0)
+
+# Return 0
+print(minStack.getMin())
+
+minStack.pop()
+
+# Return 2
+print(minStack.top())
+
+# Return 1
+print(minStack.getMin())

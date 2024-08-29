@@ -16,7 +16,7 @@ For this role specifically, I'd love the chance to work across different discipl
 
 A pioneering company in the quantum computing field, founded by researchers from the University of Oxford. The company focuses on developing high-performance quantum computers by using electronics and combining photonic and microwave technology to achieve high levels of precision and scalability.
 
-Oxford Ionics leverages trapped ion qubits, known for superior performance and low error rates and combines them with a unique electronic qubit control technology, allowing for more scalability of quantum computing systems. 
+Oxford Ionics leverages trapped ion qubits, known for superior performance and low error rates and combines them with a unique electronic qubit control technology, allowing for more scalability of quantum computing systems.
 
 **What are your strengths/weaknesses**
 
@@ -31,6 +31,3 @@ One weakness I would say I have ties in to my main strength. Like I said i'm pre
 **What do you know about REST**
 
 ****
-
-
-

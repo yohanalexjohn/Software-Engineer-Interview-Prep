@@ -1,12 +1,13 @@
 # How do you rate yourself out of 10 in your software skills
-- I see myself as a 8/10 for c and a 9/10 for python. With my current knowledge of these individual languages 
+
+- I see myself as a 8/10 for c and a 9/10 for python. With my current knowledge of these individual languages
 - However I do see myself getting better as i am aware there is ample room to grow and learn from my fellow colleagues who are more the wiser than I am
 
 # What are the tools I am exposed to for code quality checking
 
 Sonarqube scans through for the code quality results from each of the tools and reports back where there is errors and problems with the quality of the code in regards to safety and standards
 
-## C 
+## C
 
 1. clang-tidy: flags bad practices in the code
 2. clang-format: formats the code spaces etc
@@ -54,7 +55,6 @@ Sonarqube scans through for the code quality results from each of the tools and 
 - I have always been able to perform at a high
 - level regardless of what's been thrown at me
 
-
 - Don't care if you handle it well or not, just give an example of a time you had to handle it (STAR)
 
 # How do you think someone else would describe you?
@@ -69,8 +69,8 @@ Sonarqube scans through for the code quality results from each of the tools and 
 
 # What are your strengths/weaknesses?
 
-weakness - rabbit hole 
-streghthe - curiosity, team player, organised 
+weakness - rabbit hole
+streghthe - curiosity, team player, organised
 
 - Strengths: Idk just think up one or two then back it up with an example (STAR)
 - Weaknesses: Emphasise skills; what programming languages you want to learn or improve at/DSA?
@@ -78,11 +78,11 @@ streghthe - curiosity, team player, organised
 # Tell me about a time you completely failed?
 
 talk about the stitching ticket
-xxd convert to bin 
+xxd convert to bin
 dd stitch two binaries together
 
-
 # Did you ever have any conflict with your co-workers and how did you resolve it
+
 aggreed that it should be delivered on time
 maybe the complexity of the tests could be counted to the sizing of the tickets
 and we talked as a team to deliver on time with full test coverage to find problems early and not
@@ -90,14 +90,14 @@ have to fix them later on
 
 # What is your favourite Apple application?
 
-
 # What is your least favourite Apple application?
-notes 
 
+notes
 
-# Tell me about yourself 
+# Tell me about yourself
+
 - Dedicated and hard-working person good sense of humor
-- I enjoy my work as I find it interesting and i get to constantly solve problems 
-- I work well within a team-dynamic, 
+- I enjoy my work as I find it interesting and i get to constantly solve problems
+- I work well within a team-dynamic,
 - But am also very self -motivated when working on individual tasks.
 - I constantly thrive to get better and learn from my collegues whom i look for mentorship and feedback where i can.
