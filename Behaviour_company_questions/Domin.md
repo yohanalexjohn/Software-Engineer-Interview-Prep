@@ -379,7 +379,7 @@ stuffing , acknowledgement error, error counters
 data packets
 - Standard and Extended Frames: Supports both 11-bit and 29-bit identifiers,
 flexibility in addressing
-- Frame contains Start of Frame, IDentifier, Remote Transmission request,
+- Frame contains Start of Frame, Identifier, Remote Transmission request,
 Control field, Data field, Cyclic Redundancy check, Acknowledgement field, end
 of frame
 

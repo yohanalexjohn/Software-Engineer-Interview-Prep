@@ -396,3 +396,8 @@ can also strain limited processing resources.
 - Blocked/Waiting: Awaiting an event or condition.
 - Suspended: Temporarily paused.
 - Terminated: Completed or terminated.
+
+## What is #pragma
+
+Special instructions to the compiler and are implementation specific 
+

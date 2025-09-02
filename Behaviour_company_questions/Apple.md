@@ -72,7 +72,7 @@ had to handle it (STAR)
 - Mention a few traits that you think you possess
 - Back up with a relevant experience/example (STAR)
 
-## #What motivates you?
+## What motivates you?
 
 - Meeting targets, helping others, sense of achievement
 - Working in teams, setting up team for success
