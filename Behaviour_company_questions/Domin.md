@@ -602,7 +602,7 @@ void ReadSensorValues(void) {
 ```
 
 - Safe data types: uint8_t, uint16_t, etc
-- Initialization and deallocation: properly initialize all variables and clear or deallocate memorry when it is no longer needed to avoid memory leak issues
+- Initialization and deallocation: properly initialize all variables and clear or deallocate memory when it is no longer needed to avoid memory leak issues
 
 ```c
 void InitBuffer(uint8_t* buffer, size_t size) {

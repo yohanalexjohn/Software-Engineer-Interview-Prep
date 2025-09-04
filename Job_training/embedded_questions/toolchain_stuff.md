@@ -2,7 +2,7 @@
 
 - Consists of programming tools like compiler, linker, assembler, debugger
 - Used in embedded systems to compile code to particular architecture
-- cmake to automate the build and linking
+- CMAKE to automate the build and linking
 
 ## linker scripts
 
@@ -15,26 +15,26 @@ be allocated
 
 - Startup files are written in assembly or C sets up at runtime to before the
 main call
-- Initalise the hardware
-- setup the stack pointer vector table
-- Initalise the data and bss segments
+- Initialise the hardware
+- Setup the stack pointer vector table
+- Initialise the data and bss segments
 
 ## .text section
 
-- has the executable code
-- read only
-- copied at run time in RAM
+- Has the executable code
+- Read only
+- Copied at run time in RAM
 
 ## .data section
 
-- Contains initalised global and static variables
-- stored in rom
-- copied at run time in RAM
+- Contains initialised global and static variables
+- Stored in ROM
+- Copied at run time in RAM
 
 ## .bss section
 
-- contains unintialised global and static variables  
-- No space in rom
+- Contains uninitialised global and static variables  
+- No space in ROM
 - Initial value set to 0 so no space needed
 
 ## Memory regions

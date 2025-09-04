@@ -28,16 +28,15 @@ bool push_data_buffer(circular_buffer_t *buffer, uint8_t data)
     uint8_t next;
 
     // Move the current head pointer to the next position
-    next = buffer->head + 1;
-    
-    // If the head points to the end of the buffer set it to
-    // the initial position or start of the buffer again.
-    if( next >= buffer->maxlen )
-    {
-        next = 0;
-    }
+    // If the next is max length the mod value sets it back 
+    // to the start of the buffer
+    next = (buffer->head + 1) % buffer->maxlen;
 
     // If the next points to the Tail, circular buffer is full
+    // Or if want a condition to overwrite the buffer can continue 
+    // to do so. Have the tail only return the latest byte
+    // if the trigger pattern is needed to return a note that the 
+    // buffer is full to be read can use this 
     if( next == buffer->tail )
     {
         return false;
@@ -65,13 +64,7 @@ bool pop_data_buffer(circular_buffer_t *buffer, unit8_t data)
     }
     
     // Next is where the tail will point to after the read
-    next = buffer->tail + 1;
-    
-    // Reached length of the buffer
-    if(next >= buffer->maxlen)
-    {
-        next = 0;
-    }
+    next = (buffer->tail + 1) % buffer->maxlen;
     
     // Read the data then move the tail
     *data = buffer->buffer[buffer->tail];
