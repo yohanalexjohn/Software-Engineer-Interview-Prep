@@ -2,6 +2,24 @@
 
 [Github link for the questions](https://github.com/theEmbeddedGeorge/theEmbeddedNewTestament.github.io/tree/master/Interview)
 
+## Board Bring up
+
+1. **Check Power Rails**
+1. **Prove can flash using JTAG or serial programmer**
+1. **Prove Timers and oscillators set up correctly through blinky and gpio**
+1. **Check interrupts through spi and i2c**
+1. **Memory checks if external flash is present**
+1. **ADC,dma**
+1. **Debugging and verification**
+
+### How to say it 
+
+I’d start simple — power, clock, and programming. Then verify the basics like GPIO and UART, 
+before moving on to more complex peripherals like SPI or CAN. At each stage I’d validate with 
+test code and tools like a logic analyzer. Finally, I’d integrate everything into higher-level
+tests to prove the board functions as intended. This systematic approach reduces risk and makes 
+it easy to isolate issues.
+
 ##  Microcontroller basics
 
 ### Set up the clock
