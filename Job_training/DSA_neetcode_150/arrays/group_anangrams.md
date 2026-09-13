@@ -45,3 +45,33 @@ def solution(strs: List[str]) -> List[List[str]]:
 
 solution(["act", "pots", "tops", "cat", "stop", "hat"])
 ```
+
+```cpp 
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+
+        std::unordered_map<char, vector<string>>group;
+
+        // Create unique keys
+        for(int i(0) : strs.size())
+        {
+            // sort will sort the key and return void 
+            // copy the key first
+            string key = strs[i];
+            std::sort(key.begin(), key.end());
+            group[key].push_back(strs[i]);
+        }
+
+        std::vector<vector<string>> output;
+
+        // extract the pairs
+        for(const auto& pairs: group)
+        {
+            output.push_back(pairs.second);
+        }
+
+        return output;
+    }
+};
+```

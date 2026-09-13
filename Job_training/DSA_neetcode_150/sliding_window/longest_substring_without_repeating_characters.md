@@ -65,3 +65,56 @@ def lengthOfLongestSubstring(self, s: str) -> int:
     return res
 
 ```
+
+```cpp
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int result = 0;
+
+        for (int i(0); i < s.size(); ++i) {
+            std::unordered_set<char> seen;
+            int count = 0;
+
+            for (int j(i); j < s.size(); ++j) {
+                if (seen.find(s[j]) != seen.end()) {
+                    break;
+                }
+
+                seen.insert(s[j]);
+                count++;
+            }
+
+            result = std::max(result, count);
+        }
+
+        return result;
+    }
+};
+```
+
+```cpp
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s)
+    {
+        std::unordered_set<char>seen;
+
+        int result(0);
+
+        for(int right(0); right < s.size(); ++right)
+        {
+            while(seen.find(s[right]) != seen.end())
+            {
+                seen.erase(s[left]);
+                left++;
+            }
+
+            seen.insert(s[right]);
+            result = std::max(result, right - left + 1);
+        } 
+
+        return result;
+    }
+}
+```

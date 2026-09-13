@@ -39,7 +39,7 @@ Depending on the initial value of p and the elements it points to, this could le
 
 #### Potential Undefined Behavior
 
-Evaluating *p++ twice within the same statement can lead to undefined behavior according to the C standard, since the order of evaluation of subexpressions is not guaranteed.
+Evaluating *p++ twice within the same statement can lead to undefined behavior according to the C standard, since the order of evaluation of sub expressions is not guaranteed.
 
 ### Proper Handling
 
@@ -198,3 +198,159 @@ int circular_buffer_size() {
 }
 ```
 
+## Reverse Linked List 
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+// ---------- Singly linked list ----------
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+Node* reverseSingly(Node* head)
+{
+    Node* prev = NULL;
+    Node* temp;
+
+    while (head != NULL)
+    {
+        temp = head->next;
+        head->next = prev;
+        prev = head;
+        head = temp;
+    }
+
+    return prev;
+}
+
+Node* pushSingly(Node* head, int data)
+{
+    Node* node = malloc(sizeof(Node));
+    node->data = data;
+    node->next = head;
+    return node;
+}
+
+void printSingly(Node* head)
+{
+    while (head != NULL)
+    {
+        printf("%d -> ", head->data);
+        head = head->next;
+    }
+    printf("NULL\n");
+}
+
+// ---------- Doubly linked list ----------
+
+typedef struct DNode {
+    int data;
+    struct DNode* next;
+    struct DNode* prev;
+} DNode;
+
+DNode* reverseDoubly(DNode* head)
+{
+    DNode* temp = NULL;
+
+    while (head != NULL)
+    {
+        temp = head->prev;
+        head->prev = head->next;
+        head->next = temp;
+        head = head->prev;
+    }
+
+    if (temp != NULL)
+        head = temp->prev;
+
+    return head;
+}
+
+DNode* pushDoubly(DNode* head, int data)
+{
+    DNode* node = malloc(sizeof(DNode));
+    node->data = data;
+    node->prev = NULL;
+    node->next = head;
+    if (head != NULL)
+        head->prev = node;
+    return node;
+}
+
+void printDoubly(DNode* head)
+{
+    while (head != NULL)
+    {
+        printf("%d <-> ", head->data);
+        head = head->next;
+    }
+    printf("NULL\n");
+}
+
+// ---------- main ----------
+
+int main(void)
+{
+    // Singly linked list: build 1 -> 2 -> 3 -> 4 -> NULL
+    Node* sHead = NULL;
+    for (int i = 4; i >= 1; i--)
+        sHead = pushSingly(sHead, i);
+
+    printf("Singly before: ");
+    printSingly(sHead);
+
+    sHead = reverseSingly(sHead);
+
+    printf("Singly after:  ");
+    printSingly(sHead);
+
+    // Doubly linked list: build 1 <-> 2 <-> 3 <-> 4 <-> NULL
+    DNode* dHead = NULL;
+    for (int i = 4; i >= 1; i--)
+        dHead = pushDoubly(dHead, i);
+
+    printf("\nDoubly before: ");
+    printDoubly(dHead);
+
+    dHead = reverseDoubly(dHead);
+
+    printf("Doubly after:  ");
+    printDoubly(dHead);
+
+    return 0;
+}
+
+single pass so time complixxit is o(n)
+```
+
+## Imagine you have declared a variable as static before main and you have assigned it the value 42. When you print it in main, it prints 0. Where would you start to look?
+
+First suspect: the .data copy didn't happen, or copied the wrong thing. If the startup code's .data copy loop has a bug (wrong source address, wrong size, or it's missing entirely 
+for a custom/modified linker script), initialized statics silently stay at whatever RAM happened to contain — often 0 if .bss zeroing ran, or garbage otherwise. Since it printed 
+exactly 0, that's actually a strong clue it's zero-initialized via .bss, not garbage.
+
+Check the linker script — is this variable actually landing in .data (as expected for an initialized static) or has it been mis-placed into .bss? A misconfigured or hand-edited 
+linker script is a classic cause.
+
+Check symbol/section markers — _sdata, _edata, _sidata (or vendor equivalents) must correctly bound the .data section for the copy loop to work; if these markers are wrong, the copy 
+either copies nothing or copies the wrong region.
+
+Check for multiple definitions / linkage collision — if there are two variables with the same name in different translation units (one static, one accidentally not, or vice versa) the linker might resolve to the wrong one.
+
+Check initialization order relative to when you're printing — if this print happens in another static/global constructor (C++) or an early init function that runs before the .data copy completes, you'd see the pre-init value.
+
+As a last resort, inspect the disassembly/map file — confirm the address the variable actually lives at, and check the .data copy loop is really covering that address range.
+
+Good framing to say out loud: "A static local prints 0 instead of its initializer almost always points to the .data-copy step in startup, since 0 is what you'd get from .bss zeroing overriding or replacing it — so I'd start at the linker script and startup code before suspecting the C logic itself."
+
+## Design embedded firmware to keep it testable 
+
+- Ask if the implementation would change in runtime if so stick to compile time polymorphism design whic will be template based else run time optimisation using Interface
+
+I'd choose between runtime and compile-time polymorphism based on the requirements. I'd consider virtual interfaces where runtime substitution and testability are valuable, while
+using templates or simpler static abstractions where performance, memory usage and deterministic execution are more important.

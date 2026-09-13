@@ -113,3 +113,31 @@ print(
 
 ```
 
+
+```cpp 
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        std::unordered_set<int>numSet(nums.begin(), nums.end());
+
+        int longest(0);
+
+        for(int num : numSet)
+        {
+            // Start of the sequence 
+            if(numSet.find(num - 1) == numSet.end())
+            {
+                int length (1);
+
+                while(numSet.find(num+length) != numSet.end())
+                {
+                    length++;
+                }
+
+                longest = std::max(longest, length);
+            }
+        }
+        return longest;
+    }
+};
+```

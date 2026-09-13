@@ -65,3 +65,32 @@ print(solution([1, 2, 4, 6]))
 print(solution([-1, 0, 1, 2, 3]))
 
 ```
+
+
+```cpp 
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        vector<int> output{nums.size(), 1};
+
+        // Calculate the prefix products
+        for(int i(1); i< nums.size(); i++)
+        {
+            output[i] =  output[i-1] * nums[i-1];
+        }
+
+        // Calculate suffix products
+        // right to left here as we got the most out of
+        // bound suffix at 1
+        int suffix = 1;
+        for(int j(nums.size() - 1; j >=0; j--)
+        {
+            output[j] *= suffix;
+            suffix *= nums[j];
+        }
+
+        return output;
+    }
+};
+
+```

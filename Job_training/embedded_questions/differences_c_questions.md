@@ -8,6 +8,7 @@
 | Size is large enough to hold all members | Size is large enough to hold the largest member       |
 | Structure elements are of the same size  | Unions elements can be of different sizes             |
 
+
 ## malloc() and calloc()
 
 | Malloc()                                         | calloc()                                                        |
@@ -17,12 +18,14 @@
 | Memory allocated contains garbage values         | It initialises the contains of block of memory to zero          |
 | It allocates contiguous(shared) memory locations | Memory allocated is not contiguous                              |
 
+
 ## Pass by reference vs pass by value
 
 | Pass by reference | Pass by value |
 | --- | --- |
 | Pass a pointer to the value  | Pass a copy of the variable |
 | Direct manipulation of the variable | Cannot Change the value of the original variable  |
+
 
 ## Arrays vs Pointers  
 
@@ -33,6 +36,7 @@
 | It cannot be reassigned                                | It can be reassigned                                                                                 |
 | sizeof() returns number of bytes occupied by the array | Number of bytes used to store the pointer variable which depending the architecture can be different |
 
+
 ## Arrays vs Linked list  
 
 | Arrays                                                                                 | Linked List                                                                                                         |
@@ -40,12 +44,14 @@
 | Repeated pattern of variables in contiguous storage                                    | Set of structures scattered through memory held together by pointers in each element that point to the next element |
 | Move from one element to the next through a fixed constant integer in a repeatable way | Use the **next** pointer in each structure which says what the next element is                                      |
 
+
 ## Enums vs Macros  
 
 | Enums                                             | Macros                                                                                                                                   |
 | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | They are a list of named integer-valued constants | Abbreviations for lengthy and frequently used statements                                                                                 |
 | Enums declare a type, hence can be type checked   | Types are not defined can be anything as the entire code is substituted by a single line. Only used as it is faster for control transfer |
+
 
 ## Enums vs Pre-processor defines  
 
@@ -55,6 +61,7 @@
 | local effect to the enum block                | Global effect to the file          |
 | Sizes are fixed for the enumeration variables | No size as its a text subsitution  |
 
+
 ## Array name and a pointer variable
 
 | Array Name                          | Pointer variable                            |
@@ -63,6 +70,7 @@
 | Array name cannot be initialised    | Must be initialised                         |
 | Name begins with a constant         | ++ and -- operators cannot be applied to it |
 
+
 ## Array  of pointers and a pointer to an array
 
 | Array of pointers | Pointer to an array |
@@ -70,6 +78,7 @@
 | int *array_name[size] | int [*array_name](size) |
 | Size represents the row size | Size represents the column size |
 | Space may be dynamic | space is dependent on the architecture |
+
 
 ## Constant Pointer  and a pointer to a constant  
 
@@ -134,6 +143,7 @@ int main() {
 | Take the whole program as a whole and convert to object code before execution| Execute code line by line|
 | All syntax errors can be caught before code execution | Errors are only caught during execution |
 
+
 ## Mutexes vs Semaphores
 
 | Mutexes | Semaphores |
@@ -146,6 +156,7 @@ int main() {
 | Protect critical sections | Synhchronise access to resources or limit concurrent access |
 | faster and lightweight simple lock and unlock  | Flexible as can handle multiple instances |
 
+
 ## MPU vs MCU
 
 | MPU | MCU |
@@ -154,6 +165,7 @@ int main() {
 | Higher power consumption  | lower power consumption |
 | more expensive | cheaper |
 | can run more complex tasks | can run simpler task on products  |
+
 
 ## RTOS vs General OS
 
@@ -166,3 +178,5 @@ int main() {
 | Used in embedded systems, industrial control, automotive, medical devices. | Used in desktop computers, servers, and general-purpose applications. |
 | Often lacks a graphical user interface (GUI); primarily command-line or simple interfaces. | Typically provides a comprehensive GUI for user interaction. |
 | Generally simpler to reduce overhead and ensure predictability. | More complex to support a wide range of applications and hardware.|
+
+

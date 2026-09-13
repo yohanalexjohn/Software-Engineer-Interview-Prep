@@ -87,3 +87,54 @@ print(
     )
 )
 ```
+
+```cpp 
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        std::unordered_map<int, int> frequencies;
+
+        // Find the Frequencies of each elements 
+        for(int i(0); i < nums.size(); i++ )
+        {
+            frequencies[nums[i]]++;
+        }
+
+        // NO element can appear more than the size of the nums 
+        // So need n + 1 buckets 
+        // need n+ 1 as the index is is itself the frequency
+        // so if we are to inedex via frequency we need to have 
+        // n + 1 space. 
+        vector<vector<int>>buckets(num.size() + 1);
+
+        // group frequencies as buckets
+        for(const auto& entry: frequencies)
+        {
+            int value = entry.first;
+            int frequency = entry.second;
+
+            buckets[frequency].push_back(value);
+        }
+
+        vector<int> result;
+
+        for(int frequency = buckets.size() - 1;
+            frequency >= 0 && result.size() < k;
+            --frequency)
+        {
+            for(int value : buckets[frequency])
+            {
+                result.push_back(value);
+
+                if(result.size() == k)
+                {
+                    return result;
+                }
+            }
+        }
+
+
+        return min_heap;
+    }
+};
+```

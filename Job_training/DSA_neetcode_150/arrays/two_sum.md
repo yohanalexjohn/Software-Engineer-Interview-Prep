@@ -37,3 +37,49 @@ value we need to search for that exists in the dictionary.
 
 If it doesn't we store it to the hash map or dictionary.
 
+
+```cpp
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        std::unordered_map<int,int>seen;
+        
+        int complement(0);
+
+        for(int i(0); i < nums.size(); i++)
+        {
+            complement = target - nums[i];
+
+            if(seen.find(complement) != seen.end())
+            {
+                return {seen[complement], i};
+            }
+
+            seen[nums[i]] = i;
+        }
+        return {};
+    }
+};
+```
+
+```cpp
+
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        std::unordered_set<int> seen;
+
+        for(int i(0); i < nums.size(); i++)
+        {
+            if(seen.find(nums[i]) != seem.end())
+            {
+                return true;
+            }
+            seen.insert(nums[i]); 
+        }
+
+        return false;
+    }
+};
+```
+

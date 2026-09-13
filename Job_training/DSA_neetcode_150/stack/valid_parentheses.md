@@ -74,3 +74,39 @@ print(solution("["))
 print(solution("[(])"))
 print(solution("{[]}"))
 ```
+
+```cpp
+class Solution {
+public:
+    bool isValid(string s) {
+        std::unordered_map<char, char> matching = {
+            {')', '('},
+            {']', '['},
+            {'}', '{'}
+        };
+
+        std::stack<char> stack;
+
+        for (int i = 0; i < s.size(); ++i) {
+            if (matching.find(s[i]) != matching.end()) {
+                if (stack.empty()) {
+                    // opening first then close 
+                    return false;
+                }
+
+                if (stack.top() != matching[s[i]]) {
+                    return false;
+                }
+
+                stack.pop();
+            }
+            else {
+                stack.push(s[i]);
+            }
+        }
+
+        return stack.empty();
+    }
+};
+```
+

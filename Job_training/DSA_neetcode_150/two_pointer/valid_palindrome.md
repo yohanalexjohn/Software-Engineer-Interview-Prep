@@ -71,3 +71,32 @@ print(solution("A man, a plan, a canal: Panama")) # Output: True
 print(solution("race a car")) # Output: False
 print(solution("r")) # Output: False
 ```
+
+```cpp
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        int left(0), right(s.size() -1 );
+
+        while ( left < right)
+        {
+            while (left < right && !std::isalnum(s[left])) {
+                left++;
+            }
+
+            while (left < right && !std::isalnum(s[right])) {
+                right--;
+            }
+
+            if (std::tolower(s[left]) != std::tolower(s[right])) {
+                return false;
+            }
+
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+};
+```

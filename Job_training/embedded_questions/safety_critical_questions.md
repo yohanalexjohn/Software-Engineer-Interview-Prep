@@ -132,3 +132,162 @@ introduce new safety issues
 leading to inconsistent or incorrect behaviour
   - Fix using mutexes or semaphores to ensure only one thread can access
   critical section of code at a time
+
+## Interview Answer: Software quality and reliability in safety-critical applications
+
+Start with requirements and traceability. In safety-critical software, quality
+comes from being able to show that each requirement has been designed,
+implemented, reviewed, tested, and controlled through release.
+
+Good answer:
+
+- Define clear and testable requirements.
+- Link software requirements to hazards and risk controls.
+- Use simple modular design so each part can be reviewed and tested.
+- Follow coding standards such as MISRA C/C++ where appropriate.
+- Avoid undefined behaviour, uncontrolled dynamic memory, recursion, and
+unbounded execution in critical paths.
+- Use code reviews, static analysis, and automated tests.
+- Test at unit, integration, system, regression, and hardware-in-the-loop
+levels.
+- Include fault handling such as range checks, watchdogs, timeouts,
+diagnostics, redundancy, and safe states.
+- Keep version control, change control, and release evidence.
+
+Key phrase:
+
+Safety-critical quality is not just "does the code work"; it is whether the
+team can prove the software satisfies its requirements and fails safely when
+something goes wrong.
+
+## Interview Answer: Debugging firmware issue in a medical device
+
+Treat the issue as a safety and evidence problem first, then as a technical
+debugging problem.
+
+Steps:
+
+1. Understand the symptom and whether there is any patient-safety impact.
+2. Put the system into a safe state or isolate the issue if needed.
+3. Gather evidence: logs, fault codes, firmware version, hardware revision,
+test setup, input conditions, and reproduction steps.
+4. Check recent changes using version control.
+5. Narrow down the subsystem: sensor input, communication, timing, memory,
+interrupt, RTOS task, state machine, or hardware interface.
+6. Use the right tools: debugger, trace logs, oscilloscope, logic analyser,
+unit tests, or hardware-in-the-loop tests.
+7. Find root cause rather than only masking the symptom.
+8. Add a regression test and document the fix, risk impact, and verification.
+
+Medical-device angle:
+
+The fix needs to go through change control, review, traceability, and
+verification because the process evidence is part of the product quality.
+
+## IEC 62304 and medical-device software lifecycle
+
+IEC 62304 is the medical device software lifecycle standard. It defines a
+structured process for developing and maintaining medical device software.
+
+Main lifecycle areas:
+
+- Software development planning.
+- Software requirements analysis.
+- Software architecture and detailed design.
+- Implementation.
+- Unit verification.
+- Integration and integration testing.
+- System testing.
+- Software release.
+- Software maintenance.
+- Risk management links.
+- Configuration management.
+- Problem resolution.
+
+Important concepts:
+
+- Traceability from requirement to design, code, tests, and risk controls.
+- Software safety classification, commonly Class A, B, and C, based on the
+possible harm if the software fails.
+- Higher-risk software needs stronger process evidence and verification.
+- Works alongside risk management standards such as ISO 14971.
+
+Interview answer:
+
+My understanding is that IEC 62304 makes software development controlled and
+auditable. You should be able to show what was required, how it was designed,
+how it was implemented, how it was tested, what risks it controls, and exactly
+which version was released. I have not worked directly under IEC 62304 before,
+but my embedded experience has built the same habits: requirements,
+documentation, modular design, testing, review, and controlled changes.
+
+## Version control and configuration management
+
+Version control is about making source changes traceable. Configuration
+management is broader: it controls the exact software, tools, build settings,
+hardware revision, dependencies, and release artifacts used to create a tested
+system.
+
+Good answer:
+
+- Use Git or similar source control.
+- Keep commits focused and commit messages clear.
+- Use branches for features, fixes, and releases.
+- Use code review before merging.
+- Tag released firmware versions.
+- Track compiler, linker, SDK, RTOS, library, and hardware versions.
+- Store build configuration alongside the source when possible.
+- Link changes to tickets, requirements, test evidence, or risk controls.
+- Use CI to build and run repeatable tests.
+
+Medical-device angle:
+
+For a regulated device, it must be possible to recreate or identify exactly
+what was released and prove what verification was performed on that version.
+
+## Automated testing frameworks in embedded software
+
+Automated tests should be used at different levels:
+
+- Unit tests: pure logic, calculations, state machines, boundary checks, and
+fault handling.
+- Integration tests: drivers, communication stacks, and module interactions.
+- Hardware-in-the-loop tests: tests that need real hardware behaviour.
+- Regression tests: protect against old bugs returning.
+- Static analysis: catch unsafe patterns and coding-standard violations.
+
+Common tools:
+
+- C: Unity, Ceedling, CMock.
+- C++: GoogleTest, Catch2, CppUTest.
+- Python tooling: pytest.
+- Static analysis: compiler warnings, clang-tidy, cppcheck, MISRA tools.
+
+Interview answer:
+
+For embedded software I would test as much logic as possible away from the
+hardware, then use integration and hardware-in-the-loop testing for the parts
+that depend on real timing, peripherals, or electrical behaviour. In a medical
+device, I would also make sure test results are linked to requirements and
+recorded against the exact software and hardware version.
+
+## Technical debt vs new features
+
+Prioritise technical debt based on risk and impact.
+
+- Fix immediately if it affects safety, reliability, data integrity, or
+verification.
+- Prioritise debt that repeatedly slows the team or causes defects.
+- Address small refactors during feature work if they reduce risk and keep the
+change focused.
+- Avoid large refactors close to release unless they are necessary.
+- Use evidence such as defect history, test gaps, or maintenance cost to
+justify the work.
+
+Interview answer:
+
+I would not treat technical debt as automatically less important than features.
+In safety-critical software, debt in requirements, tests, fault handling,
+traceability, or configuration management can become a product risk. I would
+prioritise it when it reduces safety risk, improves verification confidence, or
+removes a repeated blocker for the team.

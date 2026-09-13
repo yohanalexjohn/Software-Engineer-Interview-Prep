@@ -122,3 +122,42 @@ print(minStack.top())
 # Return 1
 print(minStack.getMin())
 ```
+
+
+```cpp 
+class MinStack {
+private:
+        std::stack<int>values;
+        std::stack<int>minValues;
+
+public:
+    MinStack() {
+        // Initialise stack to empty
+    }
+
+    void push(int val) {
+        values.push(val);
+
+        if (minValues.empty()){
+            minValues.push(val);
+        }
+        else{
+            minValues.push(std::min(val, minValues.top()));
+        }
+
+    }
+
+    void pop() {
+        values.pop();
+        minValues.pop();
+    }
+
+    int top() {
+        return values.top();
+    }
+
+    int getMin() {
+        return minValues.top();
+    }
+};
+```

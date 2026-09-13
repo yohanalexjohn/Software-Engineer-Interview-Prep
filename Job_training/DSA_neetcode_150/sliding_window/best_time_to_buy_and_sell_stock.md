@@ -48,3 +48,50 @@ def solution(prices: list[int]) -> int:
 print(solution([7, 1, 5, 3, 6, 4]))
 print(solution([7, 6, 4, 3, 2, 1]))
 ```
+
+```cpp 
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int output(0);
+
+        for(int buy(0); buy < princes.size(); buy++)
+        {
+            for (int sell(buy + 1); sell < prices.size(), ++sell )
+            {
+                if(prices[sell] > prices[buy])
+                {
+                   int profit = prices[sell] - prices[buy];
+                   output = std::max(output, profit);
+                }
+            }
+        }
+
+        return output;
+    }
+};
+```
+
+```cpp 
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if (prices.empty()) {
+            return 0;
+        }
+
+        int minPrice = prices[0];
+        int maxProfit = 0;
+
+        for (int i = 0; i < prices.size(); ++i) {
+            int profit = prices[i] - minPrice;
+
+            maxProfit = std::max(maxProfit, profit);
+            minPrice = std::min(minPrice, prices[i]);
+        }
+
+        return maxProfit;
+    }
+};
+```
+```

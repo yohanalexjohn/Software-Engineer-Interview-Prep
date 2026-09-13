@@ -74,3 +74,55 @@ bool pop_data_buffer(circular_buffer_t *buffer, unit8_t data)
     return True;
 }
 ```
+
+
+```cpp 
+class CircularBuffer {
+private:
+    static constexpr size_t CAPACITY = 8;
+
+    int buffer[CAPACITY];
+    size_t head;
+    size_t tail;
+
+public:
+    CircularBuffer() : head(0), tail(0){
+    }
+
+    bool push(int value) {
+        if(full())
+        {
+            return false
+        }
+
+        buffer[head] =  value;
+        head = (head+1) % CAPACITY;
+
+        return true;
+    }
+
+    bool pop() {
+        if(empty())
+        {
+            return false;
+        }
+
+        tail = (tail + 1) % CAPACITY;
+
+        return true;
+    }
+
+    int front() const {
+        return buffer[tail];
+    }
+
+    bool empty() const {
+        return (head == tail);
+    }
+
+    bool full() const {
+        return (((head+1) % CAPACITY) == tail);
+    }
+};
+
+```
