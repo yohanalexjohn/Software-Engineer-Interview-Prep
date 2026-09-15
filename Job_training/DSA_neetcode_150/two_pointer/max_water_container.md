@@ -50,3 +50,34 @@ print(solution([]))
 print(solution([0]))
 ```
 
+```cpp 
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int left (0);
+        int right (height.size() - 1);
+
+        int max_volume (0);
+
+        while (left < right)
+        {
+            int max_height = std::min(height[left], height[right]);
+            int max_width  = right - left;
+
+            max_volume = std::max(max_volume, (max_height*max_width));
+
+            if (height[left] < height[right])
+            {
+                left++;
+            }
+            else
+            {
+                right--; 
+            }
+        }
+
+        return max_volume;
+    }
+};
+```

@@ -687,6 +687,7 @@ Prepare:
 
 Use these notes during the plan:
 
+- Amazon OA active recall: `Job_training/DSA_neetcode_150/active_recall_pattern_sheet.md`
 - C++: `Job_training/cpp.md`
 - Design patterns: `Job_training/Design_patterns/`
 - RTOS: `Job_training/embedded_questions/rtos.md`
