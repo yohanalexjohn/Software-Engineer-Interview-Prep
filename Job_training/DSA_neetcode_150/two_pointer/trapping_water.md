@@ -1,5 +1,13 @@
 # Trapping Rain Water
 
+## Active recall
+
+- Pattern: two pointers with running left/right maximums.
+- Algorithm: move the side with the smaller height; update that side's max and add trapped water.
+- Water at a position is limited by the smaller wall seen from left and right.
+- Time: O(n). Space: O(1).
+- Common mistake: adding negative water; update max before or while computing trapped amount.
+
 You are given an array non-negative integers heights which represent an
 elevation map. Each value heights[i] represents the height of a bar, which has
 a width of 1.

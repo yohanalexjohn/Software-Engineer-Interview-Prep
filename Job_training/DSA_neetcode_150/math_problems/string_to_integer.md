@@ -1,5 +1,13 @@
 # String to integer atoi function
 
+## Active recall
+
+- Pattern: parsing with bounds.
+- Algorithm: skip leading spaces, read optional sign, then consume digits until a non-digit.
+- Update result digit by digit and clamp to 32-bit signed integer range on overflow.
+- Time: O(n). Space: O(1).
+- Common mistake: sign is only valid before digits; stop parsing after digits end.
+
 Implement atoi to convert a string to an integer.
 
 The atoi function first discards as many whitespace characters as necessary

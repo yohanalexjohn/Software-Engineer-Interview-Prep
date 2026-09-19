@@ -1,5 +1,13 @@
 # Longest Consecutive Sequence
 
+## Active recall
+
+- Pattern: set lookup for sequence starts.
+- Algorithm: put all numbers in a set. A number starts a sequence only if `num - 1` is not in the set.
+- From each start, count upward while `num + length` exists.
+- Time: O(n). Space: O(n).
+- Common mistake: sorting is O(n log n), but the target pattern is O(n) using a set.
+
 Given an array of integers nums, return the length of the longest consecutive
 sequence of elements.
 

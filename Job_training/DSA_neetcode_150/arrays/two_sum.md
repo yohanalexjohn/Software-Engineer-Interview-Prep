@@ -7,6 +7,14 @@ The function twoSum should return indices of the two numbers such that they add
 up to the target, where index1 must be less than index2. Please note that your
 returned answers (both index1 and index2) are not zero-based.
 
+## Active recall
+
+- Pattern: hash lookup for complement.
+- Store value -> index.
+- For each number, check `target - nums[i]` before inserting the current value.
+- Contains Duplicate is simpler: use a set and return true when a value is seen again.
+- `find()` is useful when I need the stored value. `count()` is enough for existence.
+
 ```python
 def twoSum(nums, target):
     # Create a dictionary to store the number and its index
@@ -71,7 +79,7 @@ public:
 
         for(int i(0); i < nums.size(); i++)
         {
-            if(seen.find(nums[i]) != seem.end())
+            if(seen.find(nums[i]) != seen.end())
             {
                 return true;
             }
@@ -82,4 +90,3 @@ public:
     }
 };
 ```
-

@@ -1,5 +1,14 @@
 # Two sum input array is sorted
 
+## Active recall
+
+- Pattern: sorted array + two pointers.
+- Algorithm: start `left` at 0 and `right` at end.
+- If sum is too small, move `left` right. If sum is too large, move `right` left.
+- Return 1-based indices for this LeetCode problem.
+- Time: O(n). Space: O(1).
+- Common mistake: using zero-based output when the problem asks for 1-based.
+
 Given an array of integers numbers that is sorted in non-decreasing order.
 
 Return the indices (1-indexed) of two numbers, [index1, index2], such that they

@@ -1,4 +1,11 @@
-# Rotate Array 
+# Rotate Array
+
+## Active recall
+
+- Pattern: array rotation in-place.
+- Algorithm: reduce `k %= n`, reverse whole array, reverse first `k`, reverse remaining `n-k`.
+- Time: O(n). Space: O(1).
+- Common mistake: not handling `k > n` or empty input.
 
 Given an integer array nums, rotate the array to the right by k steps.
 

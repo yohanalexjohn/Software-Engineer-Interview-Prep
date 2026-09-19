@@ -1,5 +1,14 @@
 # Minimum Stack
 
+## Active recall
+
+- Pattern: stack that can return minimum in O(1).
+- Algorithm: keep a normal stack for values and a second stack for the minimum so far.
+- On push, also push to `minStack` when the new value is `<=` current min.
+- On pop, if popped value equals `minStack.top()`, pop `minStack` too.
+- Time: O(1) for push, pop, top, and getMin. Space: O(n).
+- Common mistake: using `<` instead of `<=` loses duplicate minimum values.
+
 Basically write your stack definitions
 
 Design a stack class that supports the push, pop, top, and getMin operations.

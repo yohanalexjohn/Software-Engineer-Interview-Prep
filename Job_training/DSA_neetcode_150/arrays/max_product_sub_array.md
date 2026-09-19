@@ -13,6 +13,14 @@ nums = [-2,0,-1]
 Output = 0
 ```
 
+## Active recall
+
+- Pattern: Kadane-style running state, but track both max and min product.
+- Negative values can flip min into max.
+- Save `oldMin` and `oldMax` before updating either value.
+- Compare against the current number so the subarray can restart.
+- Time: O(n). Space: O(1).
+
 ```cpp 
 class Solution {
 public:
@@ -22,12 +30,12 @@ public:
         // result in a single pass
         int minProduct {nums[0]};
         int maxProduct {nums[0]};
-        int result;
+        int result {nums[0]};
 
         for(int i(1); i < nums.size(); i++)
         {
             int oldMin = minProduct;
-            int oldMax = maxnProduct;
+            int oldMax = maxProduct;
 
             minProduct = std::min({
                     nums[i], 
@@ -35,7 +43,7 @@ public:
                     oldMax * nums[i]
                 });
 
-            maxProduct = std::max(
+            maxProduct = std::max({
                     nums[i], 
                     oldMin * nums[i],
                     oldMax * nums[i]

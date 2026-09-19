@@ -1,5 +1,13 @@
 # Number of elements to the right smaller than curr
 
+## Active recall
+
+- Pattern: count smaller elements to the right.
+- Brute force algorithm: for each index, scan all elements to its right and count smaller values.
+- Better algorithm: merge-sort counting or Fenwick tree with coordinate compression.
+- Time: brute force O(n^2), optimized O(n log n). Space: O(n) for optimized approaches.
+- Common mistake: tracking only the minimum to the right is not enough because the problem asks for a count.
+
 Given an integer array nums, return an array answer such that:
 
 ```text 
@@ -117,4 +125,3 @@ private:
     }
 };
 ```
-

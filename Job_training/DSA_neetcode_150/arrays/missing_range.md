@@ -1,4 +1,12 @@
-# Missing Range 
+# Missing Range
+
+## Active recall
+
+- Pattern: sorted array + gaps between previous and current value.
+- Algorithm: track the next expected value, compare it to each number, and emit single number or range when there is a gap.
+- Add a sentinel after the upper bound to flush the final gap.
+- Time: O(n). Space: O(1) extra excluding output.
+- Common mistake: forgetting the gap before the first value or after the last value.
 
 Given:
 Given a sorted integer array where the range of elements are [0, 99] inclusive, return its missing ranges.

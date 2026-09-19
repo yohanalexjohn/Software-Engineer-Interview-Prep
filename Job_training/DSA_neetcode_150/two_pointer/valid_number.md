@@ -1,4 +1,14 @@
 # Valid Number
+
+## Active recall
+
+- Pattern: parsing / state validation.
+- Algorithm: track whether a digit, decimal point, exponent, and sign are valid at this position.
+- A sign is valid only at the start or right after `e`/`E`.
+- Exponent requires digits before it and digits after it.
+- Time: O(n). Space: O(1).
+- Common mistake: accepting `e` without digits on both sides.
+
 Question:
 Validate if a given string is numeric.
 

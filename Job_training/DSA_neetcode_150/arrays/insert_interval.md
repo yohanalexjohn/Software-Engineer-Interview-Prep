@@ -1,5 +1,13 @@
 # Insert Interval
 
+## Active recall
+
+- Pattern: sorted non-overlapping intervals + one new interval.
+- Algorithm: copy intervals before `newInterval`, merge overlaps into `newInterval`, push it, then append the rest.
+- Overlap condition: current start `<= newInterval.end` and current end `>= newInterval.start`.
+- Time: O(n). Space: O(n) output.
+- Common mistake: forgetting to push the merged `newInterval` before appending remaining intervals.
+
 You’re given a sorted list of non-overlapping intervals and one new interval. 
 Insert the new interval into the correct position, merging if necessary.
 

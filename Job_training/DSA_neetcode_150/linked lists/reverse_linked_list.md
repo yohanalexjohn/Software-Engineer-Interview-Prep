@@ -1,5 +1,14 @@
 # Reverse Linked List
 
+## Active recall
+
+- Pattern: pointer relinking.
+- Algorithm: keep `prev`, `curr`, and `next`.
+- Save `next = curr->next` before changing `curr->next`.
+- Point `curr->next` to `prev`, then advance `prev = curr`, `curr = next`.
+- Time: O(n). Space: O(1).
+- Common mistake: overwriting `curr->next` before saving the rest of the list.
+
 ```cpp 
 /**
  * Definition for singly-linked list.

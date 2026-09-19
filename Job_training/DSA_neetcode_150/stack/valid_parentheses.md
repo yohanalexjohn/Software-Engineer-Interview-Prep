@@ -11,6 +11,15 @@ The input string s is valid if and only if:
 
 Return true if s is a valid string, and false otherwise.
 
+## Active recall
+
+- Pattern: stack for matching pairs.
+- Push opening brackets.
+- When seeing a closing bracket, stack must not be empty and top must match.
+- Pop after a successful match.
+- At the end, stack must be empty.
+- Common mistake: checking only counts is not enough because order matters.
+
 ## Example 1
 
 ```text
@@ -109,4 +118,3 @@ public:
     }
 };
 ```
-

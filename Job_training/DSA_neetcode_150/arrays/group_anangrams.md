@@ -1,5 +1,13 @@
 # Group Anangrams
 
+## Active recall
+
+- Pattern: group strings by a canonical key.
+- Algorithm: for each word, build a key using sorted characters or a 26-count signature.
+- Store `key -> list of words` in an `unordered_map`.
+- Time: O(n * k log k) with sorting, or O(n * k) with count key. Space: O(n * k).
+- Common mistake: grouping by original string instead of anagram key.
+
 Given an array of strings strs, group all anagrams together into sublists. You
 may return the output in any order.
 

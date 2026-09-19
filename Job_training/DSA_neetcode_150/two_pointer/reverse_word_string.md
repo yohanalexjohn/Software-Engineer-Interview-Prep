@@ -1,5 +1,12 @@
 # Reverse Words in a String
 
+## Active recall
+
+- Pattern: trim/split words, then reverse word order.
+- Algorithm: scan words while ignoring extra spaces, collect words, reverse them, and join with one space.
+- Time: O(n). Space: O(n) unless doing in-place character operations.
+- Common mistake: output should not preserve leading/trailing/multiple spaces.
+
 Given an input string s, reverse the string word by word.
 For example, given s = "the sky is blue", return "blue is sky the".
 

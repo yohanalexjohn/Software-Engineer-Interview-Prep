@@ -1,5 +1,13 @@
 # Valid Anagram
 
+## Active recall
+
+- Pattern: character frequency count.
+- Algorithm: if lengths differ, return false. Count characters from first string and subtract for second.
+- All counts must end at zero.
+- Time: O(n). Space: O(1) for fixed lowercase alphabet, otherwise O(k).
+- Common mistake: sorting works but is O(n log n); counting is cleaner for fixed alphabet.
+
 ```cpp
 class Solution {
 public:
@@ -55,4 +63,3 @@ public:
     }
 };
 ```
-

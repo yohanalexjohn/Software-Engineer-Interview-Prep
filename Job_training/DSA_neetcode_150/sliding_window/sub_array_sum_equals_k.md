@@ -1,4 +1,13 @@
-# Sub Array Sum Equals K 
+# Sub Array Sum Equals K
+
+## Active recall
+
+- Pattern: prefix sum + hash map of previous prefix counts.
+- Algorithm: running sum is `prefix`. Need previous prefix `prefix - k`.
+- Add `prefixCount[prefix - k]` to result, then increment `prefixCount[prefix]`.
+- Start with `prefixCount[0] = 1`.
+- Time: O(n). Space: O(n).
+- Common mistake: sliding window does not work with negative numbers; use prefix sums.
 
 Given an integer array nums and an integer k, return the total number of 
 continuous subarrays whose sum equals k.

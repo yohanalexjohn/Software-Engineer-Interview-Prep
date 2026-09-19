@@ -1,5 +1,13 @@
 # 3 sum
 
+## Active recall
+
+- Pattern: sort + fixed index + two pointers.
+- Algorithm: sort first. For each `i`, skip duplicate `nums[i]`, then run left/right search for `-nums[i]`.
+- After finding a triplet, move both pointers and skip duplicates.
+- Time: O(n^2). Space: O(1) extra excluding output.
+- Common mistake: forgetting duplicate skipping for both the fixed value and the pointer values.
+
 Given an integer array nums, return all the triplets [nums[i], nums[j],
 nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k]
 == 0.

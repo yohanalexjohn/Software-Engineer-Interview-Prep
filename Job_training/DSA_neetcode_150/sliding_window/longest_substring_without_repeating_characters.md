@@ -18,6 +18,14 @@ Explanation: The answer is "wke", with the length of 3.
 Note that the answer must be a substring, "pwke" is a subsequence
 and not a substring.
 
+## Active recall
+
+- Pattern: sliding window over a contiguous substring.
+- For "no repeating characters", an `unordered_set` is enough.
+- Grow with `right`; if `s[right]` already exists, erase from `left` until the duplicate is gone.
+- Use a frequency map instead when counts matter, such as "at most K distinct characters".
+- Common mistake: this is substring, not subsequence. The window must stay contiguous.
+
 ## Algorithm
 
 Sliding Window algorithm consists of two pointers slow and fast. Fast increments
@@ -101,6 +109,7 @@ public:
         std::unordered_set<char>seen;
 
         int result(0);
+        int left(0);
 
         for(int right(0); right < s.size(); ++right)
         {

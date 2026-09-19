@@ -1,5 +1,14 @@
 # Merge Two Sorted Lists
 
+## Active recall
+
+- Pattern: merge two sorted linked lists.
+- Algorithm: use a dummy head and a `tail` pointer, or recursively choose the smaller head.
+- Repeatedly attach the smaller current node from `list1` or `list2`.
+- After one list ends, attach or return the remaining nodes from the other list.
+- Time: O(n + m). Space: O(1) iterative, O(n + m) recursion stack for recursive version.
+- Common mistake: losing the head; with dummy-head iteration return `dummy.next`.
+
 You’re given two sorted singly linked lists. Merge them into one sorted list and return the head.
 
 ```cpp 

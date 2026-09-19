@@ -1,5 +1,13 @@
 # Median of two sorted Arrays
 
+## Active recall
+
+- Pattern: binary search partition across two sorted arrays.
+- Algorithm: binary search the smaller array so left partitions contain half the total elements.
+- Correct partition when `leftA <= rightB` and `leftB <= rightA`.
+- Odd total length returns max left. Even total length returns average of max left and min right.
+- Time: O(log min(m, n)). Space: O(1).
+- Common mistake: binary search the larger array; always search the smaller one.
 
 There are two sorted arrays nums1 and nums2 of size m and n respectively.
 

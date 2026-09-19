@@ -86,15 +86,15 @@ Two Sum, Contains Duplicate, Valid Anagram, Group Anagrams, Longest Consecutive 
 - Recognition clue: Need fast lookup, matching pair, seen before, count frequencies, group by same key.
 - Core idea: Use `unordered_map` / `unordered_set`. Store the information needed so each lookup is close to O(1). For anagrams, use sorted string or character-count key.
 - Time / space: Usually O(n), sometimes O(n k log k) for sorting words. Space O(n).
-- Common mistake I made: Forgetting whether the map should store value -> index, count, or grouped list. Do not overcomplicate with nested loops when lookup is enough.
+- Common mistake I made: Forgetting whether the map should store value -> index, count, or grouped list. Two Sum needs value -> index before inserting current. Contains Duplicate only needs a set. Do not overcomplicate with nested loops when lookup is enough.
 
 ### Two pointers
 
 Problems:
-Valid Palindrome, 3Sum, Container With Most Water, Two Sum sorted, Rotate Array reverse sections.
+Valid Palindrome, 3Sum, Container With Most Water, Two Sum sorted, Remove Duplicates, Rotate Array reverse sections.
 
 - Recognition clue: Array/string has order, sorted input, compare both ends, move inward, avoid extra space.
-- Core idea: Use left/right pointers. Move the pointer that can still improve the answer. For rotate array, reverse whole array, reverse first `k`, reverse remaining `n-k`.
+- Core idea: Use left/right pointers. Move the pointer that can still improve the answer. For Remove Duplicates, use read/write pointers: read scans every value, write marks where the next unique value should go. For rotate array, reverse whole array, reverse first `k`, reverse remaining `n-k`.
 - Time / space: Usually O(n), O(1) extra space except output.
 - Common mistake I made: Confusing iterator and value: `nums.begin() + k` is an iterator, `nums[k]` is the value. Remember `k %= nums.size()` and handle empty input.
 
@@ -105,6 +105,7 @@ Longest Substring Without Repeating Characters.
 
 - Recognition clue: Contiguous substring/subarray, grow and shrink a range, longest/shortest valid window.
 - Core idea: Move `right` to include new values. Move `left` only when the window breaks the rule. Track best answer as the window changes.
+- Set vs frequency map: For "no duplicates", an `unordered_set` is enough: erase from left until duplicate is gone. For "at most K distinct" or "counts matter", use an `unordered_map<char,int>` and shrink when the number of active keys breaks the rule.
 - Time / space: O(n), space depends on map/set, usually O(k).
 - Common mistake I made: Moving `left` too far or not far enough. Window problems are about a contiguous range, not choosing any elements.
 
@@ -117,6 +118,17 @@ Best Time to Buy and Sell Stock, Maximum Subarray, Maximum Product Subarray.
 - Core idea: Keep enough state for the best answer ending at current index and a global result. For max product, track both min and max ending here because negatives can flip.
 - Time / space: O(n), O(1).
 - Common mistake I made: For max product, do not update `minProduct` then use the changed value for `maxProduct`. Save `oldMin` and `oldMax` first. Also compare against `current` so the subarray can restart.
+
+### Dynamic programming / exact total
+
+Problems:
+Coin Change.
+
+- Recognition clue: Minimum/maximum number of choices to reach an exact total, choices can be reused, and greedy may fail -> dynamic programming.
+- Core idea: Let `dp[a]` be the fewest coins needed to make amount `a`. Base case: `dp[0] = 0`. For each amount and each coin, if `a - coin >= 0`, update `dp[a] = min(dp[a], dp[a - coin] + 1)`.
+- Time / space: O(amount * number_of_coins) time, O(amount) space.
+- Greedy counterexample: `coins = [1,3,4]`, `amount = 6`. Greedy takes `4 + 1 + 1 = 3` coins, but optimal is `3 + 3 = 2` coins.
+- Common mistake I made: Sorting and repeatedly taking the largest coin is not generally correct unless the coin system has special structure.
 
 ### Intervals
 
@@ -136,7 +148,7 @@ Subarray Sum Equals K, Product Except Self.
 - Recognition clue: Need sum/product over ranges or "everything except current" without nested loops.
 - Core idea: For sums, store previous prefix counts in a map. For product except self, use left product pass and right product pass instead of division.
 - Time / space: O(n), usually O(n) space. Product Except Self can be O(1) extra excluding output.
-- Common mistake I made: Mixing this with problems that require contiguity or order in a different way. Prefix/suffix was not right for Maximum Product Subarray because negatives and restart logic matter.
+- Common mistake I made: Product Except Self should not use division. Build output with prefix products first, then multiply by a running suffix product. Prefix/suffix was not right for Maximum Product Subarray because negatives and restart logic matter.
 
 ### Stack / monotonic stack
 
@@ -171,7 +183,7 @@ Number of Islands.
 ### Binary search
 
 Problems:
-Binary Search, Find Minimum in Rotated Sorted Array, Search in Rotated Sorted Array.
+Binary Search, Find Minimum in Rotated Sorted Array, Search in Rotated Sorted Array, Search Range.
 
 - Recognition clue: Sorted or partly sorted input, target better than O(n), can eliminate half.
 - Core idea: Use `left`, `right`, `mid`. Compare against sorted side or boundary to decide which half still contains the answer. Rotated sorted arrays still have structure.
@@ -179,7 +191,8 @@ Binary Search, Find Minimum in Rotated Sorted Array, Search in Rotated Sorted Ar
 - Pattern pairing:
   - Find Minimum in Rotated Sorted Array: no target. Compare `nums[mid]` with `nums[right]`. If `nums[mid] > nums[right]`, minimum is right side, so `left = mid + 1`. Else minimum can be `mid`, so `right = mid`.
   - Search in Rotated Sorted Array: target exists or not. First identify which half is sorted. If target is inside the sorted half, keep that half. Otherwise discard it.
-- Common mistake I made: Using `std::min_element` is correct but O(n), which ignores the "better than O(n)" requirement. Midpoint should be `left + (right - left) / 2`, not `left + (right + left) / 2`. Do not return `-1` early just because target is not between `mid` and one edge before checking which half is sorted. For find minimum use `right = mid` because `mid` may be the answer. For search, after checking `mid`, use `right = mid - 1` when discarding `mid`.
+  - Search Range: run two biased binary searches. First occurrence moves `right = mid - 1` after finding target. Last occurrence moves `left = mid + 1` after finding target.
+- Common mistake I made: Boundary updates depend on whether `mid` can still be the answer. Use `[left, right]` with `left <= right` when discarding `mid`; use `right = mid` only in patterns like find-min where `mid` may be answer. Midpoint should be `left + (right - left) / 2`, not `left + (right + left) / 2`. Do not return `-1` early in rotated search before identifying the sorted half.
 
 ### Heap / priority queue
 
@@ -189,7 +202,7 @@ Kth Largest Element, Top K Frequent Elements.
 - Recognition clue: Need top K, kth largest/smallest, repeatedly remove best/worst.
 - Core idea: Use `priority_queue`. For top K, count first, then keep a heap of candidates. Min-heap of size K is useful for kth largest/top K.
 - Time / space: Usually O(n log k) or O(n log n), space O(n) or O(k).
-- Common mistake I made: Forgetting whether the heap should keep largest values or smallest values. Decide if popping removes useful or unwanted candidates.
+- Common mistake I made: For Kth Largest, keep a min-heap of size `k`: push each number, and if size exceeds `k`, pop the smallest. The heap top is the kth largest. Decide if popping removes useful or unwanted candidates.
 
 ### Advanced ordering / counting
 
@@ -207,7 +220,7 @@ Problems:
 Extract fields from register/byte, masks and shifts.
 
 - Recognition clue: Need specific bits from a byte/register.
-- Core idea: Shift right, then mask. Keep constants readable.
+- Core idea: Shift right, then mask. Formula for `width` bits starting at bit `start`: `field = (value >> start) & ((1u << width) - 1)`. Keep constants readable.
 - Time / space: O(1), O(1).
 - Common mistake I made: Off-by-one bit positions. Remember whether bit 0 is the least significant bit.
 
@@ -227,7 +240,7 @@ Problems:
 Fixed-size queue, producer/consumer, UART/log samples.
 
 - Recognition clue: Need fixed-size queue behaviour with wraparound.
-- Core idea: Use head/tail indices and wrap with modulo. Decide full/empty rule clearly.
+- Core idea: Use head/tail indices and wrap with modulo. Decide full/empty rule clearly: either keep one slot empty, so full is `(head + 1) % capacity == tail`, or track `count`, so empty is `count == 0` and full is `count == capacity`.
 - Time / space: Push/pop O(1), space O(n) for buffer.
 - Common mistake I made: Confusing full and empty when `head == tail`. Keep one slot empty or track count.
 
@@ -244,10 +257,18 @@ Frames, packets, commands, sensor data.
 ### C++ ownership
 
 Problems:
-`unique_ptr`, raw owning pointers, move semantics, RAII.
+`unique_ptr`, `shared_ptr`, `weak_ptr`, raw owning pointers, copy/move constructors, move semantics, RAII.
 
 - Recognition clue: Class owns a raw resource (`new`, file handle, socket, mutex handle) -> think ownership semantics, Rule of Five / Rule of Zero.
-- Core idea: If a class owns `uint8_t* data`, the compiler-generated copy constructor does a shallow copy of the pointer.
+- Core idea: RAII ties resource lifetime to object lifetime. Constructor/acquire, destructor/release. This gives deterministic cleanup even on early return or exceptions.
+- Smart pointer ownership:
+  - `unique_ptr`: exactly one owner, move-only, default choice for exclusive ownership.
+  - `shared_ptr`: reference-counted shared ownership, resource freed when last owner is destroyed.
+  - `weak_ptr`: non-owning observer of a `shared_ptr`; use it to break circular references such as parent owns child and child points back to parent.
+- Copy vs move constructor:
+  - Copy constructor creates a separate object from an lvalue. For real ownership it must deep-copy or be deleted.
+  - Move constructor takes resources from an rvalue. It transfers handles/pointers and leaves the source valid but unspecified/empty.
+- If a class owns `uint8_t* data`, the compiler-generated copy constructor does a shallow copy of the pointer.
 - That means `Buffer b = a;` makes two `Buffer` objects point at the same heap allocation.
 - No second 128-byte heap allocation is made by the copy.
 - The local `Buffer` objects live on the stack only for their members: pointer + size.
@@ -299,6 +320,38 @@ public:
 };
 ```
 
+### C++ parameter passing and lookup
+
+Problems:
+Passing strings/vectors, map lookup, read-only inputs.
+
+- Recognition clue: Function receives a large object or needs to check a key in `unordered_map`.
+- Core idea:
+  - `const T&`: no copy, read-only view of caller's object. Use for large inputs when the function only reads.
+  - `T value`: makes a local copy for lvalues, but can move from rvalues. Use when the function needs its own modifiable copy or will store it.
+  - Vector copy copies all elements, O(n). Vector move transfers the internal buffer pointer/size/capacity, usually O(1); source remains valid but unspecified.
+  - `map.count(key)`: returns 0 or 1 for `unordered_map`, good for existence.
+  - `map.find(key)`: returns iterator, good when I need the value without doing a second lookup.
+- Time / space: `const T&` O(1). Copy O(n). Move usually O(1). Hash lookup average O(1).
+- Common mistake I made: Using `count()` and then `operator[]`, which may do another lookup and can insert a default value. Use `find()` when I need to read the mapped value.
+
+### C++ pointers, references, and concurrency keywords
+
+Problems:
+Pointer constness, references vs pointers, `volatile` vs `std::atomic`.
+
+- Recognition clue: Interview asks what can be changed: the pointed-to value, the pointer variable, or both.
+- Core idea:
+  - `const int* p`: pointer to const int. Can change `p`; cannot change `*p`.
+  - `int* const p`: const pointer to int. Cannot change `p`; can change `*p`.
+  - `const int* const p`: const pointer to const int. Cannot change `p` or `*p`.
+  - Reference: alias to an existing object, must be initialized, cannot be reseated, usually use when null is not valid.
+  - Pointer: stores an address, can be null, can be reseated, use when optional/reassignable.
+  - `volatile`: tells compiler the value may change outside normal program flow, useful for memory-mapped registers, but not thread synchronization.
+  - `std::atomic`: gives thread-safe atomic operations and memory-order guarantees. Use for shared data between threads.
+- Time / space: O(1), O(1).
+- Common mistake I made: Reading declarations from the wrong side. Read around the `*`: `const int*` protects the value, `int* const` protects the pointer. Do not say `volatile` makes code thread-safe.
+
 ## Personal mistakes to check before submitting
 
 - Did I initialise `result` correctly, usually from `nums[0]`?
@@ -318,6 +371,7 @@ public:
 - [[arrays/group_anangrams]]
 - [[arrays/product_of_array_excuding_self]]
 - [[arrays/max_product_sub_array]]
+- [[arrays/remove_duplicates]]
 - [[arrays/rotate_array]]
 - [[arrays/merge_intervals]]
 - [[arrays/insert_interval]]
@@ -328,8 +382,9 @@ public:
 - [[sliding_window/longest_substring_without_repeating_characters]]
 - [[sliding_window/sub_array_sum_equals_k]]
 - [[stack/valid_parentheses]]
+- [[stack/kth_largest_element_in_an_array]]
 - [[stack/minimum_stack]]
-- [[daily_temperatures]]
+- [[stack/daily_temperatures]]
 - [[two_pointer/valid_palindrome]]
 - [[two_pointer/three_sum]]
 - [[two_pointer/max_water_container]]
@@ -339,5 +394,6 @@ public:
 - [[binary_search/binary_search]]
 - [[binary_search/find_minimum_in_rotated_sorted_array]]
 - [[binary_search/search_in_rotated_sorted_array]]
+- [[binary_search/searchRange]]
 - [circular_buffer](../embedded_questions/coding_questions_asked_interview/circular_buffer.md)
 - [parse_16_bit_little_endian](bit_manipulation/parse_16_bit_little_endian.md)

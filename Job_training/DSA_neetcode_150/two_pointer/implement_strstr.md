@@ -1,5 +1,13 @@
 # Implement strstr
 
+## Active recall
+
+- Pattern: substring search.
+- Algorithm: brute force checks each possible start and compares characters.
+- Better pattern for repeated search: KMP uses prefix table to avoid rechecking matched characters.
+- Time: brute force O(n * m), KMP O(n + m). Space: O(1) brute force, O(m) KMP.
+- Common mistake: return 0 when `needle` is empty.
+
 Returns the index of the first occurrence of needle in haystack, or –1
 if needle is not part of haystack.
 

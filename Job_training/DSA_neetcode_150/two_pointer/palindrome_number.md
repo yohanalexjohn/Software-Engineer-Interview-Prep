@@ -1,5 +1,13 @@
 # Palindrome Number
 
+## Active recall
+
+- Pattern: reverse digits or compare digits from both ends.
+- Algorithm: for numeric reverse, build reversed number with `rev = rev * 10 + x % 10`.
+- Negative numbers are not palindromes.
+- Time: O(number of digits). Space: O(1).
+- Common mistake: full reverse can overflow in some languages; half-reverse avoids that.
+
 Given an integer x, return true if x is a palindrome, and false otherwise.
 
 ## Example 1

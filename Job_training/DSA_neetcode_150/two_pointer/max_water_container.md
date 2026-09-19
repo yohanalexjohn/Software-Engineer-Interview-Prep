@@ -1,5 +1,13 @@
 # Max Water Container
 
+## Active recall
+
+- Pattern: two pointers maximizing area.
+- Algorithm: area is `(right - left) * min(height[left], height[right])`.
+- Move the pointer with the smaller height because the shorter wall limits the area.
+- Time: O(n). Space: O(1).
+- Common mistake: moving the taller wall first does not remove the limiting factor.
+
 You are given an integer array heights where heights[i] represents the height
 of the ith bar.
 

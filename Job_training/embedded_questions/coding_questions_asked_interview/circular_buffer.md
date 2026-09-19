@@ -12,6 +12,13 @@
 2. Data written into the buffer the header pointer is incremented.
 3. Data being removed or read from the buffer the tail pointer is incremented.
 
+## Active recall
+
+- With the one-empty-slot design, `head == tail` means empty.
+- Full means `(head + 1) % maxlen == tail`.
+- Alternative design: track `count`; empty is `count == 0`, full is `count == maxlen`.
+- Common mistake: full and empty can look the same unless the rule is explicit.
+
 ```c
 
 // Create the data structure first
@@ -56,8 +63,7 @@ bool pop_data_buffer(circular_buffer_t *buffer, unit8_t data)
 {
     uint8_t next;
 
-    // If the head is the tail buffer is full cannot read or delete
-    // as there is no data to read from
+    // If the head is the tail buffer is empty so there is no data to read
     if( buffer->head == buffer->tail )
     {
         return False;

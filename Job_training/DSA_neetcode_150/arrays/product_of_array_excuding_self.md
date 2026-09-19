@@ -9,6 +9,14 @@ Follow-up: Could you solve it in O(n)
 
 O(n) time without using the division operation?
 
+## Active recall
+
+- Pattern: prefix product + suffix product.
+- Do not use division.
+- First pass stores product of everything to the left.
+- Second pass walks right-to-left and multiplies by product of everything to the right.
+- Time: O(n). Extra space: O(1) excluding output.
+
 ## Example 1
 
 Input: nums = [1,2,4,6]
@@ -71,7 +79,7 @@ print(solution([-1, 0, 1, 2, 3]))
 class Solution {
 public:
     vector<int> productExceptSelf(vector<int>& nums) {
-        vector<int> output{nums.size(), 1};
+        vector<int> output(nums.size(), 1);
 
         // Calculate the prefix products
         for(int i(1); i< nums.size(); i++)
@@ -83,7 +91,7 @@ public:
         // right to left here as we got the most out of
         // bound suffix at 1
         int suffix = 1;
-        for(int j(nums.size() - 1; j >=0; j--)
+        for(int j(nums.size() - 1); j >= 0; j--)
         {
             output[j] *= suffix;
             suffix *= nums[j];

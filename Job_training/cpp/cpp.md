@@ -361,15 +361,82 @@ Singleton, but I would only use them where they solve a real problem. In
 embedded software, clarity and deterministic behaviour matter more than
 showing off abstraction.
 
-## What is RAII 
+## Active recall: RAII and ownership
 
-Resource Acquisition is Initalisation
+RAII means **Resource Acquisition Is Initialization**.
 
-When destructor is called the resource is automatically released by design
+- Constructor acquires the resource.
+- Destructor releases the resource.
+- Useful for heap memory, file handles, sockets, mutex locks, and hardware handles.
+- Main benefit: cleanup is automatic even on early return or exceptions.
 
-## unique_ptr vs shared_ptr vs weak_ptr
+Interview answer:
 
-unique_ptr - Follows RAII design, reource moves cannot be reasigned 
-shared_ptr - Multiple shared owners. On Desctruction each of the shared reseource is called and destrouyed
+> RAII ties resource ownership to object lifetime. A resource is acquired in the
+> constructor and released in the destructor, giving deterministic cleanup and
+> helping prevent leaks.
 
+## Active recall: unique_ptr vs shared_ptr vs weak_ptr
+
+- `unique_ptr`: one owner only. Move-only. Use by default for exclusive ownership.
+- `shared_ptr`: multiple owners. Reference counted. Resource is destroyed when
+  the last `shared_ptr` owner is destroyed.
+- `weak_ptr`: non-owning observer of a `shared_ptr`. Use it to break circular
+  references, for example parent owns child and child points back to parent.
+
+Common mistake:
+
+- `shared_ptr` cycles leak because the reference count never reaches zero.
+- Use `weak_ptr` for the back-reference.
+
+## Active recall: copy vs move
+
+- Copy constructor creates a separate object from an lvalue.
+- Move constructor transfers resources from an rvalue.
+- For owning raw resources, a compiler-generated copy can shallow-copy the
+  pointer and cause double-delete.
+- After a move, the source object is still valid but should be treated as empty
+  or unspecified.
+- `std::move` does not move by itself; it allows move construction or move
+  assignment to run.
+
+Vector note:
+
+- Vector copy copies all elements, so it is O(n).
+- Vector move usually transfers the internal buffer pointer, size, and capacity,
+  so it is usually O(1).
+
+## Active recall: references, pointers, and const
+
+- `const T&`: no copy, read-only view. Good for large read-only parameters.
+- `T value`: local copy for lvalues, can move from rvalues. Good when the
+  function needs its own modifiable copy or will store it.
+- Reference: alias to an existing object, must be initialized, cannot be null,
+  cannot be reseated.
+- Pointer: stores an address, can be null, can be reseated.
+
+Pointer constness:
+
+- `const int* p`: pointer to const int. Can change `p`, cannot change `*p`.
+- `int* const p`: const pointer to int. Cannot change `p`, can change `*p`.
+- `const int* const p`: const pointer to const int. Cannot change either.
+
+## Active recall: volatile vs atomic
+
+- `volatile`: value may change outside normal program flow, such as a
+  memory-mapped register. It does not make threaded code safe.
+- `std::atomic`: thread-safe atomic operations with memory-order guarantees.
+  Use for shared data between threads.
+
+Common mistake:
+
+- Do not say `volatile` is a locking or thread-synchronisation tool.
+
+## Active recall: unordered_map count vs find
+
+- `map.count(key)`: existence check. For `unordered_map`, returns `0` or `1`.
+- `map.find(key)`: returns an iterator. Use when I need the value without doing
+  another lookup.
+- Avoid `count()` followed by `operator[]` when reading, because `operator[]`
+  can insert a default value.
 

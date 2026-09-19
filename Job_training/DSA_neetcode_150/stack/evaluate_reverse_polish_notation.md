@@ -1,5 +1,13 @@
 # Evaluate Reverse Polish Notation
 
+## Active recall
+
+- Pattern: stack evaluation of postfix expression.
+- Algorithm: push numbers; when an operator appears, pop right operand first, then left operand.
+- Compute `left op right`, then push the result back.
+- Time: O(n). Space: O(n).
+- Common mistake: order matters for `-` and `/`; the first popped value is the right side.
+
 You are given an array of strings tokens that represents a valid arithmetic
 expression in **Reverse Polish Notation**.
 

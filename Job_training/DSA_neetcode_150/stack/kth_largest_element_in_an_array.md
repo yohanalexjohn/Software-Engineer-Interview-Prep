@@ -10,6 +10,14 @@ k = 2
 Output = 5
 ```
 
+## Active recall
+
+- Pattern: top K / kth largest.
+- Use a min-heap of size `k`.
+- Push each number; if heap size becomes greater than `k`, pop the smallest.
+- At the end, heap top is the kth largest.
+- Time: O(n log k). Space: O(k).
+
 ```cpp 
 class Solution {
 public:
@@ -35,4 +43,3 @@ public:
     }
 };
 ```
-

@@ -1,4 +1,14 @@
+# Valid Palindrome
+
 Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.
+
+## Active recall
+
+- Pattern: two pointers from both ends.
+- Algorithm: skip non-alphanumeric characters, compare lowercased characters, then move inward.
+- If any pair differs, return false.
+- Time: O(n). Space: O(1).
+- Common mistake: compare only letters/numbers and ignore case.
 
 For example,  
 "A man, a plan, a canal: Panama" is a palindrome. "race a car" is not a palindrome.

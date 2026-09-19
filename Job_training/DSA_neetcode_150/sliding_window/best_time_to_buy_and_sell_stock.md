@@ -1,5 +1,13 @@
 # Best time to buy and sell stock
 
+## Active recall
+
+- Pattern: one-pass running minimum.
+- Algorithm: keep lowest price seen so far and best profit so far.
+- At each price, profit is `price - minPrice`; update best, then update min.
+- Time: O(n). Space: O(1).
+- Common mistake: sell must happen after buy, so do not just subtract global min from global max if order is wrong.
+
 You are given an array prices where prices[i] is the price of a given stock on
 the ith day.
 

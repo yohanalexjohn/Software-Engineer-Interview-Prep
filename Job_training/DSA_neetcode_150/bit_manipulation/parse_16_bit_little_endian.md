@@ -1,4 +1,13 @@
-# Parse a 16 bit Little Endian Value 
+# Parse a 16 bit Little Endian Value
+
+## Active recall
+
+- Pattern: byte parsing / endianness.
+- Algorithm: little-endian means low byte first.
+- For 16-bit value: `value = low | (high << 8)`.
+- Cast before shifting to avoid narrow-byte surprises.
+- Time: O(1). Space: O(1).
+- Common mistake: reversing byte order; little-endian stores least significant byte first.
 
 
 ```cpp 
@@ -12,4 +21,3 @@ public:
     }
 };
 ```
-

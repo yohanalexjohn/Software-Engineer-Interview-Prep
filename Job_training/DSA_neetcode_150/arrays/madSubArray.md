@@ -17,6 +17,14 @@ At each element is it better to extend the previous subarray
 or start a new subarray from the current position 
 ```
 
+## Active recall
+
+- Pattern: Kadane / best subarray ending here.
+- `currentSum = max(nums[i], currentSum + nums[i])`.
+- `maxSum = max(maxSum, currentSum)`.
+- Initialize from `nums[0]` so all-negative arrays work.
+- Time: O(n). Space: O(1).
+
 ```cpp 
 
 class Solution {
@@ -26,8 +34,9 @@ public:
         int currentSum (nums[0]);
         int maxSum(nums[0]);
 
-        for (int num : nums)
+        for (int i = 1; i < nums.size(); i++)
         {
+            int num = nums[i];
             currentSum = std::max(num, currentSum + num );
             maxSum = std::max(maxSum, currentSum );
         }

@@ -1,4 +1,12 @@
-# Top K Frequent Elements 
+# Top K Frequent Elements
+
+## Active recall
+
+- Pattern: frequency count + top K.
+- Algorithm: count with `unordered_map`, then use bucket sort by frequency or a heap.
+- Bucket sort uses `buckets[freq]` to store values with that frequency, then walks from high frequency down.
+- Time: O(n) with buckets, O(n log k) with heap. Space: O(n).
+- Common mistake: heap should compare frequency, not the raw value.
 
 Given an integer array `nums` and an integer `k`, return _the_ `k` _most frequent elements_. You may return the answer in **any order**.
 

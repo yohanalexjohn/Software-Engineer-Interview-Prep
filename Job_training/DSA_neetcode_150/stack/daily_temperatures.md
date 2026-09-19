@@ -13,6 +13,13 @@ Output:
 [1,1,4,2,1,1,0,0]
 ```
 
+## Active recall
+
+- Pattern: monotonic stack / next greater value.
+- Store indices, not temperatures.
+- When current temperature is warmer than the index on top of the stack, pop it and fill the wait distance.
+- Each index is pushed once and popped once, so the nested `while` is still O(n).
+- Pre-size output with zeros for days that never get a warmer future day.
 
 ```cpp 
 class Solution {
@@ -29,7 +36,7 @@ public:
             {
                if(temperatures[j] > temperatures[i])
                {
-                    output.push_back(j - i);
+                    output[i] = j - i;
                     break;
                }
             }
@@ -51,7 +58,7 @@ public:
         for(int i(0); i < temperatures.size(); i++)
         {
             // Compare against current and previous
-            while(!waiting.empty() && (temperature[i] > temperatures[waiting.top()]))
+            while(!waiting.empty() && (temperatures[i] > temperatures[waiting.top()]))
             {
                 int previous_temp_index = waiting.top();
                 waiting.pop();
@@ -60,10 +67,10 @@ public:
                 output[previous_temp_index] = i - previous_temp_index;
             }
 
-            waiting.push_back(i);
+            waiting.push(i);
         }
 
         return output;
-}
+    }
+};
 ```
-

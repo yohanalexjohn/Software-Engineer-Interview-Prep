@@ -1,5 +1,14 @@
 # Valid Sudoku
 
+## Active recall
+
+- Pattern: duplicate detection across rows, columns, and boxes.
+- Algorithm: keep sets for each row, column, and 3x3 box.
+- Box index/key comes from `(row / 3, col / 3)`.
+- Ignore `'.'` cells.
+- Time: O(81), effectively O(1). Space: O(81).
+- Common mistake: validating rows and columns but forgetting 3x3 boxes.
+
 You are given a  9 x 9 Sudoku board board. A Sudoku board is valid if the
 following rules are followed:
 

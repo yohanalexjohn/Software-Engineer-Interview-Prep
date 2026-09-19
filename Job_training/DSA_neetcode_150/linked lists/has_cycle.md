@@ -2,6 +2,15 @@
 
 Use Rabbit and Hare Algorithm
 
+## Active recall
+
+- Pattern: linked-list cycle detection.
+- Use slow and fast pointers.
+- Slow moves one node; fast moves two nodes.
+- If they meet, there is a cycle.
+- If fast reaches `nullptr`, there is no cycle.
+- Time: O(n). Space: O(1).
+
 ```cpp 
 class Solution {
 public:
@@ -20,7 +29,7 @@ public:
             }
         }
 
-        return false;;
+        return false;
     }
 };
 ```

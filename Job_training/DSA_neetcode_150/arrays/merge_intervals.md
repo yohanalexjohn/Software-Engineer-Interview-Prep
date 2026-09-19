@@ -27,6 +27,15 @@ Output:
 [[1,5]]
 ```
 
+## Active recall
+
+- Pattern: intervals with overlap.
+- Sort by start first.
+- Keep merged intervals in `output`.
+- If current start is `<= output.back()[1]`, merge by extending the end.
+- Otherwise push a new interval.
+- Time: O(n log n) because of sorting.
+
 ```cpp
 class Solution {
 public:
@@ -36,11 +45,12 @@ public:
         // cant compare if not sorted
         std::sort(intervals.begin(), intervals.end());
 
-        std::vector<vector<int>> output.push_back(intervals[0]);
+        std::vector<vector<int>> output;
+        output.push_back(intervals[0]);
 
-        for(int i(1); i < intervals.size(), i++){
+        for(int i(1); i < intervals.size(); i++){
             // Compare last merged interval in the output.
-            if(intervals[i][0] <= ouptput.back()[1]){
+            if(intervals[i][0] <= output.back()[1]){
                 // current interval 0 and the prev here output 1 
                 // wiped out
                 // sorted so output here is smaller and getting expanded
@@ -56,4 +66,3 @@ public:
     }
 };
 ```
-

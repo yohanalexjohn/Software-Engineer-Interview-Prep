@@ -15,6 +15,14 @@ grid = [
 Output = 3
 ```
 
+## Active recall
+
+- Pattern: grid connected components / flood fill.
+- Outer row/column scan only finds a new starting point.
+- When an unvisited `'1'` is found, increment islands and run DFS/BFS to mark the whole island.
+- DFS/BFS explores four directions: up, down, left, right.
+- Common mistake: the outer scan is not BFS; the flood-fill traversal is the DFS/BFS.
+
 ```cpp
 class Solution {
 public:
@@ -24,11 +32,12 @@ public:
         for(int row{0}; row < grid.size(); row++){
             for(int col{0}; col < grid[row].size(); col++){
 
-                if(grid[row][col] == "1"){
+                if(grid[row][col] == '1'){
                     islands++;
                     dfs(grid, row, col); // clear the boundaries
                 }
 
+            }
         }
 
         return islands;

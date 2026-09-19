@@ -15,6 +15,14 @@ target = 3
 Output = -1
 ```
 
+## Active recall
+
+- Pattern: rotated sorted array still has one sorted half.
+- Check `mid` first.
+- If left half is sorted, decide whether target lies inside `[nums[left], nums[mid])`.
+- Otherwise the right half is sorted, decide whether target lies inside `(nums[mid], nums[right]]`.
+- Common mistake: do not return `-1` early before deciding which half can be discarded.
+
 ```cpp 
 class Solution {
 public:
@@ -22,7 +30,7 @@ public:
         int left (0);
         int right (nums.size() -1);
 
-        while (left < right){
+        while (left <= right){
             int middle = left + (right - left)/2;
 
             if (nums[middle] == target){
@@ -37,7 +45,7 @@ public:
                     right = middle - 1;
                 }
                 else{
-                    left = middle + 1
+                    left = middle + 1;
                 }
             }
             // right is sorted
@@ -56,4 +64,3 @@ public:
     }
 };
 ```
-
