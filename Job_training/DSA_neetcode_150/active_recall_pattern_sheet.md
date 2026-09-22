@@ -430,10 +430,10 @@ Periodic task occasionally misses deadline, but average CPU usage looks normal.
 
 - Full note: [rtos](../embedded_questions/rtos.md)
 - Recognition clue: Timing failure is rare/intermittent, so average CPU load is misleading. Think worst-case latency.
-- Core idea: Timestamp expected wake time, actual start time, and completion time. Correlate misses with higher-priority task activity, ISR duration/frequency, mutex wait time/owner, scheduler jitter, and worst-case execution time.
+- Core idea: Timestamp expected wake time, actual start time, and completion time. Correlate misses with higher-priority task activity, ISR duration/frequency, long critical sections/interrupt masking, mutex wait time/owner, queue blocking/high-water marks, scheduler jitter, and worst-case execution time.
 - Hardware proof: use RTOS trace/timestamp logging and GPIO toggles at wake/start/completion to inspect timing on a scope or logic analyser.
-- Distinction: temporary mutex blocking resolves; priority inversion is High waiting on Low while Medium interferes; starvation means ready but not scheduled; deadlock means cyclic wait with no progress.
-- Remedies: shorten critical sections, bound ISR/task work, fix priorities, avoid long blocking calls, and reduce workload if WCET approaches the period.
+- Distinction: READY means able to run; BLOCKED means waiting for time/event/queue/mutex. In a pre-emptive RTOS, a lower-priority task cannot normally keep a higher-priority READY task from running.
+- Remedies: shorten critical sections, bound ISR/task work, fix priorities, avoid long blocking calls, handle queue backpressure, and reduce workload if WCET approaches the period.
 - Time / space: Debug technique, not algorithmic. Tracing/logging/GPIO overhead must be bounded so it does not create the timing bug.
 - Common mistake I made: Saying "CPU usage is normal" rules out software timing issues. It does not; deadlines fail because of worst-case blocking, latency, or execution spikes.
 
@@ -448,6 +448,19 @@ Sample/control loop must run every 1 ms.
 - Shared state: if ISR or another task updates data used by the loop, protect it with atomic access, brief critical sections, or a queue/message. `volatile` alone is not synchronization.
 - Time / space: Design answer, not algorithmic. Main complexity is worst-case execution time and jitter.
 - Common mistake I made: Designing a permanent busy polling loop. The task should block until its next release and then do bounded work.
+
+
+### Embedded: RTOS task architecture and primitives
+
+Problems:
+Periodic sensing, processing pipeline, UART packets, watchdog, ISR handoff.
+
+- Full note: [rtos](../embedded_questions/rtos.md)
+- Recognition clue: Multiple tasks with different deadlines, queues filling, ISR bytes, watchdog supervision, or several system-state flags.
+- Core idea: Keep deadline-critical acquisition short and periodic (`vTaskDelayUntil` style), process from queues, let UART/comms own TX/RX parsing in task context, and use a supervisor task to refresh the watchdog only after all critical tasks report progress.
+- Primitive choice: queue = fixed-size data transfer; mutex = shared ownership; notification = lightweight one-to-one wake; event group = multiple boolean bits with ANY/ALL wait; stream buffer = UART byte stream; message buffer = variable-length complete records.
+- Backpressure: bigger queues absorb bursts, not sustained producer > consumer mismatch. If data cannot be dropped, consumer throughput must catch up.
+- Common mistake I made: Adding a mutex around an RTOS queue, or kicking the watchdog from one healthy task while another critical task is dead.
 
 ### Embedded: UART / SPI / I2C debugging
 
