@@ -405,12 +405,27 @@ Vector note:
 - Vector copy copies all elements, so it is O(n).
 - Vector move usually transfers the internal buffer pointer, size, and capacity,
   so it is usually O(1).
+- Mark move constructors/assignments `noexcept` when they cannot throw.
+  Containers such as `std::vector` prefer `noexcept` moves during reallocation;
+  otherwise they may copy elements to preserve strong exception safety.
+
+Recall prompt:
+
+- Does `std::move(x)` move anything by itself?
+- After a move, what must still be true about the source object?
+- Why does `vector` care whether a move constructor is `noexcept`?
 
 ## Active recall: references, pointers, and const
 
 - `const T&`: no copy, read-only view. Good for large read-only parameters.
 - `T value`: local copy for lvalues, can move from rvalues. Good when the
   function needs its own modifiable copy or will store it.
+- Lvalue: named object or expression with a stable location, such as `x`.
+- Rvalue: temporary or expiring value, such as `42`, `makeBuffer()`, or
+  `std::move(x)`.
+- `T&`: lvalue reference, binds to lvalues.
+- `T&&`: rvalue reference, binds to rvalues and is commonly used for move
+  construction/assignment.
 - Reference: alias to an existing object, must be initialized, cannot be null,
   cannot be reseated.
 - Pointer: stores an address, can be null, can be reseated.
@@ -432,6 +447,71 @@ Common mistake:
 
 - Do not say `volatile` is a locking or thread-synchronisation tool.
 
+## Active recall: lock_guard vs unique_lock
+
+- `std::lock_guard<std::mutex>`:
+  - simplest scoped mutex lock
+  - locks on construction
+  - unlocks on destruction
+  - cannot be manually unlocked/relocked
+- `std::unique_lock<std::mutex>`:
+  - scoped lock with more control
+  - can unlock/relock
+  - movable
+  - required by `std::condition_variable::wait`
+
+Interview answer:
+
+> Use `lock_guard` for simple scope-based locking. Use `unique_lock` when the
+> lock needs to be unlocked/relocked, moved, deferred, or passed to a condition
+> variable wait.
+
+## Active recall: condition_variable
+
+Use a condition variable when one thread should sleep until another thread
+signals that shared state may have changed.
+
+Pattern:
+
+```cpp
+std::mutex mutex;
+std::condition_variable cv;
+bool ready = false;
+
+// waiting thread
+std::unique_lock<std::mutex> lock(mutex);
+cv.wait(lock, [&] {
+    return ready;
+});
+
+// notifying thread
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    ready = true;
+}
+cv.notify_one();
+```
+
+Why the predicate matters:
+
+- Wake-ups can be spurious.
+- A notification only means "the condition may have changed."
+- The waiting thread must re-check the actual shared condition before
+  continuing.
+
+Why `wait()` takes `unique_lock`:
+
+- It unlocks the mutex while the thread sleeps.
+- It re-locks the mutex when the thread wakes.
+- It checks the predicate while protected by the mutex.
+
+Interview answer:
+
+> `std::condition_variable` lets a thread sleep until another thread signals
+> that a shared condition may have changed. It avoids polling. I wait with a
+> predicate because wake-ups can be spurious and the thread should only proceed
+> when the real condition is true.
+
 ## Active recall: unordered_map count vs find
 
 - `map.count(key)`: existence check. For `unordered_map`, returns `0` or `1`.
@@ -439,4 +519,3 @@ Common mistake:
   another lookup.
 - Avoid `count()` followed by `operator[]` when reading, because `operator[]`
   can insert a default value.
-

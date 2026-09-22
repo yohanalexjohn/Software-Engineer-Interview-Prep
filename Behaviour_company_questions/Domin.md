@@ -690,12 +690,21 @@ void HighPriorityTask(void) {
 
 ##### Stack overflow, how to detect
 
-- Add values above and below the stack, bootloader checks the stack
-periodically
-- If anything overwritten, stack overflow, stop the system?
-- To clear a stack, turn it off and on
-- To prevent, don't pass structures, might have big shit inside (don't pass by
-value, pass by reference)
+- Detailed note: [memory_corruption_diagnostics](../Job_training/embedded_questions/memory_corruption_diagnostics.md)
+- Fill unused stack with a known pattern at startup, then check how much of the
+pattern remains. This gives stack high-water mark.
+- Add stack canaries / guard words near the stack boundary and check if they
+were overwritten.
+- Use RTOS stack high-water-mark APIs if available.
+- On HardFault/reset, inspect fault registers plus stacked PC/LR/SP to see what
+code was running and which stack pointer was active.
+- Check the linker map and linker-defined stack region. Do not assume stack
+direction or exact address layout.
+- If available, use an MPU guard region so stack overflow faults immediately.
+- Watchdog reset can recover the device into a safe state, but it is not the
+root-cause fix. Still need to find why the stack overflowed.
+- To prevent: avoid large stack objects, recursion, and passing large structs by
+value; prefer static allocation or pass by pointer/reference when appropriate.
 
 ##### Mutex vs Semaphore
 
@@ -724,4 +733,3 @@ are part of same program. Useful for encapsulating data within a file, prevent
 naming conflicts Static function is visible only within the file. Useful for
 creating helper/private functions that should not be exposed to other files,
 reduce name collisions
-

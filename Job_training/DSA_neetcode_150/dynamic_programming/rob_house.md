@@ -8,6 +8,11 @@
 - Time: O(n). Space: O(1).
 - Common mistake: adjacent houses cannot both be chosen, so greedy by largest value fails.
 
+ dp[i] = max(
+    dp[i - 1],        // skip current house
+    dp[i - 2] + nums[i]   // rob current house
+)
+
 You’re given an array nums where nums[i] is the amount of money in house i.
 You cannot rob two adjacent houses.
 Return the maximum amount you can rob.

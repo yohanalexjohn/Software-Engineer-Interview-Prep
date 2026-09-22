@@ -33,3 +33,4 @@ stitches the results back together) >> bubble sort
 1. [[arrays]]
 2. [[linked_list]]
 3. [[stack]]
+4. [[dynamic_programming]]

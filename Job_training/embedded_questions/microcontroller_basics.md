@@ -73,6 +73,45 @@ for high - speed point to point peripherals, at the cost of more wires and chip-
 
 I²C is useful when multiple lower-speed peripherals need to share two wires.
 
+### Debugging UART / SPI / I2C
+
+Interview answer:
+
+I would debug from the physical layer upward: power, ground, pins, clocks,
+alternate functions, then protocol settings, then driver logic. For serial
+buses, I would use a logic analyser or scope early, because the waveform can
+quickly show whether the problem is wiring, timing, or software.
+
+UART checklist:
+
+- Baud rate, parity, stop bits, word length.
+- TX/RX crossed correctly and common ground present.
+- Framing/overrun errors.
+- Ring buffer overflow or missed interrupt.
+
+SPI checklist:
+
+- CPOL/CPHA mode.
+- Chip-select timing and polarity.
+- MISO/MOSI wiring.
+- Clock speed within device limits.
+- Bit order and command/address phase.
+- Dummy bytes/reads if the device protocol needs them.
+
+I2C checklist:
+
+- Pull-up resistors present and sensible.
+- Correct 7-bit address; avoid shifting it twice.
+- ACK/NACK behaviour.
+- Bus speed.
+- SDA/SCL stuck low.
+- Device power/reset state.
+
+Common mistake:
+
+- Do not only stare at code. For bus issues, prove what is happening on the
+  pins.
+
 ### CAN Controller Area Network
 
 1. Enable the CAN peripheral clock
@@ -109,6 +148,56 @@ Useful for debugging with JTAG
 2. Software: Occurs when execution of a dedicated instruction
 Useful for debugging with JTAG when not enough hardware pins
 
+### ISR and main-loop shared state
+
+Interview answer:
+
+If an ISR and main loop share data, I would keep the ISR short and make the
+shared access explicit. A flag written by an ISR may need `volatile` so the
+compiler re-reads it, but `volatile` does not make compound operations atomic.
+For counters, buffers, or multi-byte values, I would use atomic operations,
+temporarily disable interrupts around a very small critical section, or pass
+data through a queue/ring buffer.
+
+Checklist:
+
+- Is the shared object one byte or multi-byte on this MCU?
+- Can the ISR update it while main is halfway through reading it?
+- Is the operation compound, like read-modify-write?
+- Does the buffer need head/tail updates to be atomic?
+- Would a queue/semaphore be clearer than a shared flag?
+
+Common mistake:
+
+- `volatile` prevents some compiler caching/reordering assumptions. It does
+  not protect against races or make `counter++` atomic.
+
+### Volatile hardware register access
+
+Example:
+
+```cpp
+#define STATUS_REG (*(volatile uint32_t*)0x40001000)
+```
+
+Interview answer:
+
+`volatile` is appropriate for a memory-mapped hardware register because the
+value can change outside normal program flow. Each access should result in a
+real register access; the compiler must not assume the value stays the same or
+optimize repeated reads away.
+
+Bad pattern:
+
+```cpp
+uint32_t cached = STATUS_REG;
+```
+
+Then repeatedly using only `cached` later may be wrong, because it reads the
+hardware once and then keeps using a stale snapshot. Copying into a local
+variable is fine when I intentionally want one stable snapshot for one
+calculation; it is wrong when I need fresh hardware state.
+
 ### What happens when MCU startsup and main()
 
 1. Reset vector fires - Vector table reset handlers address loads on the pc on power up 
@@ -130,6 +219,39 @@ The runtime also performs run time static/global constructor initialisation for 
 Once this is done main() is called. 
 
 So therefore by the time main runs all the static variables have been inisliased correctly. 
+
+Interview debugging clue:
+
+If a static local/global that should have a non-zero initializer prints as `0`,
+suspect startup before normal application logic. Check the linker script,
+`.data` load address, `.data` copy loop, `.bss` zeroing boundaries, and whether
+startup code is using the right symbols.
+
+### Testing firmware without hardware
+
+Interview answer:
+
+You cannot prove every hardware behaviour without hardware, but you can still
+test a lot. I would separate hardware access from decision logic, then run host
+unit tests for parsers, state machines, algorithms, alarms, safety checks, and
+protocol framing. Drivers can be wrapped behind interfaces and replaced with
+mocks/fakes. When hardware arrives, I would add integration tests and
+hardware-in-the-loop tests for timing, electrical behaviour, and real
+peripheral interaction.
+
+Good candidates for host tests:
+
+- packet parsing and length checks
+- CRC/checksum handling
+- state-machine transitions
+- retry/error handling
+- control thresholds and alarm logic
+- circular buffer edge cases
+
+Common mistake:
+
+- Do not say "we cannot test until hardware exists." Say what can be tested on
+  host and what still needs real hardware.
 
 ### What is a vector table 
 The vector table is located at a defined memory address, commonly the beginning of the boot memory region. 

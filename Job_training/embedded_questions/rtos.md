@@ -37,22 +37,130 @@ task can pre-empt a lower priory running task.
 
 ## Synchronisation and Communication
 
-Semaphores and mutexes are inter-task Synchronisation and signaling mechanisms
+Semaphores and mutexes are inter-task synchronisation and signaling mechanisms.
 
-1. Binary Semaphore's - 1 & 0
-2. Counting Semaphore - Each time task is called count is reduced or increased once hit threshold yield
-3. Mutex - wont yield until key is returned or task is completed
+1. Binary semaphore - 0 or 1 signal, often used to wake a task from an ISR or event.
+2. Counting semaphore - count represents available events/resources; tasks take/decrement and give/increment.
+3. Mutex - ownership lock for shared data/resources; only the owner should unlock it, and RTOS mutexes may support priority inheritance.
 
-### Disadvantage of Binary Semaphores
+## Scheduling and locking failure modes
 
-Lower priority tasks might be holding away the higher priority tasks as it has not released the count.
+### Priority inversion
 
-Eg: Medium task running doesn't allow the task with the semaphore to run and the higher priority task H cant run its UART task as 
-Low priority task has access due to binary semaphore
+- Definition: high-priority task is blocked by a lower-priority task holding a needed resource.
+- Classic example: Low holds a UART mutex. High wakes and needs the UART, but blocks on Low. Medium does not need the UART, but keeps running and prevents Low from releasing the mutex, so High is indirectly delayed by Medium.
+- Mitigation: use mutexes with priority inheritance, keep critical sections short, avoid sleeping/logging/slow I/O while holding locks, and avoid unnecessary shared mutexes on hard real-time paths.
 
-Mutexes are better as the lock boosts the priority of the task. Priority falls back to normal after task is finished. 
-Eg: fix problem above by boosting low priority to higher priority therefore L is run and released lock to Higher priority after which medium 
-task is run.
+### Priority inheritance
+
+- Definition: temporarily boost the resource-owning lower-priority task so it can finish the critical section and release the resource needed by the higher-priority task.
+- Classic example: Low owns a UART mutex and High blocks on it. The RTOS temporarily raises Low near High's priority, Low runs, releases the mutex, then drops back to its normal priority.
+- Mitigation note: priority inheritance reduces priority inversion, but it is not a fix for bad lock design. Still keep lock scope small and bounded.
+
+### Starvation
+
+- Definition: ready lower-priority task gets little/no CPU time because higher-priority tasks keep running.
+- Classic example: High runs a `while (true)` polling loop and never blocks, so a low-priority logging task remains ready but rarely or never runs.
+- Mitigation: make high-priority tasks block or sleep when idle, keep high-priority work bounded, choose sensible priorities, use time slicing for equal-priority tasks where appropriate, and avoid busy loops.
+
+### Deadlock
+
+- Definition: cyclic resource wait where tasks cannot progress.
+- Classic example: Task A holds Mutex 1 and waits for Mutex 2, while Task B holds Mutex 2 and waits for Mutex 1.
+- Mitigation: use consistent lock ordering, scoped locking/RAII where available, timeouts where appropriate, and design to reduce shared locks.
+
+Interview distinction:
+
+- Priority inversion: High is blocked by Low holding a resource.
+- Priority inheritance: RTOS temporarily boosts Low so it can release the resource.
+- Starvation: Low is ready, but higher-priority work keeps taking the CPU.
+- Deadlock: tasks are stuck waiting on resources held by each other.
+
+## Diagnosing occasional missed deadlines
+
+Interview answer:
+
+If average CPU usage looks normal but a periodic RTOS task occasionally misses
+its deadline, investigate worst-case latency, not average load. I would
+timestamp the task's expected wake time, actual start time, and completion time,
+then correlate each miss with what else was running.
+
+Checklist:
+
+- Expected vs actual timing: log expected wake time, actual start time,
+  completion time, and deadline miss amount.
+- Execution-time spike: measure worst-case execution time, not just average
+  execution time. A rare branch, retry loop, cache miss, peripheral timeout, or
+  logging path can break the period.
+- Higher-priority interference: trace context switches and check whether a
+  higher-priority task runs too long near the missed deadline.
+- ISR latency: measure interrupt duration and frequency. A long ISR or burst of
+  interrupts can delay task scheduling even when average CPU usage is low.
+- Mutex blocking: log how long the task waits, which mutex it waits on, and
+  which task owns it.
+- Scheduler jitter: compare expected wake time against actual run time across
+  many cycles.
+- Hardware proof: use RTOS trace/timestamp logging, and toggle GPIO at task
+  wake/start/completion so the timing can be checked on a scope or logic
+  analyser.
+
+Important distinction:
+
+- Temporary mutex blocking: task waits briefly because another task owns the
+  lock, then continues.
+- Priority inversion: high-priority task waits on a lock held by a lower-priority
+  task while medium-priority work prevents the lock owner from running.
+- Starvation: task is ready, but other work repeatedly prevents it from getting
+  CPU time.
+- Deadlock: tasks are stuck forever in a cyclic resource wait.
+
+Likely fixes:
+
+- Shorten critical sections and avoid slow I/O, logging, sleeps, or long blocking
+  calls while holding a mutex.
+- Use priority inheritance where mutex blocking can affect a high-priority task.
+- Bound ISR work; keep ISRs short and move heavier work into a task/work queue.
+- Bound task work; split long processing or reduce per-period workload.
+- Fix priority assignment so deadline-critical work can pre-empt less important
+  work.
+- If worst-case execution time approaches the task period, reduce the workload,
+  increase the period, optimise the path, or move work out of the hard real-time
+  path.
+
+## Designing a 1 ms periodic task
+
+Interview answer:
+
+For a 1 ms periodic task, I would first decide what work genuinely belongs in
+the hard periodic path. The task should do only bounded time-critical work, such
+as reading a sample, updating a control output, or moving data into a queue.
+Slow work such as logging, formatting, communication retries, flash writes, or
+large calculations should run in a lower-priority task or worker.
+
+Design checklist:
+
+- Use a hardware timer interrupt, RTOS timer, or absolute-delay API so the
+  release time is based on the intended schedule, not on "sleep 1 ms after work
+  finishes."
+- Keep ISR work tiny: timestamp, set a flag, give a semaphore, or submit work.
+- Keep the periodic task short, bounded, and measurable.
+- Measure worst-case execution time, not just average execution time.
+- Give the task a priority that matches its deadline.
+- Avoid mutexes or blocking calls in the hard 1 ms path where possible.
+- If shared data crosses ISR/task boundaries, use atomics, queues, or short
+  critical sections.
+- Prove timing with trace logs or GPIO toggles on a scope/logic analyser.
+
+Common mistake:
+
+- A busy `while (true)` polling loop wastes CPU and can starve lower-priority
+  work. A periodic task should normally block until the next release.
+
+Recall prompt:
+
+- What must happen every 1 ms?
+- What can be delayed safely?
+- What is the worst-case time, including blocking and ISR interference?
 
 ## Real-time vs non-real-time operating systems
 

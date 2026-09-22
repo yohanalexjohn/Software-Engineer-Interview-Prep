@@ -149,3 +149,6 @@ public:
     }
 };
 ```
+
+O\[n] on average time complexity 
+O\[n] on space complexity 
