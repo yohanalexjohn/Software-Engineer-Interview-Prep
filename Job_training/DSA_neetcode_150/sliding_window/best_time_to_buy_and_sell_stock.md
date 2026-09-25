@@ -5,8 +5,15 @@
 - Pattern: one-pass running minimum.
 - Algorithm: keep lowest price seen so far and best profit so far.
 - At each price, profit is `price - minPrice`; update best, then update min.
+- Two-pointer framing: `right` always advances through possible sell days.
+  `left` only jumps to `right` when `right` finds a new lower buy price.
 - Time: O(n). Space: O(1).
 - Common mistake: sell must happen after buy, so do not just subtract global min from global max if order is wrong.
+
+Recall prompt:
+
+- When does `left` move?
+- Why does `right` never move backwards?
 
 You are given an array prices where prices[i] is the price of a given stock on
 the ith day.
@@ -61,13 +68,13 @@ print(solution([7, 6, 4, 3, 2, 1]))
 class Solution {
 public:
     int maxProfit(vector<int>& prices) {
-        int output(0);
+        int output = 0;
 
-        for(int buy(0); buy < princes.size(); buy++)
+        for (int buy = 0; buy < prices.size(); ++buy)
         {
-            for (int sell(buy + 1); sell < prices.size(), ++sell )
+            for (int sell = buy + 1; sell < prices.size(); ++sell)
             {
-                if(prices[sell] > prices[buy])
+                if (prices[sell] > prices[buy])
                 {
                    int profit = prices[sell] - prices[buy];
                    output = std::max(output, profit);
@@ -101,5 +108,4 @@ public:
         return maxProfit;
     }
 };
-```
 ```

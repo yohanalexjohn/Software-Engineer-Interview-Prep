@@ -106,6 +106,13 @@ Max Average Subarray, Longest Substring Without Repeating Characters, Longest Su
 - Recognition clue: Contiguous substring/subarray, grow and shrink a range, longest/shortest valid window.
 - Fixed-size window: window length is given, for example size `k`. Add the new right value, remove the value leaving on the left, update best after the first full window.
 - Variable-size window: window length is discovered. Move `right` to include new values. Move `left` only when the window breaks the rule. Track best answer as the window changes.
+- Minimum Size Subarray Sum: positive integers. Expand `right`; while
+  `sum >= target`, record `minLength`, subtract `nums[left]`, and move `left`.
+  Start `minLength = nums.size() + 1`; return `0` if unchanged.
+- Maximum requests in a time window: sorted timestamps. Keep
+  `requests[right] - requests[left] <= window`; shrink while too wide; answer
+  is `right - left + 1`. This counts an observed maximum, not a live
+  `maxRequests` rate limiter.
 - Set vs frequency map: For "no duplicates", an `unordered_set` is enough: erase from left until duplicate is gone. For "at most K distinct" or "counts matter", use an `unordered_map<char,int>` and shrink when the number of active keys breaks the rule.
 - Time / space: O(n), space depends on map/set, usually O(k).
 - Common mistake I made: Moving `left` too far or not far enough. Window problems are about a contiguous range, not choosing any elements. If negative numbers are allowed and the task asks for exact sum count, normal sliding window may fail; think prefix sum + hashmap.
@@ -116,7 +123,7 @@ Problems:
 Best Time to Buy and Sell Stock, Maximum Subarray, Maximum Product Subarray.
 
 - Recognition clue: Best answer ending here, one pass, contiguous subarray, decide continue vs restart.
-- Core idea: Keep enough state for the best answer ending at current index and a global result. For max product, track both min and max ending here because negatives can flip.
+- Core idea: Keep enough state for the best answer ending at current index and a global result. For stock, `right` always advances and `left` only jumps when `right` finds a new lower price. For max product, track both min and max ending here because negatives can flip.
 - Time / space: O(n), O(1).
 - Common mistake I made: For Maximum Product Subarray, do not update `minProduct` then use the changed value for `maxProduct`. Save `oldMin` and `oldMax` first. Compare `current`, `oldMax * current`, and `oldMin * current` so the subarray can restart. Initialise from `nums[0]`, not `0`, because all values may be negative.
 
@@ -344,7 +351,7 @@ Binary Search, Search Insert Position, Find Minimum in Rotated Sorted Array, Sea
 - Core idea: Use `left`, `right`, `mid`. Compare against sorted side or boundary to decide which half still contains the answer. Rotated sorted arrays still have structure.
 - Time / space: O(log n), O(1).
 - Pattern pairing:
-  - Search Insert Position: find the first index where `nums[index] >= target`. Use `left = 0`, `right = nums.size()` as an exclusive boundary, and return `left`.
+  - Search Insert Position: find the first index where `nums[index] >= target`. Common inclusive version: `left = 0`, `right = nums.size() - 1`, `while (left <= right)`, discard `mid`, and return `left` when not found. Exclusive lower-bound version uses `right = nums.size()` and `left < right`.
   - Find Minimum in Rotated Sorted Array: no target. Compare `nums[mid]` with `nums[right]`. If `nums[mid] > nums[right]`, minimum is right side, so `left = mid + 1`. Else minimum can be `mid`, so `right = mid`.
   - Search in Rotated Sorted Array: target exists or not. First identify which half is sorted. If target is inside the sorted half, keep that half. Otherwise discard it.
   - Search Range: run two biased binary searches. First occurrence moves `right = mid - 1` after finding target. Last occurrence moves `left = mid + 1` after finding target.
@@ -356,8 +363,8 @@ Problems:
 Kth Largest Element, Top K Frequent Elements.
 
 - Recognition clue: Need top K, kth largest/smallest, repeatedly remove best/worst.
-- Core idea: Use `priority_queue`. For top K, count first, then keep a heap of candidates. Min-heap of size K is useful for kth largest/top K.
-- Time / space: Usually O(n log k) or O(n log n), space O(n) or O(k).
+- Core idea: Use `priority_queue` or bucket sort. For Top K Frequent, build a frequency map, put each value into `bucket[count]`, then traverse buckets from high frequency down. Min-heap of size K is useful for kth largest/top K.
+- Time / space: Top K Frequent bucket sort is O(n), O(n). Heap versions are usually O(n log k) or O(n log n), space O(n) or O(k).
 - Common mistake I made: For Kth Largest, keep a min-heap of size `k`: push each number, and if size exceeds `k`, pop the smallest. The heap top is the kth largest. Decide if popping removes useful or unwanted candidates.
 
 ### Advanced ordering / counting
@@ -376,7 +383,7 @@ Problems:
 Extract fields from register/byte, masks and shifts.
 
 - Recognition clue: Need specific bits from a byte/register.
-- Core idea: Shift right, then mask. Formula for `width` bits starting at bit `start`: `field = (value >> start) & ((1u << width) - 1)`. Keep constants readable.
+- Core idea: Single bit uses direct mask. Multi-bit field shifts right, then masks. Formula for `width` bits starting at bit `start`: `field = (value >> start) & ((1u << width) - 1)`. Status byte example: bit0 `POWER_ON`, bit1 `ERROR`, bits2-4 `MODE`, bit5 `CONNECTED`; `0b00110101` gives power true, error false, mode `5`, connected true.
 - Time / space: O(1), O(1).
 - Common mistake I made: Off-by-one bit positions. Remember whether bit 0 is the least significant bit.
 
@@ -386,7 +393,7 @@ Problems:
 Parse bytes into 16-bit/32-bit values.
 
 - Recognition clue: Bytes arrive in little-endian or big-endian order.
-- Core idea: For little-endian 16-bit: low byte first, high byte shifted by 8. Cast before shifting if needed.
+- Core idea: Place each byte into the correct significance position. For little-endian 16-bit: low byte first, high byte shifted by 8. For 32-bit big-endian `12 34 56 78`, result is `0x12345678`; little-endian byte order for that value is `78 56 34 12`. Cast to `uint32_t` before wide shifts.
 - Time / space: O(1), O(1).
 - Common mistake I made: Mixing byte order. Little-endian means `value = low | (high << 8)`.
 
@@ -396,7 +403,7 @@ Problems:
 Fixed-size queue, producer/consumer, UART/log samples.
 
 - Recognition clue: Need fixed-size queue behaviour with wraparound.
-- Core idea: Use head/tail indices and wrap with modulo. Decide full/empty rule clearly: either keep one slot empty, so full is `(head + 1) % capacity == tail`, or track `count`, so empty is `count == 0` and full is `count == capacity`.
+- Core idea: Use head/tail indices and wrap with modulo. Reserved-slot approach: `head` is next write, `tail` is next read, empty is `head == tail`, full is `(head + 1) % capacity == tail`, usable capacity is `N - 1`. Alternative: track `count`, so empty is `count == 0` and full is `count == capacity`.
 - Time / space: Push/pop O(1), space O(n) for buffer.
 - Common mistake I made: Confusing full and empty when `head == tail`. Keep one slot empty or track count.
 
@@ -406,7 +413,7 @@ Problems:
 Frames, packets, commands, sensor data.
 
 - Recognition clue: Need parse structured bytes safely.
-- Core idea: Check length first, validate header/checksum/type, then extract fields. Avoid reading past buffer.
+- Core idea: Check length first, validate header/checksum/type, then extract fields. For `HEADER | LENGTH | PAYLOAD | CHECKSUM`, check minimum size, header `0xAA`, payload length `0..8`, exact packet size, checksum over payload, zero-length payload, extra bytes, and truncated bytes. Full-vector validation can be direct; streaming UART parsing benefits from persistent `HEADER -> LENGTH -> PAYLOAD -> CHECKSUM` state.
 - Time / space: O(n) over packet length, O(1) extra usually.
 - Common mistake I made: Parsing before checking length. Be explicit about signed/unsigned and byte order.
 
@@ -445,6 +452,7 @@ Sample/control loop must run every 1 ms.
 - Full note: [rtos](../embedded_questions/rtos.md)
 - Recognition clue: Periodic deadline, deterministic timing, sensor/control loop, medical/embedded timing guarantee.
 - Core idea: Use a hardware timer or RTOS periodic delay based on absolute time. Keep the 1 ms task short, bounded, and high enough priority. Move logging, formatting, I/O retries, and slow communication into lower-priority work.
+- Timing detail: prefer `vTaskDelayUntil`/absolute wake timing over `vTaskDelay`, avoid blocking I/O, long mutexes, dynamic allocation, and heavy logging, and verify period/WCET/jitter with GPIO plus scope/logic analyser.
 - Shared state: if ISR or another task updates data used by the loop, protect it with atomic access, brief critical sections, or a queue/message. `volatile` alone is not synchronization.
 - Time / space: Design answer, not algorithmic. Main complexity is worst-case execution time and jitter.
 - Common mistake I made: Designing a permanent busy polling loop. The task should block until its next release and then do bounded work.
@@ -458,8 +466,11 @@ Periodic sensing, processing pipeline, UART packets, watchdog, ISR handoff.
 - Full note: [rtos](../embedded_questions/rtos.md)
 - Recognition clue: Multiple tasks with different deadlines, queues filling, ISR bytes, watchdog supervision, or several system-state flags.
 - Core idea: Keep deadline-critical acquisition short and periodic (`vTaskDelayUntil` style), process from queues, let UART/comms own TX/RX parsing in task context, and use a supervisor task to refresh the watchdog only after all critical tasks report progress.
-- Primitive choice: queue = fixed-size data transfer; mutex = shared ownership; notification = lightweight one-to-one wake; event group = multiple boolean bits with ANY/ALL wait; stream buffer = UART byte stream; message buffer = variable-length complete records.
-- Backpressure: bigger queues absorb bursts, not sustained producer > consumer mismatch. If data cannot be dropped, consumer throughput must catch up.
+- Primitive choice: queue = payload/descriptor transfer; mutex = shared ownership; binary semaphore = event signal/no ownership; counting semaphore = N events/resources; notification = lightweight one-to-one wake; event group = multiple boolean bits with ANY/ALL wait; stream buffer = UART byte stream; message buffer = variable-length complete records.
+- Backpressure: bigger queues absorb bursts, not sustained producer > consumer mismatch. If all buffers are busy, the producer should block/drop by explicit policy; do not overwrite in-use data.
+- Buffer handles: pass pointer/handle + length + timestamp between tasks, not large image bytes. Use fixed buffer pool + free-buffer queue; after queue send, producer must not reuse the buffer until returned.
+- SPI ownership: separate chip selects do not arbitrate the shared controller. Prefer a dedicated SPI-owner task with request queue, DMA if useful, and requester notification; otherwise mutex the whole transaction.
+- Queue vs notification prompt: queue carries payload such as `SensorSample`; notification wakes one known task when data is already in a buffer.
 - Common mistake I made: Adding a mutex around an RTOS queue, or kicking the watchdog from one healthy task while another critical task is dead.
 
 ### Embedded: UART / SPI / I2C debugging
@@ -501,6 +512,7 @@ Interrupt updates a flag/counter/buffer that main loop or task reads.
 
 - Recognition clue: ISR and main/task touch the same variable, intermittent missed events, corrupted counter, flag sometimes not seen.
 - Core idea: Keep ISR short. Use `volatile` only so memory-mapped/ISR-updated objects are re-read, but use atomic operations, interrupt masking, critical sections, or queues for atomicity and ordering. For multi-byte values on small MCUs, a read/write may not be atomic.
+- Counter detail: a 32-bit aligned access may be naturally atomic on some MCUs, but `volatile` does not guarantee atomicity. Overflow/wraparound is separate from concurrency.
 - Common mistake I made: Treating `volatile` as enough for thread safety. It prevents some compiler caching; it does not make compound operations atomic.
 
 ### C++ ownership
@@ -517,6 +529,8 @@ Problems:
 - Copy vs move constructor:
   - Copy constructor creates a separate object from an lvalue. For real ownership it must deep-copy or be deleted.
   - Move constructor takes resources from an rvalue. It transfers handles/pointers and leaves the source valid but unspecified/empty.
+  - `std::move` is a cast to an rvalue/xvalue. It does not move by itself and may still copy if no suitable move operation exists.
+  - `noexcept` move constructors help containers such as `std::vector` prefer moving during reallocation while preserving exception guarantees.
 - If a class owns `uint8_t* data`, the compiler-generated copy constructor does a shallow copy of the pointer.
 - That means `Buffer b = a;` makes two `Buffer` objects point at the same heap allocation.
 - No second 128-byte heap allocation is made by the copy.
@@ -597,17 +611,17 @@ Pointer constness, references vs pointers, `volatile` vs `std::atomic`.
   - Reference: alias to an existing object, must be initialized, cannot be reseated, usually use when null is not valid.
   - Pointer: stores an address, can be null, can be reseated, use when optional/reassignable.
   - `volatile`: tells compiler the value may change outside normal program flow, useful for memory-mapped registers, but not thread synchronization.
-  - `std::atomic`: gives thread-safe atomic operations and memory-order guarantees. Use for shared data between threads.
+  - `std::atomic`: gives thread-safe atomic operations and memory-order guarantees. Use for shared data between threads. It does not necessarily lock memory; implementation depends on type/platform.
 - Time / space: O(1), O(1).
 - Common mistake I made: Reading declarations from the wrong side. Read around the `*`: `const int*` protects the value, `int* const` protects the pointer. Do not say `volatile` makes code thread-safe.
 
 ### C++ locks and condition variables
 
 Problems:
-`lock_guard`, `unique_lock`, `condition_variable`, waking a worker thread.
+`lock_guard`, `unique_lock`, `scoped_lock`, `condition_variable`, waking a worker thread.
 
 - Recognition clue: Shared condition changes, one thread should sleep until work/data is ready, avoid polling.
-- Core idea: `lock_guard` is simple scoped locking. `unique_lock` is movable and can unlock/relock, so it is used with `condition_variable::wait`.
+- Core idea: `lock_guard` is simple scoped locking. `unique_lock` is movable and can unlock/relock, so it is used with `condition_variable::wait`. `scoped_lock` can acquire multiple mutexes together using a deadlock-avoiding algorithm.
 - Condition variable pattern:
   - protect shared state with a mutex.
   - waiting thread calls `cv.wait(lock, predicate)`.

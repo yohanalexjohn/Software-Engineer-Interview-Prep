@@ -399,6 +399,10 @@ Common mistake:
   or unspecified.
 - `std::move` does not move by itself; it allows move construction or move
   assignment to run.
+- If no suitable move constructor/assignment exists, the operation may still
+  copy. `std::move` is only a cast to an rvalue/xvalue.
+- Moving transfers ownership/resources where the type implements that; it does
+  not automatically free memory.
 
 Vector note:
 
@@ -442,6 +446,9 @@ Pointer constness:
   memory-mapped register. It does not make threaded code safe.
 - `std::atomic`: thread-safe atomic operations with memory-order guarantees.
   Use for shared data between threads.
+- `std::atomic` does not necessarily mean "lock the whole memory region"; the
+  implementation may use CPU atomic instructions or a lock internally depending
+  on the type/platform.
 
 Common mistake:
 
@@ -465,6 +472,18 @@ Interview answer:
 > Use `lock_guard` for simple scope-based locking. Use `unique_lock` when the
 > lock needs to be unlocked/relocked, moved, deferred, or passed to a condition
 > variable wait.
+
+## Active recall: scoped_lock for multiple mutexes
+
+- `std::scoped_lock` can acquire multiple mutexes together.
+- It uses a deadlock-avoiding locking algorithm for the group of mutexes.
+- Good fit when one operation must protect two shared objects at once.
+- Still keep the critical section short and use a consistent lock strategy.
+
+Recall prompt:
+
+- Am I locking more than one mutex?
+- Can I acquire them together instead of manually choosing an order?
 
 ## Active recall: condition_variable
 

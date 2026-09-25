@@ -1,5 +1,20 @@
 # Shortest Contiguous Sub array
 
+## Active recall
+
+- Pattern: variable-size sliding window over positive integers.
+- Algorithm: expand `right`, add to `currentSum`, then while
+  `currentSum >= target`, record the shortest length and shrink from `left`.
+- Sentinel: initialise `minLength = nums.size() + 1`; return `0` if unchanged.
+- Time: O(n). Space: O(1).
+- Common mistake: this relies on positive values. With negatives, shrinking
+  no longer has monotonic behaviour.
+
+Recall prompt:
+
+- Why can I shrink while the sum is still valid?
+- What does the sentinel prove at the end?
+
 You’re given an array of integers nums.
 Return the length of the shortest contiguous subarray whose sum is at least target.
 If none exists, return 0.

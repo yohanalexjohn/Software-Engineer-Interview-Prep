@@ -6,9 +6,16 @@
 - Goal: return the first index where `nums[index] >= target`.
 - Use `right = nums.size()` as an exclusive boundary so insertion at the end can
   return `nums.size()`.
+- Inclusive variant: `left = 0`, `right = nums.size() - 1`,
+  `while (left <= right)`, discard `mid`, and return `left` when not found.
 - Time: O(log n). Space: O(1).
-- Common mistake: using `right = nums.size() - 1` and `while (left < right)` can
-  miss the insert-at-end case.
+- Common mistake: mixing inclusive and exclusive boundaries. With inclusive
+  search use `left <= right`; with exclusive search use `left < right`.
+
+Recall prompt:
+
+- When does `left` move?
+- Why does returning `left` give the insert position?
 
 You’re given a sorted array of integers nums and an integer target.
 Return the index where target is found. If it is not found, return 

@@ -104,6 +104,122 @@ that disagreement is productive when it stays evidence-based and focused on the 
 Production issue → diode noise → senior wanted raw-buffer filter → you pushed for transition-logic fix too → data showed
 both were needed → passed verification and went to production
 
+### Story: Field-device recovery tool for corrupted configuration
+
+**Best for:** Ownership, Dive Deep, Deliver Results, Customer Obsession, Bias
+for Action
+
+#### Situation
+
+- Field devices were returning with corrupted configuration.
+- The normal path would have required returns or engineer intervention.
+- Warehouse operators needed a safe way to recover affected devices locally.
+
+#### Task
+
+- I volunteered outside my normal scope to adapt an existing handset into a
+protected recovery/reprogramming tool.
+- The tool needed to be safe for non-engineer operators and prevent accidental
+damage to good devices.
+
+#### Action
+
+- Constrained the approved configuration items and values in firmware.
+- Added a simple pass/fail UI and an operator instruction sheet.
+- Implemented a write/verify sequence.
+- Allowed up to three retries, then moved to a safe failure animation rather
+than continuing indefinitely.
+- Validated the flow with unit, integration, and device-level testing.
+
+#### Result
+
+- Warehouses had a scalable local recovery path.
+- The fix reduced dependency on returns or engineer intervention.
+- The recovery process was bounded, repeatable, and safer for untrained
+operators.
+
+#### Leadership Principle Mapping
+
+- **Ownership:** took responsibility beyond normal role boundaries.
+- **Dive Deep:** understood the corrupted configuration and safe value limits.
+- **Deliver Results:** produced a practical recovery process operators could use.
+- **Customer Obsession / Bias for Action:** reduced delay and friction for
+affected devices without waiting for a slower support path.
+
+#### Likely Follow-up Questions
+
+- How did you prevent untrained operators from damaging good devices?
+- What values were operators allowed to change, and why?
+- How did the write/verify step work?
+- What happened after three failed retries?
+- How did you validate the tool before giving it to warehouses?
+
+One-line recall:
+
+Corrupted field configuration → volunteered to adapt handset → constrained
+approved values → pass/fail UI + instructions → write/verify + three retries
+then safe fail → local warehouse recovery.
+
+### Story: Production unlock failures halting factory throughput
+
+**Best for:** Bias for Action, Dive Deep, Ownership, Deliver Results
+
+#### Situation
+
+- I maintained software on a production PCB used to configure and calibrate
+devices during manufacturing.
+- Factory runs started failing during the device unlock sequence.
+- Devices would stop progressing and throughput was affected.
+- At first it was unclear whether the root cause was the device, PCB, or
+communication sequence.
+
+#### Task
+
+- Identify the failure quickly under production time pressure.
+- Restore reliable unlock flow without only patching the visible symptom.
+
+#### Action
+
+- Reviewed logs and broke the unlock sequence into stages.
+- Isolated where communication stopped and reproduced the failure under
+controlled conditions.
+- Traced the issue to stale message-buffer state from the previous transaction.
+- Found the buffer-in-use flag handling was not correctly marking/freeing buffer
+state for the next device.
+- Fixed the flag handling.
+- Added explicit communication-buffer reinitialisation at the start of each
+new-device unlock sequence so every transaction begins from a known clean
+state.
+
+#### Result
+
+- Production unlock flow became reliable again.
+- The prevention was more robust than only fixing one stale flag, because a new
+device no longer inherited communication state from the previous device.
+
+#### Leadership Principle Mapping
+
+- **Bias for Action:** moved quickly with limited initial information.
+- **Dive Deep:** used logs, stage isolation, and reproduction to find the real
+buffer-state cause.
+- **Ownership:** treated it as a factory-throughput issue, not just a local
+software bug.
+- **Deliver Results:** restored production flow with a defensive prevention
+mechanism.
+
+#### Interview Emphasis
+
+- Say what was uncertain at the start: device, PCB, or communication sequence.
+- Explain the decision under time pressure.
+- Emphasise robust prevention: known clean state at each new unlock start, not
+only a symptom patch.
+
+One-line recall:
+
+Factory unlock failures → logs/stage isolation/reproduction → stale message
+buffers + buffer-in-use flag → fix flag + reinitialise buffers at new-device
+start → reliable production flow.
+
 ### Tell me about how you would debug an embedded issue that only appears intermittently on real hardware, not in simulation or unit tests. 
 
 **Evidence → reproduce → instrument carefully → isolate → fix → verify → prevent recurrence**
@@ -124,4 +240,3 @@ JTAG breakpoints or watchpoints where possible, but I would be careful because b
 After identifying the root cause, I would make the smallest safe fix and then confirm it under the same conditions that reproduced the issue. 
 I would also add a regression test orrhardware-in-the-loop test if possible, and document the evidence so the team can trust that the fix 
 addresses the actual cause rather than just hiding the symptom.
-

@@ -182,11 +182,15 @@ Design checklist:
 - Use a hardware timer interrupt, RTOS timer, or absolute-delay API so the
   release time is based on the intended schedule, not on "sleep 1 ms after work
   finishes."
+- Prefer `vTaskDelayUntil`-style absolute timing over `vTaskDelay`, because
+  `vTaskDelay` sleeps after the current work completes and can accumulate drift.
 - Keep ISR work tiny: timestamp, set a flag, give a semaphore, or submit work.
 - Keep the periodic task short, bounded, and measurable.
 - Measure worst-case execution time, not just average execution time.
 - Give the task a priority that matches its deadline.
 - Avoid mutexes or blocking calls in the hard 1 ms path where possible.
+- Avoid dynamic allocation, heavy logging, flash writes, long mutex waits, and
+  blocking I/O in the 1 ms path.
 - If shared data crosses ISR/task boundaries, use atomics, queues, or short
   critical sections.
 - Prove timing with trace logs or GPIO toggles on a scope/logic analyser.
@@ -201,6 +205,7 @@ Recall prompt:
 - What must happen every 1 ms?
 - What can be delayed safely?
 - What is the worst-case time, including blocking and ISR interference?
+- How much jitter do I actually see on a scope or logic analyser?
 
 
 ## Practical sensing, processing, UART, watchdog architecture
@@ -293,6 +298,8 @@ Recall prompt:
 
 - Is the queue full because of a short burst, or because average production is
   faster than average consumption?
+- Are all buffers busy because the consumer is too slow? If yes, investigate
+  throughput instead of overwriting in-use data.
 
 ## ISR-to-task handoff
 
@@ -378,6 +385,152 @@ Design answer:
 Recall prompt:
 
 - Am I waiting for several boolean conditions produced by different tasks?
+
+## Event group example: processing task
+
+Scenario:
+
+`ProcessingTask` reacts to sensor data, shutdown, and configuration changes.
+
+Design answer:
+
+- Define event bits such as `SENSOR_DATA`, `SHUTDOWN`, and `CONFIG_CHANGED`.
+- Wait for ANY bit when any of those conditions should wake the task.
+- Wait for ALL bits when work must start only after several conditions are true.
+- Keep payload data elsewhere, for example in a queue or shared protected
+  config object; event groups are for boolean state/events.
+
+Recall prompt:
+
+- Do I need ANY event, or must ALL required bits be set?
+
+## Queue vs task notification
+
+- Queue: transfers payload, for example a `SensorSample`, command, or buffer
+  descriptor.
+- Direct task notification: lightweight one-to-one signal, for example
+  DMA-complete where the data already exists in a known buffer.
+- Notification wakes the blocked task by making it READY. The scheduler still
+  decides when it runs.
+
+Recall prompt:
+
+- Queue or notification here?
+- Is there payload to transfer, or just a wake-up?
+
+## Encoder pulse counting
+
+Scenario:
+
+GPIO edge interrupt reports encoder pulses.
+
+Design answer:
+
+- If one task only needs to be woken and missed duplicates do not matter, a
+  task notification can be enough.
+- If every pulse must be counted, prefer a hardware timer/counter peripheral or
+  a counting notification/semaphore.
+- Avoid binary-style events when repeated pulses can collapse into one pending
+  signal.
+- DMA is not the natural first choice for simple GPIO edge counting.
+
+Recall prompt:
+
+- Can repeated pulses collapse safely, or must every pulse be counted?
+
+## Volatile ISR/task shared counter
+
+- `volatile` tells the compiler the value can change outside normal program
+  flow. It helps visibility for ISR/MMIO-style access.
+- `volatile` does not make increments atomic and does not provide
+  synchronisation or memory ordering.
+- A 32-bit aligned read/write may be naturally atomic on some 32-bit MCUs, but
+  that is a hardware property, not a guarantee from `volatile`.
+- On narrower targets, multi-byte reads can tear if an ISR updates the value in
+  the middle of the read.
+- Use a short critical section, disable interrupts briefly, or use a suitable
+  atomic/counter primitive when correctness depends on atomicity.
+- Overflow/wraparound is a separate design issue from concurrency.
+
+Recall prompt:
+
+- Do I need visibility, atomicity, or both?
+
+## Buffer-handle passing between tasks
+
+Scenario:
+
+Camera captures large image buffers and storage/upload tasks process them.
+
+Design answer:
+
+- Queue a descriptor, not the image bytes: pointer/handle, length, timestamp,
+  and metadata.
+- Use a fixed buffer pool and a `freeBufferQueue`.
+- Camera takes a free buffer, fills it, and transfers ownership to storage with
+  a queue send.
+- Storage writes/persists it, then returns the buffer to the free pool when safe.
+- Avoid heap allocation in the capture path for predictable memory use.
+- Natural backpressure: if no free buffers exist, the producer blocks or drops
+  according to explicit requirements.
+- After `xQueueSend` transfers ownership, the producer must not reuse that
+  buffer until it is returned.
+
+Recall prompt:
+
+- What owns this buffer now?
+- Is the queue carrying bytes, or a handle to bytes?
+
+## Shared SPI ownership
+
+Problem:
+
+Several devices share one SPI controller with different chip-select lines.
+
+Design answer:
+
+- Separate chip selects choose devices; they do not make the SPI controller
+  usable by multiple tasks at the same time.
+- Double buffering can improve throughput, but it does not solve bus
+  arbitration.
+- Prefer a dedicated SPI-owner task for complex systems:
+  - clients queue requests with device/CS, tx/rx pointers, length, and a
+    requester/response handle;
+  - SPI owner serializes transactions;
+  - use DMA where useful;
+  - notify or reply to the requester when complete.
+- With a dedicated owner task, client tasks do not need their own SPI mutex.
+- If tasks access SPI directly, protect the whole transaction with a mutex,
+  from chip select assert through transfer to chip select deassert.
+
+Recall prompt:
+
+- Who owns the SPI bus during the whole transaction?
+
+## Motion camera storage upload architecture
+
+Scenario:
+
+Motion triggers a camera capture, storage persists the data, and Wi-Fi upload
+sends it later.
+
+Design answer:
+
+- ISR stays minimal: clear interrupt, timestamp if needed, and notify a motion
+  task or set an event.
+- Motion task performs validation/debounce in task context.
+- Camera task captures into a buffer from a fixed pool.
+- Transfer buffer ownership explicitly to storage using a descriptor queue.
+- Storage persists locally with states such as `UNSENT`, `IN_PROGRESS`, and
+  `SENT`.
+- Wi-Fi/upload is decoupled from capture and storage; it retries after reconnect
+  and does not block the capture path.
+- OTA runs lower priority/background and is gated by battery, network,
+  device-idle state, flash space, and authenticated image verification.
+
+Recall prompt:
+
+- Which task owns capture, persistence, upload, and buffer return?
 
 ## UART packet buffering: queue, stream buffer, message buffer, ring buffer
 

@@ -14,10 +14,20 @@
 
 ## Active recall
 
-- With the one-empty-slot design, `head == tail` means empty.
+- Fixed-size circular buffer uses static storage and wraparound indexes.
+- Reserved-slot design: `head` is the next write, `tail` is the next read.
+- Empty means `head == tail`.
 - Full means `(head + 1) % maxlen == tail`.
+- Usable capacity is `maxlen - 1`.
+- Push and pop are O(1).
+- `pop` returns false when empty and writes the output byte by reference/pointer.
 - Alternative design: track `count`; empty is `count == 0`, full is `count == maxlen`.
 - Common mistake: full and empty can look the same unless the rule is explicit.
+
+Recall prompt:
+
+- What does `head` own: next write or last written byte?
+- What byte does `tail` point to?
 
 ```c
 
@@ -32,7 +42,7 @@ typedef struct {
 // Method to push data into the buffer
 bool push_data_buffer(circular_buffer_t *buffer, uint8_t data)
 {
-    uint8_t next;
+    int next;
 
     // Move the current head pointer to the next position
     // If the next is max length the mod value sets it back 
@@ -54,19 +64,19 @@ bool push_data_buffer(circular_buffer_t *buffer, uint8_t data)
     // Head to the next data offset
     buffer->head = next;
 
-    return True;
+    return true;
 
 }
 
 // Method to delete / read the data from the circular buffer
-bool pop_data_buffer(circular_buffer_t *buffer, unit8_t data)
+bool pop_data_buffer(circular_buffer_t *buffer, uint8_t *data)
 {
-    uint8_t next;
+    int next;
 
     // If the head is the tail buffer is empty so there is no data to read
     if( buffer->head == buffer->tail )
     {
-        return False;
+        return false;
     }
     
     // Next is where the tail will point to after the read
@@ -77,7 +87,7 @@ bool pop_data_buffer(circular_buffer_t *buffer, unit8_t data)
     // Tail to the next offset
     buffer->tail = next;
 
-    return True;
+    return true;
 }
 ```
 
@@ -98,7 +108,7 @@ public:
     bool push(int value) {
         if(full())
         {
-            return false
+            return false;
         }
 
         buffer[head] =  value;
@@ -107,12 +117,13 @@ public:
         return true;
     }
 
-    bool pop() {
+    bool pop(int& value) {
         if(empty())
         {
             return false;
         }
 
+        value = buffer[tail];
         tail = (tail + 1) % CAPACITY;
 
         return true;

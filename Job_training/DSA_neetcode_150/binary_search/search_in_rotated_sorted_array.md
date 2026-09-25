@@ -18,10 +18,21 @@ Output = -1
 ## Active recall
 
 - Pattern: rotated sorted array still has one sorted half.
-- Check `mid` first.
-- If left half is sorted, decide whether target lies inside `[nums[left], nums[mid])`.
-- Otherwise the right half is sorted, decide whether target lies inside `(nums[mid], nums[right]]`.
-- Common mistake: do not return `-1` early before deciding which half can be discarded.
+- Use inclusive boundaries: `left = 0`, `right = nums.size() - 1`,
+  `while (left <= right)`.
+- Check `mid` first. If found, return it.
+- If `nums[left] <= nums[mid]`, the left half is sorted. Keep it only if
+  `nums[left] <= target && target < nums[mid]`; otherwise discard it.
+- Otherwise the right half is sorted. Keep it only if
+  `nums[mid] < target && target <= nums[right]`; otherwise discard it.
+- Time: O(log n). Space: O(1).
+- Common mistake: do not return `-1` early before deciding which half can be
+  discarded.
+
+Recall prompt:
+
+- Which half is sorted?
+- Is the target inside that sorted half?
 
 ```cpp 
 class Solution {
