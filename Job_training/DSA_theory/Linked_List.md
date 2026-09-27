@@ -255,3 +255,54 @@ void reverseTraversal(struct ListNode* head, struct ListNode* tail) {
     }
 }
 ```
+
+## Active recall: push/pop front with `Node**`
+
+Mental model:
+
+- `Node*` points to a node, so it can read or modify that node.
+- `Node**` points to a `Node*`, so it lets a function replace the caller's
+  pointer.
+- C passes arguments by value. With `Node* head`, assigning to `head` changes
+  only the local copy. With `Node** head`, `*head = newHead` changes the
+  caller's actual head.
+- Access a node through the double pointer with `(*head)->value`; parentheses
+  matter because `->` binds before unary `*`.
+
+```c
+typedef struct Node {
+    int value;
+    struct Node* next;
+} Node;
+
+bool push_front(Node** head, int value)
+{
+    if (head == NULL) return false;
+
+    Node* node = malloc(sizeof *node);
+    if (node == NULL) return false;
+
+    node->value = value;
+    node->next = *head;
+    *head = node;
+    return true;
+}
+
+bool pop_front(Node** head, int* out)
+{
+    if (head == NULL || *head == NULL || out == NULL) return false;
+
+    Node* oldHead = *head;
+    *out = oldHead->value;
+    *head = oldHead->next;
+    free(oldHead);
+    return true;
+}
+```
+
+Both operations are O(1). Call them with `push_front(&head, value)` and
+`pop_front(&head, &value)`.
+
+Recall prompt:
+
+- Which object must change: the node, or the caller's `head` pointer?

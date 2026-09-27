@@ -101,7 +101,7 @@ Valid Palindrome, 3Sum, Container With Most Water, Two Sum sorted, Remove Duplic
 ### Sliding window
 
 Problems:
-Max Average Subarray, Longest Substring Without Repeating Characters, Longest Substring With At Most K Distinct.
+Max Average Subarray, Longest Substring Without Repeating Characters, Longest Substring With At Most K Distinct, Longest Repeating Character Replacement.
 
 - Recognition clue: Contiguous substring/subarray, grow and shrink a range, longest/shortest valid window.
 - Fixed-size window: window length is given, for example size `k`. Add the new right value, remove the value leaving on the left, update best after the first full window.
@@ -113,6 +113,11 @@ Max Average Subarray, Longest Substring Without Repeating Characters, Longest Su
   `requests[right] - requests[left] <= window`; shrink while too wide; answer
   is `right - left + 1`. This counts an observed maximum, not a live
   `maxRequests` rate limiter.
+- Longest Repeating Character Replacement: keep counts for the current window
+  and track the highest character frequency seen in the window. The window is
+  valid while `windowSize - maxFrequency <= k`, because that is the number of
+  characters that would need replacing. Shrink one step at a time while invalid;
+  do not reset `left = right`.
 - Set vs frequency map: For "no duplicates", an `unordered_set` is enough: erase from left until duplicate is gone. For "at most K distinct" or "counts matter", use an `unordered_map<char,int>` and shrink when the number of active keys breaks the rule.
 - Time / space: O(n), space depends on map/set, usually O(k).
 - Common mistake I made: Moving `left` too far or not far enough. Window problems are about a contiguous range, not choosing any elements. If negative numbers are allowed and the task asks for exact sum count, normal sliding window may fail; think prefix sum + hashmap.
@@ -332,15 +337,60 @@ Reverse Linked List, Linked List Cycle, Merge Two Sorted Lists.
 - Time / space: Usually O(n), O(1) extra.
 - Common mistake I made: Losing the rest of the list by changing `curr->next` before saving `next`. For cycle detection, move fast by two and slow by one.
 
+### Trees
+
+Problems:
+Maximum Depth, Validate BST, Binary Tree Level Order Traversal, Same Tree.
+
+- Recognition clue: `TreeNode*`, left/right children, ancestor constraints,
+  levels, or comparing two trees.
+- Max depth: DFS returns `0` for `nullptr`; otherwise
+  `1 + max(depth(left), depth(right))`. Time O(n), recursion stack O(h).
+- Validate BST: pass allowed range down the tree, not only parent comparison.
+  Left subtree must stay inside `(low, node->val)`, right inside
+  `(node->val, high)`. Use `long long`/nullable bounds to avoid `INT_MIN` and
+  `INT_MAX` edge cases. Reject `<= low` or `>= high`.
+- Level-order BFS: queue starts with root. For each level, snapshot
+  `int levelSize = q.size()`, then pop exactly that many nodes and push their
+  children. The size snapshot prevents mixing the next level into the current
+  level.
+- Same Tree iterative BFS: use `queue<pair<TreeNode*, TreeNode*>>`. For each
+  pair, if both are null continue; if only one is null return false; otherwise
+  compare values and push `{left,left}` and `{right,right}` pairs.
+- Common mistake I made: For BST, local child checks miss deep violations. For
+  Same Tree, handle the null/null pair before dereferencing either node.
+
+### Graph BFS
+
+Problems:
+Adjacency-list traversal, connected components, shortest unweighted traversal.
+
+- Recognition clue: Nodes with neighbours, `vector<vector<int>> graph`, need
+  breadth-first order or shortest number of edges.
+- Core idea: `queue<int>` holds discovered nodes to process; `visited` records
+  nodes already discovered; output records traversal order if needed.
+- Mark `visited[neighbour] = true` when enqueueing, not when popping, so the
+  same node is not queued multiple times through different parents.
+- Skeleton: push start, mark start visited, while queue not empty pop current,
+  loop `for (int neighbour : graph[current])`, enqueue unseen neighbours.
+- Time / space: O(V + E), O(V).
+- Common mistake I made: Mixing DFS recursion into BFS. BFS is queue -> pop
+  current -> loop neighbours -> enqueue unseen neighbours.
+
 ### Grid / flood fill
 
 Problems:
-Number of Islands.
+Number of Islands, Flood Fill.
 
 - Recognition clue: 2D grid + connected regions/components. Usually means DFS/BFS flood fill.
 - Core idea: Outer row/column scan finds an unvisited `'1'`, so increment island count. Then flood fill from that cell through all 4-directionally connected land and mark each visited cell, for example change `'1'` to `'0'`, so the same island is not counted again.
+- Flood Fill variant: store `originalColor = image[sr][sc]`. If
+  `originalColor == newColor`, return immediately to avoid revisiting forever.
+  In DFS, check bounds before reading `image[row][col]`, then return unless the
+  cell equals `originalColor`, then mark it with `newColor` and recurse in four
+  directions.
 - Time / space: O(rows * cols) time. DFS recursion stack can be O(rows * cols) worst case. BFS queue can also be O(rows * cols) worst case.
-- Common mistake I made: The outer row/column scan is not BFS. It only finds possible starting points. The flood-fill traversal itself is the DFS or BFS.
+- Common mistake I made: The outer row/column scan is not BFS. It only finds possible starting points. The flood-fill traversal itself is the DFS or BFS. For Flood Fill, `0` is not special; the guard is "not original colour".
 
 ### Binary search
 
@@ -376,6 +426,41 @@ Count Smaller After Self.
 - Core idea: Brute force is nested loops. Better solutions need ordering plus counts, like merge-sort counting or Fenwick tree.
 - Time / space: Brute force O(n^2), O(1) extra excluding output. Merge sort O(n log n), O(n).
 - Common mistake I made: Storing only the minimum is not enough because it loses count information. This is lower priority than core OA patterns.
+
+### Math / search-space reasoning
+
+Problems:
+2-egg minimum drops.
+
+- Recognition clue: Need minimise the worst-case number of tests, and each
+  failed egg removes future ability to binary search.
+- Core idea: With 2 eggs and `x` allowed drops, first drop from floor `x`, then
+  `x + (x - 1)`, then `x + (x - 1) + (x - 2)`, and so on. If the egg breaks at
+  any step, the remaining floors below that step can be linearly checked with
+  the second egg inside the remaining drop budget.
+- Formula: choose the smallest `x` where `x + (x - 1) + ... + 1 >= floors`, so
+  `x * (x + 1) / 2 >= floors`.
+- Code:
+
+```cpp
+int twoEggDrop(int floors)
+{
+    int drops = 0;
+    int covered = 0;
+
+    while (covered < floors)
+    {
+        drops++;
+        covered += drops;
+    }
+
+    return drops;
+}
+```
+
+- Common mistake I made: Trying ordinary binary search. With only two eggs,
+  after the first egg breaks, the second egg must be used linearly, so the first
+  egg's step sizes should shrink.
 
 ### Embedded: bit extraction
 
@@ -629,6 +714,22 @@ Problems:
 - Predicate reason: wakeups can be spurious, and a notification only means "check the condition again." The predicate keeps waiting until the real condition is true.
 - Time / space: Synchronisation primitive, not algorithmic. Benefit is avoiding CPU-wasting polling.
 - Common mistake I made: Saying the thread should "check occasionally." With a condition variable it sleeps until notified, then re-checks the predicate safely.
+
+## Sept 27 embedded coding weak-area recall
+
+- Bitmap pool: derive `(N + 7) / 8`, then map an ID with `id / 8` and `id % 8`.
+  Explain padding bits, search-hint worst case, and the free-list trade-off.
+- Fragmented copy: keep independent source/destination index and offset pairs;
+  copy the smaller remaining span and advance boundaries independently.
+- MSB-first search: scan every bit start; extract with
+  `(byte >> (7 - bitIndex)) & 1`; rebuild by shift/OR.
+- `Node**`: say precisely, "I need to replace the caller's `Node* head`, so I
+  pass `&head` and assign through `*head`."
+
+Source notes: [[../cpp/cpp#Active recall: bit-packed index pool]],
+[[../embedded_questions/how_would_you_questions#Copy between fragmented source and destination segments]],
+[[bit_manipulation/bit_manipulation#Big-endian non-byte-aligned 32-bit pattern search]],
+and [[../DSA_theory/linked_list#Active recall: push/pop front with `Node**`]].
 
 ## Personal mistakes to check before submitting
 

@@ -143,3 +143,22 @@ public:
 };
 
 ```
+
+## ISR/main-loop ownership
+
+For a bare-metal single-producer/single-consumer buffer:
+
+- Give `head` to the producer only and `tail` to the consumer only.
+- A common design is ISR producer + main-loop consumer. Publish the element
+  before advancing `head`; consume the element before advancing `tail`.
+- The reserved-slot rules remain: empty is `head == tail`; full is
+  `(head + 1) % CAPACITY == tail`; usable storage is `CAPACITY - 1`.
+- Define overflow policy explicitly: reject/drop newest, overwrite oldest, or
+  record an overrun. Overwriting oldest makes both contexts touch `tail` and
+  breaks the clean ownership model unless synchronised.
+- `volatile` can force memory accesses, but it does not make a multi-byte index
+  atomic and does not provide inter-core/thread ordering or synchronization.
+- Check whether index reads/writes are naturally atomic on the MCU and use a
+  short critical section or platform atomic operations when needed.
+- Under an RTOS, prefer an ISR-safe queue/stream-buffer API or proper atomics.
+  Do not describe `volatile` as "volatile atomic."

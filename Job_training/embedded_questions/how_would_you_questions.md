@@ -354,3 +354,30 @@ Good framing to say out loud: "A static local prints 0 instead of its initialize
 
 I'd choose between runtime and compile-time polymorphism based on the requirements. I'd consider virtual interfaces where runtime substitution and testability are valuable, while
 using templates or simpler static abstractions where performance, memory usage and deterministic execution are more important.
+
+## Copy between fragmented source and destination segments
+
+Maintain independent cursors because source and destination boundaries rarely
+line up:
+
+- Source cursor: `srcIndex`, `srcOffset`.
+- Destination cursor: `dstIndex`, `dstOffset`.
+- Remaining bytes in current segments:
+  `srcRemaining = src[srcIndex].len - srcOffset` and
+  `dstRemaining = dst[dstIndex].len - dstOffset`.
+- Copy `chunk = min(srcRemaining, dstRemaining)` bytes, then advance both
+  offsets by `chunk`.
+- When `srcOffset == src[srcIndex].len`, increment `srcIndex` and reset
+  `srcOffset = 0`. Do the equivalent independently for destination.
+- Stop successfully when the requested byte count is copied. Fail or report a
+  short copy if either side runs out first.
+- If `src` is an array/pointer to segment structs, use `src[i].len`. Use
+  `src[i]->len` only when each array element is itself a pointer.
+- Skip or advance past zero-length segments so the loop always makes progress.
+
+Each byte is copied once and each segment boundary is crossed once: O(bytes +
+source segments + destination segments) time and O(1) extra space.
+
+Recall prompt:
+
+- Can I update all four cursor values correctly when only one segment ends?

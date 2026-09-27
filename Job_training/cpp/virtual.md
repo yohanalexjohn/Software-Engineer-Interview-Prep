@@ -64,4 +64,3 @@ Runtime polymorphism means the implementation of a virtual function is selected 
 
 - In embedded if Virtual used in ISR if read from function is dyanmic dispatch which is bad for unpredicatble hehaviour or data 
 
-

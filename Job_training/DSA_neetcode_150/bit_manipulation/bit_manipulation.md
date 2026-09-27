@@ -51,3 +51,34 @@ Status decodeStatus(uint8_t status) {
     };
 }
 ```
+
+## Big-endian non-byte-aligned 32-bit pattern search
+
+- Compute the available length without overflowing: `uint64_t totalBits =
+  uint64_t(lengthBytes) * 8u`.
+- If `totalBits < 32`, there is no complete candidate.
+- Try every start bit from `0` through `totalBits - 32`, including starts that
+  are not byte-aligned.
+- For absolute `bitPosition`: `byteIndex = bitPosition / 8` and
+  `bitIndex = bitPosition % 8`.
+- Big-endian/MSB-first extraction is
+  `(data[byteIndex] >> (7u - bitIndex)) & 1u`.
+- Reconstruct each candidate in reading order:
+  `candidate = (candidate << 1) | bit`.
+- Return the starting bit offset on a match; otherwise return the agreed
+  sentinel, such as `-1`. Use a return type capable of representing all valid
+  offsets plus the sentinel.
+
+Endian clarification:
+
+- Endianness describes how a multi-byte value is encoded. Here the byte stream
+  is read in order and each byte is scanned from bit 7 to bit 0.
+- Do not cast an unaligned byte pointer to `uint32_t*`: alignment, host byte
+  order, and non-byte-aligned starts make that incorrect.
+
+Complexity: O(B * 32) time for B candidate starts, which is O(B), and O(1)
+extra space because 32 is fixed.
+
+Recall prompt:
+
+- Why is the bit shift `7 - bitIndex`, and did I test every possible start?

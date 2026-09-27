@@ -1,5 +1,14 @@
 # Amazon Interview Prep
 
+## Coding-practice provenance
+
+- The Sept 27 embedded coding practice topics were selected from a Glassdoor
+  summary of reported Amazon interview themes.
+- Treat that summary as candidate-reported practice guidance, not an official
+  or guaranteed Amazon question bank.
+- The reusable technical conclusions live in the canonical C++, DSA, linked
+  list, circular-buffer, and RTOS notes rather than being duplicated here.
+
 ## Amazon Behavioural Rounds
 
 ### Story: Medical-device software mitigation after diode change
@@ -149,16 +158,47 @@ affected devices without waiting for a slower support path.
 #### Likely Follow-up Questions
 
 - How did you prevent untrained operators from damaging good devices?
+  - Constrain the tool to approved configuration fields and fixed known-good
+    values; do not expose arbitrary memory writes or editable values.
+  - Validate under-length, over-length, unexpected reply, timeout, and wrong
+    state-machine sequencing cases.
+  - Compare before/after data so only the expected byte positions change.
+  - Fail safely with a documented error/retry state if any step does not
+    complete inside the expected time.
 - What values were operators allowed to change, and why?
+  - Operators did not choose values. The values were fixed in the recovery
+    firmware and had already been tested on development units against the
+    noisy treatment condition that caused the incorrect contact/no-contact
+    state transition.
 - How did the write/verify step work?
+  - The tool performed the approved write, read back or otherwise verified the
+    configured fields, and only showed success when the written data matched
+    the expected values.
 - What happened after three failed retries?
+  - The tool stopped the sequence and displayed the documented fault state
+    rather than continuing indefinitely or leaving the operator to guess.
 - How did you validate the tool before giving it to warehouses?
+  - Separate the validation into two questions: first, prove the configuration
+    values solved the original noisy-condition behaviour on the bench; second,
+    prove the recovery tool applied those known-good values reliably.
+- Why not push a full software release immediately?
+  - A full software release would have required implementation, regression
+    testing, validation, release activity, and potentially reworking stock that
+    was already close to market. The recovery tool was a narrow containment
+    path for affected stock; the normal release train remained the correct path
+    for a permanent software improvement.
+- What would you do differently with more time?
+  - Raise the formal software change and take it through the normal release
+    process, so the software itself becomes more robust to the noise condition
+    rather than relying only on revised configuration limits.
 
 One-line recall:
 
 Corrupted field configuration → volunteered to adapt handset → constrained
 approved values → pass/fail UI + instructions → write/verify + three retries
-then safe fail → local warehouse recovery.
+then safe fail → local warehouse recovery. Short-term containment was the
+bounded recovery tool; long-term corrective action would be a software fix
+through the release train.
 
 ### Story: Production unlock failures halting factory throughput
 

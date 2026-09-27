@@ -582,3 +582,26 @@ that result. For example, if a medical device must sample a sensor every 1 ms
 or trigger an alarm within a defined time, the scheduler needs deterministic
 behaviour and bounded latency. A non-real-time OS may be fast on average, but
 it cannot normally guarantee that timing under all conditions.
+
+## Traffic-light GPIO, timer, and pedestrian-button design
+
+- Keep timer and GPIO ISRs minimal: acknowledge the interrupt and publish an
+  event/notification. Do not debounce, sleep, log, or run the full transition
+  policy in the ISR.
+- Debounce the button in task/main-loop context. A valid press sets a pending
+  pedestrian request; it should not force an unsafe immediate light change.
+- One state-machine owner handles all transitions, so timer expiry and button
+  events cannot independently write conflicting GPIO states.
+- Timer-driven transitions preserve minimum green/amber/all-red intervals.
+  Service a pending pedestrian request only at the next safe transition, then
+  clear it when accepted or completed according to the design.
+- Centralize GPIO output updates in one function that maps a valid state to all
+  lamp outputs. This avoids transient or impossible combinations caused by
+  scattered pin writes.
+- In an RTOS, use ISR-safe notification/queue APIs. In bare metal, atomically
+  snapshot/clear event flags in the main loop as required by the MCU.
+
+Recall prompt:
+
+- Who owns the state, what may each ISR do, and when is a pedestrian request
+  safe to service?

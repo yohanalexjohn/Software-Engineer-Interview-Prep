@@ -538,3 +538,76 @@ Interview answer:
   another lookup.
 - Avoid `count()` followed by `operator[]` when reading, because `operator[]`
   can insert a default value.
+
+## Active recall: STL container add / remove / access
+
+Mental rule:
+
+- Sequence containers that own ordered elements usually use `push_back` and
+  sometimes `push_front`.
+- Adapters hide the underlying container: use `push` / `pop` plus
+  `top`, `front`, or `back`.
+- Associative containers use `insert`, `emplace`, `erase`, `count`, and `find`.
+  They do not use `push_back`.
+- `map` stores key/value pairs. `set` stores keys only.
+
+| Container | Add | Remove | Access / lookup | Live-coding notes |
+| --- | --- | --- | --- | --- |
+| `vector<T>` | `push_back(x)`, `emplace_back(args...)`, `insert(pos, x)` | `pop_back()`, `erase(pos)` / `erase(first, last)` | `v[i]`, `v.at(i)`, `front()`, `back()` | Dynamic array. Use `push_back`, not `push`. |
+| `deque<T>` | `push_back(x)`, `push_front(x)`, `emplace_back(...)`, `emplace_front(...)` | `pop_back()`, `pop_front()` | `front()`, `back()`, `d[i]` | Good when both ends matter. |
+| `queue<T>` | `push(x)`, `emplace(args...)` | `pop()` | `front()`, `back()` | No iterators or indexing. `pop()` returns `void`. |
+| `priority_queue<T>` | `push(x)`, `emplace(args...)` | `pop()` | `top()` | Max-heap by default. Min-heap: `priority_queue<int, vector<int>, greater<int>>`. |
+| `stack<T>` | `push(x)`, `emplace(args...)` | `pop()` | `top()` | `pop()` returns `void`; read `top()` first. |
+| `unordered_set<T>` / `set<T>` | `insert(x)`, `emplace(args...)` | `erase(value)` or `erase(iterator)` | `count(x)`, `find(x)` | Stores unique keys. No `push` / `push_back`. |
+| `unordered_map<K,V>` / `map<K,V>` | `m[key] = value`, `insert({key, value})`, `emplace(key, value)` | `erase(key)` or `erase(iterator)` | `m[key]`, `count(key)`, `find(key)` | `m[key]` creates a default value if missing. Use `find()` for read-only lookup. |
+| `string` | `push_back(char)`, `+=`, `append(...)` | `pop_back()`, `erase(...)` | `s[i]`, `front()`, `back()`, `substr(...)` | `push_back` takes one `char`; use `+=` or `append` for strings. |
+| `array<T, N>` | fixed at compile time | no push/pop | `a[i]`, `front()`, `back()`, `size()` | Size cannot grow or shrink. |
+
+Common mistakes from prep:
+
+- `unordered_set` uses `insert(value)`, not `push(value)`.
+- For buckets: `vector<vector<int>> bucket(n + 1); bucket[count].push_back(value);`
+- Result vectors use `result.push_back(value)`, not `result.push(value)`.
+- `queue`, `stack`, and `priority_queue` `pop()` does not return the value.
+  Read `front()` or `top()` first, then call `pop()`.
+- `set` / `unordered_set` erase uses parentheses: `seen.erase(value)`.
+- Pass vectors by const reference when not modifying:
+  `int solve(const vector<int>& nums)`.
+
+Recall prompts:
+
+- Which containers use `push_back`?
+- What accessor do `stack`, `queue`, and `priority_queue` use?
+- When does `map[key]` mutate the map?
+- When should I say `insert` instead of `push`?
+
+## Active recall: bit-packed index pool
+
+Use one bit per ID when the pool only needs to record free/used state.
+
+- Ceiling division: `(N + d - 1) / d` for positive integers. For one bit per
+  ID, bitmap bytes are `(N + 7) / 8`.
+- ID mapping: `byteIndex = id / 8`, `bitIndex = id % 8`,
+  `mask = static_cast<uint8_t>(1u << bitIndex)`.
+- Test: `(bitmap[byteIndex] & mask) != 0`.
+- Set allocated: `bitmap[byteIndex] |= mask`.
+- Clear/free: `bitmap[byteIndex] &= static_cast<uint8_t>(~mask)`.
+- `size_` is the number of valid IDs. The bitmap physically holds a multiple
+  of eight bits, so padding bits at the end are not allocatable IDs.
+- `explicit IndexPool(size_t size)` prevents an integer from implicitly
+  converting into an `IndexPool`.
+- A member function ending in `const`, such as `bool used(size_t id) const`,
+  cannot modify ordinary data members or call non-const member functions and
+  can be called on a const object.
+
+Allocation search choices:
+
+- Linear scan is simple but each allocation can be O(N).
+- A rolling search hint starts after the last successful allocation. It avoids
+  repeatedly rescanning a busy prefix, but worst-case allocation is still O(N).
+- A free list gives O(1) allocate/free when IDs can be stored explicitly, but
+  costs extra memory and needs careful duplicate-free protection.
+
+Recall prompt:
+
+- Can I derive byte, bit, mask, bounds, and the padding-bit rule without notes?
