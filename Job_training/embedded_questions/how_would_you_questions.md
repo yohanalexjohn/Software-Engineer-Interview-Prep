@@ -360,8 +360,11 @@ using templates or simpler static abstractions where performance, memory usage a
 Maintain independent cursors because source and destination boundaries rarely
 line up:
 
-- Source cursor: `srcIndex`, `srcOffset`.
-- Destination cursor: `dstIndex`, `dstOffset`.
+- Source cursor: `srcIndex` chooses the source segment; `srcOffset` chooses the
+  next byte inside that segment.
+- Destination cursor: `dstIndex` chooses the destination segment;
+  `dstOffset` chooses the next byte inside it. Do not combine these four
+  values: source and destination boundaries advance independently.
 - Remaining bytes in current segments:
   `srcRemaining = src[srcIndex].len - srcOffset` and
   `dstRemaining = dst[dstIndex].len - dstOffset`.

@@ -1,5 +1,7 @@
 # Number of Islands
 
+## Prompt
+
 You’re given a 2D grid of '1's (land) and '0's (water). Return the number of separate islands.
 An island is formed by connecting adjacent land cells horizontally or vertically.
 
@@ -15,13 +17,26 @@ grid = [
 Output = 3
 ```
 
-## Active recall
+## Approach and key invariant
 
 - Pattern: grid connected components / flood fill.
 - Outer row/column scan only finds a new starting point.
 - When an unvisited `'1'` is found, increment islands and run DFS/BFS to mark the whole island.
 - DFS/BFS explores four directions: up, down, left, right.
-- Common mistake: the outer scan is not BFS; the flood-fill traversal is the DFS/BFS.
+- Key invariant: after a flood fill finishes, every cell in that island is marked visited, so the outer scan cannot count it again.
+
+## Complexity
+
+- Time: O(rows * cols); every cell is processed a constant number of times.
+- Space: O(rows * cols) worst case for the recursive DFS stack or a BFS queue.
+
+## Common mistakes
+
+- Calling the outer scan BFS. It only locates the next component; the flood fill is the DFS/BFS.
+- Reading `grid[row][col]` before checking bounds.
+- Forgetting to mark visited before exploring neighbours.
+
+## C++ DFS
 
 ```cpp
 class Solution {

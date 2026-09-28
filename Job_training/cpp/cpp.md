@@ -585,9 +585,11 @@ Recall prompts:
 
 Use one bit per ID when the pool only needs to record free/used state.
 
-- Ceiling division: `(N + d - 1) / d` for positive integers. For one bit per
-  ID, bitmap bytes are `(N + 7) / 8`.
-- ID mapping: `byteIndex = id / 8`, `bitIndex = id % 8`,
+- Ceiling division: `(N + d - 1) / d` for positive integers. Adding `d - 1`
+  rounds any partial group up; for one bit per ID, bitmap bytes are
+  `(N + 7) / 8`.
+- ID mapping: `byteIndex = id / 8` selects the containing byte and
+  `bitIndex = id % 8` selects the bit within that byte,
   `mask = static_cast<uint8_t>(1u << bitIndex)`.
 - Test: `(bitmap[byteIndex] & mask) != 0`.
 - Set allocated: `bitmap[byteIndex] |= mask`.

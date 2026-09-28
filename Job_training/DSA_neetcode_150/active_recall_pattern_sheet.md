@@ -330,17 +330,44 @@ Valid Parentheses, Longest Valid Parentheses, Min Stack, Daily Temperatures.
 ### Linked list
 
 Problems:
-Reverse Linked List, Linked List Cycle, Merge Two Sorted Lists.
+Reverse Linked List, Linked List Cycle, Merge Two Sorted Lists,
+[[linked lists/add_two_lists|Add Two Numbers]],
+[[linked lists/merge_k_sorted_linked_lists|Merge K Sorted Lists]],
+[[linked lists/push_pop_node_double_pointer|Node** push/pop front]].
 
 - Recognition clue: Nodes and pointers, no random access, detect cycle, relink nodes.
 - Core idea: Use pointer manipulation. Reverse with `prev`, `curr`, `next`. Cycle detection uses slow/fast pointers. Merge by walking two sorted lists.
+- Add Two Numbers: reverse-order digits mean head-first addition. Use
+  dummy/tail, treat a missing node as `0`, and loop while `l1`, `l2`, or carry
+  remains.
+- Merge K Lists: min-heap of current heads; comparator
+  `a->val > b->val` puts the smaller value on top. Append with dummy/tail and
+  push the extracted node's successor.
 - Time / space: Usually O(n), O(1) extra.
 - Common mistake I made: Losing the rest of the list by changing `curr->next` before saving `next`. For cycle detection, move fast by two and slow by one.
+
+### Sliding window / monotonic deques
+
+Problems:
+[[sliding_window/longest_subarray_absolute_difference_limit|Longest subarray with max-min <= limit]].
+
+- Recognition clue: longest valid window constrained by its current maximum
+  and minimum.
+- Core idea: decreasing max deque + increasing min deque. Fronts expose the
+  max/min; backs discard dominated candidates. Store indices so fronts can
+  expire when `left` moves.
+- Time / space: O(n), O(n).
+- Common mistake I made: popping from the front for monotonic maintenance or
+  storing values and then being unable to tell whether an item left the window.
 
 ### Trees
 
 Problems:
-Maximum Depth, Validate BST, Binary Tree Level Order Traversal, Same Tree.
+[[trees/maximum_depth|Maximum Depth]],
+[[trees/validate_bst|Validate BST]],
+[[trees/binary_tree_level_order_traversal|Binary Tree Level Order Traversal]],
+[[trees/same_tree|Same Tree]],
+[[trees/lowest_common_ancestor_binary_tree|Lowest Common Ancestor]].
 
 - Recognition clue: `TreeNode*`, left/right children, ancestor constraints,
   levels, or comparing two trees.
@@ -357,13 +384,17 @@ Maximum Depth, Validate BST, Binary Tree Level Order Traversal, Same Tree.
 - Same Tree iterative BFS: use `queue<pair<TreeNode*, TreeNode*>>`. For each
   pair, if both are null continue; if only one is null return false; otherwise
   compare values and push `{left,left}` and `{right,right}` pairs.
+- LCA DFS: base case returns `root` when null, `p`, or `q`; recurse left and
+  right. If both returns are non-null, current `root` is the split/LCA;
+  otherwise return the one non-null result.
 - Common mistake I made: For BST, local child checks miss deep violations. For
   Same Tree, handle the null/null pair before dereferencing either node.
 
 ### Graph BFS
 
 Problems:
-Adjacency-list traversal, connected components, shortest unweighted traversal.
+[[graphs/adjacency_list_bfs|Adjacency-list BFS traversal]], connected components,
+shortest unweighted traversal.
 
 - Recognition clue: Nodes with neighbours, `vector<vector<int>> graph`, need
   breadth-first order or shortest number of edges.
@@ -380,7 +411,8 @@ Adjacency-list traversal, connected components, shortest unweighted traversal.
 ### Grid / flood fill
 
 Problems:
-Number of Islands, Flood Fill.
+[[graphs/number_of_islands|Number of Islands]],
+[[graphs/flood_fill|Flood Fill]].
 
 - Recognition clue: 2D grid + connected regions/components. Usually means DFS/BFS flood fill.
 - Core idea: Outer row/column scan finds an unvisited `'1'`, so increment island count. Then flood fill from that cell through all 4-directionally connected land and mark each visited cell, for example change `'1'` to `'0'`, so the same island is not counted again.
@@ -731,6 +763,26 @@ Source notes: [[../cpp/cpp#Active recall: bit-packed index pool]],
 [[bit_manipulation/bit_manipulation#Big-endian non-byte-aligned 32-bit pattern search]],
 and [[../DSA_theory/linked_list#Active recall: push/pop front with `Node**`]].
 
+## Tomorrow: remaining weak areas
+
+- Exact bit-position mapping: derive `byteIndex = id / 8`,
+  `bitIndex = id % 8`, and MSB-first shift `7 - bitIndex` without hints.
+- Pointer/`sizeof` syntax: distinguish array extent from pointer size and trace
+  `Node*`, `Node**`, `&head`, `*head`, and `(*head)->next`.
+- Linked-list head ownership: explain why replacing the caller's head requires
+  `Node**` in C; use dummy/tail for result-building problems.
+- Heap syntax: write a compile-ready min-heap comparator and explain why
+  `a->val > b->val` gives the smaller node priority.
+- Monotonic deque invariants: front is the current max/min; back removes
+  dominated candidates; indices expire from the front.
+- Clean compile-ready C++: types, headers, semicolons, null checks, container
+  APIs, and returned value.
+
+Also recall [[bit_manipulation/bit_manipulation#Binary gap|Binary Gap]],
+[[bit_manipulation/bit_manipulation#Reverse bits|Reverse Bits]], and optional
+[[graphs/filesystem_dfs|filesystem DFS]]. Kernel-driver basics remain
+optional/deprioritized; the target preparation stays RTOS-focused.
+
 ## Personal mistakes to check before submitting
 
 - Did I initialise `result` correctly, usually from `nums[0]`?
@@ -754,7 +806,7 @@ and [[../DSA_theory/linked_list#Active recall: push/pop front with `Node**`]].
 - [[arrays/rotate_array]]
 - [[arrays/merge_intervals]]
 - [[arrays/insert_interval]]
-- [[arrays/number_of_islands]]
+- [[graphs/number_of_islands]]
 - [[arrays/find_minimum_in_rotated_sorted_array]]
 - [[arrays/top_k_frequent_elements]]
 - [[sliding_window/best_time_to_buy_and_sell_stock]]

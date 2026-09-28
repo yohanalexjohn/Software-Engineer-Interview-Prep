@@ -59,12 +59,14 @@ Status decodeStatus(uint8_t status) {
 - If `totalBits < 32`, there is no complete candidate.
 - Try every start bit from `0` through `totalBits - 32`, including starts that
   are not byte-aligned.
-- For absolute `bitPosition`: `byteIndex = bitPosition / 8` and
-  `bitIndex = bitPosition % 8`.
+- For absolute `bitPosition`: `byteIndex = bitPosition / 8` chooses the byte
+  and `bitIndex = bitPosition % 8` chooses the position inside it.
 - Big-endian/MSB-first extraction is
-  `(data[byteIndex] >> (7u - bitIndex)) & 1u`.
+  `(data[byteIndex] >> (7u - bitIndex)) & 1u`: logical position `0` is the
+  byte's MSB, which is physical shift position `7`.
 - Reconstruct each candidate in reading order:
-  `candidate = (candidate << 1) | bit`.
+  `candidate <<= 1; candidate |= bit;`. Shift first to make room at bit 0,
+  then OR in the newly read bit.
 - Return the starting bit offset on a match; otherwise return the agreed
   sentinel, such as `-1`. Use a return type capable of representing all valid
   offsets plus the sentinel.
@@ -82,3 +84,60 @@ extra space because 32 is fixed.
 Recall prompt:
 
 - Why is the bit shift `7 - bitIndex`, and did I test every possible start?
+
+## Binary gap
+
+Find the longest run of zero bits bounded by `1` bits. Leading and trailing
+zeros do not count because they are not enclosed.
+
+LSB-to-MSB scan:
+
+```cpp
+int binaryGap(uint32_t value)
+{
+    int best = 0;
+    int zeros = 0;
+    bool seenOpeningOne = false;
+
+    while (value != 0)
+    {
+        if ((value & 1u) != 0u)
+        {
+            if (seenOpeningOne) best = std::max(best, zeros);
+            seenOpeningOne = true; // this 1 closes the old gap and opens the next
+            zeros = 0;
+        }
+        else if (seenOpeningOne)
+        {
+            ++zeros;
+        }
+        value >>= 1;
+    }
+    return best;
+}
+```
+
+An MSB-to-LSB scan uses the same state; only update `best` when another `1`
+closes the current gap. Common mistake: counting zeros after the final `1`.
+
+## Reverse bits
+
+For a fixed 32-bit value, repeat exactly 32 times so leading input zeros become
+trailing output zeros:
+
+```cpp
+uint32_t reverseBits(uint32_t value)
+{
+    uint32_t result = 0;
+    for (int i = 0; i < 32; ++i)
+    {
+        result <<= 1;       // make room for the next output bit
+        result |= value & 1u;
+        value >>= 1;
+    }
+    return result;
+}
+```
+
+Invariant: after `i` iterations, `result` contains the reverse of the `i`
+least-significant input bits. Time O(32), extra space O(1).

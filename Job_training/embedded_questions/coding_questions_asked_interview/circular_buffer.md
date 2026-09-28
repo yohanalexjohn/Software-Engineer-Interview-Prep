@@ -16,8 +16,9 @@
 
 - Fixed-size circular buffer uses static storage and wraparound indexes.
 - Reserved-slot design: `head` is the next write, `tail` is the next read.
-- Empty means `head == tail`.
-- Full means `(head + 1) % maxlen == tail`.
+- Empty means `head == tail`: there is no unread slot between them.
+- Full means `(head + 1) % maxlen == tail`: advancing the writer would collide
+  with the reader, so that one reserved slot distinguishes full from empty.
 - Usable capacity is `maxlen - 1`.
 - Push and pop are O(1).
 - `pop` returns false when empty and writes the output byte by reference/pointer.
