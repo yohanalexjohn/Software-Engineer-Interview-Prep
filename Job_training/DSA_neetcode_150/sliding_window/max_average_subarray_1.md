@@ -4,9 +4,16 @@
 
 - Pattern: fixed-size sliding window.
 - Algorithm: sum the first `k` values, then slide by adding the new right value and subtracting the old left value.
+- After the first window, initialise `right = k` and `left = 0`. Add
+  `nums[right]`, subtract `nums[left]`, then update the best.
+- `++right, ++left` in the `for` increment is safe here only because this fixed
+  window moves `left` exactly once for every `right` step. Do not copy that
+  form into a variable-size window whose `left` moves in a `while` loop.
 - Track the maximum window sum, then divide by `k`.
 - Time: O(n). Space: O(1).
 - Common mistake: recomputing each window sum from scratch makes it O(n * k).
+- Common mistake from recall: sliding before the initial `k`-element sum is
+  complete, or subtracting the wrong leaving index.
 
 Given an integer array nums and an integer k, find the contiguous subarray of length exactly k with the maximum average, and return that average.
 

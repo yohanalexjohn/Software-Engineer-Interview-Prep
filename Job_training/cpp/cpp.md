@@ -442,17 +442,20 @@ Pointer constness:
 
 ## Active recall: volatile vs atomic
 
-- `volatile`: value may change outside normal program flow, such as a
-  memory-mapped register. It does not make threaded code safe.
-- `std::atomic`: thread-safe atomic operations with memory-order guarantees.
-  Use for shared data between threads.
+- `volatile`: forces observable accesses/prevents ordinary optimisation of
+  those accesses, which is useful for memory-mapped registers. It provides no
+  atomicity, inter-thread ordering, or synchronization.
+- `std::atomic`: provides atomic operations plus defined memory-order choices.
+  It prevents torn/interleaved access to that atomic object, but it does not
+  automatically make a multi-step algorithm or related ordinary data safe.
 - `std::atomic` does not necessarily mean "lock the whole memory region"; the
   implementation may use CPU atomic instructions or a lock internally depending
   on the type/platform.
 
 Common mistake:
 
-- Do not say `volatile` is a locking or thread-synchronisation tool.
+- Do not say `volatile` is a locking or thread-synchronisation tool, and do not
+  claim that one atomic variable makes a whole invariant thread-safe.
 
 ## Active recall: lock_guard vs unique_lock
 

@@ -286,7 +286,8 @@ Interview answer:
 Options:
 
 - Increase baud rate.
-- Use DMA.
+- Use DMA to reduce CPU/interruption overhead. DMA does not fix a sustained
+  producer-rate greater than the physical UART throughput.
 - Batch samples.
 - Reduce protocol overhead.
 - Add flow control.
@@ -309,10 +310,17 @@ Keep the UART ISR minimal. Capture the byte/data, put it into a ring
 buffer/stream buffer/queue using an ISR-safe API, clear the interrupt source,
 and optionally request a context switch if a higher-priority task was woken.
 
+For a simple event with no payload, use a direct notification (or counting
+notification when repeated events matter). If a peripheral status/data register
+must be read before it changes or clears, capture that minimal register data in
+the ISR and pass the payload to task context.
+
 Practical notes:
 
 - Full protocol parsing, CRC checking, header/length validation, retries, and
   command dispatch belong in task context.
+- Do not block, sleep, take an ordinary mutex, perform heavy processing, or log
+  from the ISR.
 - A UART task can run a byte-by-byte parser/state machine and dispatch only
   complete validated frames.
 - Long ISRs increase interrupt latency, task jitter, missed deadlines, and can

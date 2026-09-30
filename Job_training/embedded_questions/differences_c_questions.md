@@ -44,6 +44,7 @@ int* pointer = values;
 
 sizeof values;                    // 10 * sizeof(int): still an array here
 sizeof pointer;                   // size of one pointer, not the array
+sizeof *pointer;                  // sizeof(int): size of the pointed-to type
 size_t count = sizeof values / sizeof values[0]; // valid in this scope
 ```
 
@@ -51,6 +52,10 @@ In a function parameter, `void f(int values[])` is adjusted to
 `void f(int* values)`, so `sizeof values` inside `f` is pointer size. Pass the
 element count separately or use a C++ array reference/template that preserves
 the bound.
+
+Recall exactly: `sizeof(arr) = N * sizeof(T)` only while `arr` is still an
+array; `sizeof(ptr)` is the platform's pointer size; `sizeof(*ptr) = sizeof(T)`
+and does not dereference memory at runtime.
 
 
 ## Arrays vs Linked list  
@@ -194,4 +199,3 @@ int main() {
 | Used in embedded systems, industrial control, automotive, medical devices. | Used in desktop computers, servers, and general-purpose applications. |
 | Often lacks a graphical user interface (GUI); primarily command-line or simple interfaces. | Typically provides a comprehensive GUI for user interaction. |
 | Generally simpler to reduce overhead and ensure predictability. | More complex to support a wide range of applications and hardware.|
-

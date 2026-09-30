@@ -104,8 +104,13 @@ Problems:
 Max Average Subarray, Longest Substring Without Repeating Characters, Longest Substring With At Most K Distinct, Longest Repeating Character Replacement.
 
 - Recognition clue: Contiguous substring/subarray, grow and shrink a range, longest/shortest valid window.
-- Fixed-size window: window length is given, for example size `k`. Add the new right value, remove the value leaving on the left, update best after the first full window.
-- Variable-size window: window length is discovered. Move `right` to include new values. Move `left` only when the window breaks the rule. Track best answer as the window changes.
+- Fixed-size window: sum the first `k` values. Then start `right = k`; add
+  `nums[right]`, subtract `nums[left]`, update the best, and advance both. A
+  `for` increment such as `++right, ++left` is valid only when `left` moves
+  exactly once per iteration.
+- Variable-size rule to write before coding: **expand right -> update window
+  state -> while invalid, shrink left -> update the result**. Move `left` only
+  as many times as needed to restore validity.
 - Minimum Size Subarray Sum: positive integers. Expand `right`; while
   `sum >= target`, record `minLength`, subtract `nums[left]`, and move `left`.
   Start `minLength = nums.size() + 1`; return `0` if unchanged.
@@ -118,9 +123,17 @@ Max Average Subarray, Longest Substring Without Repeating Characters, Longest Su
   valid while `windowSize - maxFrequency <= k`, because that is the number of
   characters that would need replacing. Shrink one step at a time while invalid;
   do not reset `left = right`.
+- Max Consecutive Ones with at most `k` flips: increment `zeroCount` when the
+  right value is zero; shrink only while `zeroCount > k`. A window with exactly
+  `k` zeros is valid, so `>= k` is wrong.
 - Set vs frequency map: For "no duplicates", an `unordered_set` is enough: erase from left until duplicate is gone. For "at most K distinct" or "counts matter", use an `unordered_map<char,int>` and shrink when the number of active keys breaks the rule.
 - Time / space: O(n), space depends on map/set, usually O(k).
-- Common mistake I made: Moving `left` too far or not far enough. Window problems are about a contiguous range, not choosing any elements. If negative numbers are allowed and the task asks for exact sum count, normal sliding window may fail; think prefix sum + hashmap.
+- Common mistake I made repeatedly today: changing or checking the window in
+  the wrong order. Add `right` first, then shrink while invalid, then measure.
+  Also translate the boundary literally: "at most `k`" becomes invalid at
+  `> k`, not `>= k`. Window problems are contiguous ranges. If negatives are
+  allowed and the task asks for exact sum count, normal sliding window may
+  fail; think prefix sum + hashmap.
 
 ### Running state / Kadane style
 
@@ -320,12 +333,18 @@ Subarray Sum Equals K, Product Except Self.
 ### Stack / monotonic stack
 
 Problems:
-Valid Parentheses, Longest Valid Parentheses, Min Stack, Daily Temperatures.
+Valid Parentheses, Longest Valid Parentheses, Min Stack, Daily Temperatures,
+[[stack/largest_rectangle_histogram|Largest Rectangle in Histogram]].
 
 - Recognition clue: Need latest unresolved item, matching pairs, next greater/warmer value, undo in reverse order.
 - Core idea: Use stack for LIFO. For Daily Temperatures, store indices waiting for a warmer future day. Pop while current value resolves the top. For Longest Valid Parentheses, store indices and start with sentinel `-1`; when a `)` empties the stack, push its index as the new invalid boundary.
+- Histogram connection: it is the same monotonic-stack family as Daily
+  Temperatures. Keep increasing bar indices. A shorter current bar resolves
+  taller bars: current index is first smaller right; the new stack top is first
+  smaller left. Width is `i - st.top() - 1`, or `i` if empty. Append/process a
+  sentinel height `0` to flush remaining bars.
 - Time / space: O(n), O(n). Each index pushed once and popped once.
-- Common mistake I made: For Daily Temperatures, stack stores indices, not temperatures. For Longest Valid Parentheses, length is `i - stack.top()` after popping a matched `(`; do not store only characters, because lengths need indices. A `while` inside a `for` can still be O(n).
+- Common mistake I made: For Daily Temperatures, stack stores indices, not temperatures. For histogram, height is constrained by the minimum across the whole span, so Container With Most Water's endpoint/two-pointer reasoning is wrong. A `while` inside a `for` can still be O(n) when each index is popped once.
 
 ### Linked list
 
@@ -339,7 +358,8 @@ Reverse Linked List, Linked List Cycle, Merge Two Sorted Lists,
 - Core idea: Use pointer manipulation. Reverse with `prev`, `curr`, `next`. Cycle detection uses slow/fast pointers. Merge by walking two sorted lists.
 - Add Two Numbers: reverse-order digits mean head-first addition. Use
   dummy/tail, treat a missing node as `0`, and loop while `l1`, `l2`, or carry
-  remains.
+  remains. Test the pointer (`l1 != nullptr`), not an integer member against
+  `nullptr`; digit is `sum % 10`, carry is `sum / 10`.
 - Merge K Lists: min-heap of current heads; comparator
   `a->val > b->val` puts the smaller value on top. Append with dummy/tail and
   push the extracted node's successor.
@@ -356,6 +376,9 @@ Problems:
 - Core idea: decreasing max deque + increasing min deque. Fronts expose the
   max/min; backs discard dominated candidates. Store indices so fronts can
   expire when `left` moves.
+- Update order: insert the right index into both deques, then while
+  `nums[max.front()] - nums[min.front()] > limit`, evict a front only when its
+  index equals `left`, and increment `left`.
 - Time / space: O(n), O(n).
 - Common mistake I made: popping from the front for monotonic maintenance or
   storing values and then being unable to tell whether an item left the window.
@@ -446,6 +469,10 @@ Kth Largest Element, Top K Frequent Elements.
 
 - Recognition clue: Need top K, kth largest/smallest, repeatedly remove best/worst.
 - Core idea: Use `priority_queue` or bucket sort. For Top K Frequent, build a frequency map, put each value into `bucket[count]`, then traverse buckets from high frequency down. Min-heap of size K is useful for kth largest/top K.
+- Bucket syntax: `vector<vector<int>> buckets(n + 1);` and
+  `buckets[count].push_back(value)`. Iterate the values inside each bucket and
+  stop when `result.size() == k`. For a descending index, use a signed integer;
+  unsigned `size_t` cannot represent `-1` and can wrap forever.
 - Time / space: Top K Frequent bucket sort is O(n), O(n). Heap versions are usually O(n log k) or O(n log n), space O(n) or O(k).
 - Common mistake I made: For Kth Largest, keep a min-heap of size `k`: push each number, and if size exceeds `k`, pop the smallest. The heap top is the kth largest. Decide if popping removes useful or unwanted candidates.
 
@@ -785,6 +812,19 @@ optional/deprioritized; the target preparation stays RTOS-focused.
 
 ## Personal mistakes to check before submitting
 
+- Did I test a pointer (`l1 != nullptr`) rather than compare its integer value
+  (`l1->val`) with `nullptr`?
+- For a window, did I add the right value before shrinking, shrink with the
+  exact invalid boundary (`>` versus `>=`), then update the answer?
+- Are loop-local variables declared in the scope where I use them?
+- Did I separate current state (`currentMax`, `currentMin`, current window)
+  from the global best result?
+- Did I normalize an extracted bit with `& 1u` before appending it?
+- For monotonic structures, am I maintaining candidates at the back and reading
+  or expiring the current answer at the front?
+- Is the container syntax exact: `unordered_map<K, V>`, nested
+  `vector<vector<T>>`, `push_back`, and the intended `priority_queue`
+  comparator?
 - Did I initialise `result` correctly, usually from `nums[0]`?
 - Did I handle empty input when the problem allows it?
 - Did I use semicolons in `for` loops, not commas?
