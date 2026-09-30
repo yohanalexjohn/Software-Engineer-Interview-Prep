@@ -395,8 +395,7 @@ Common mistake:
 - Move constructor transfers resources from an rvalue.
 - For owning raw resources, a compiler-generated copy can shallow-copy the
   pointer and cause double-delete.
-- After a move, the source object is still valid but should be treated as empty
-  or unspecified.
+- Standard-library moved-from objects are valid but unspecified unless the type documents a stronger guarantee. Do not assume empty; user-defined types must define their own move contract.
 - `std::move` does not move by itself; it allows move construction or move
   assignment to run.
 - If no suitable move constructor/assignment exists, the operation may still
@@ -411,7 +410,7 @@ Vector note:
   so it is usually O(1).
 - Mark move constructors/assignments `noexcept` when they cannot throw.
   Containers such as `std::vector` prefer `noexcept` moves during reallocation;
-  otherwise they may copy elements to preserve strong exception safety.
+  otherwise they may copy elements when a copy constructor exists to preserve strong exception safety.
 
 Recall prompt:
 
@@ -448,9 +447,7 @@ Pointer constness:
 - `std::atomic`: provides atomic operations plus defined memory-order choices.
   It prevents torn/interleaved access to that atomic object, but it does not
   automatically make a multi-step algorithm or related ordinary data safe.
-- `std::atomic` does not necessarily mean "lock the whole memory region"; the
-  implementation may use CPU atomic instructions or a lock internally depending
-  on the type/platform.
+- Atomic operations are indivisible operations on the atomic object; they do not mean "locking other threads". Ordering depends on the selected memory order. The implementation may use instructions or an internal lock; that is distinct from mutex ownership.
 
 Common mistake:
 

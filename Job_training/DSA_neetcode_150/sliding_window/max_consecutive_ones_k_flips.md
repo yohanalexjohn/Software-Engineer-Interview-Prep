@@ -26,7 +26,7 @@ int longestOnes(const std::vector<int>& nums, int k)
             ++left;
         }
 
-        best = std::max(best, right - left + 1);
+        best = std::max(best, right - left + 1); // measure only after restoring validity
     }
     return best;
 }
@@ -34,3 +34,5 @@ int longestOnes(const std::vector<int>& nums, int k)
 
 Common mistake from recall: checking validity before adding the right element,
 or shrinking at `zeroCount >= k` and rejecting a valid window.
+
+Syntax recall: `int longestOnes(const std::vector<int>& nums, int k)` avoids copying the read-only input; use `nums.size()`, declare the result outside the loop, and terminate statements with semicolons. Assumptions: binary input and `k >= 0`.

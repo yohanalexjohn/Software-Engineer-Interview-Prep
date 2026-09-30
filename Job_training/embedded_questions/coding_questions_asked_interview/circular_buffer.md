@@ -163,3 +163,12 @@ For a bare-metal single-producer/single-consumer buffer:
   short critical section or platform atomic operations when needed.
 - Under an RTOS, prefer an ISR-safe queue/stream-buffer API or proper atomics.
   Do not describe `volatile` as "volatile atomic."
+
+### SPSC publication order
+
+Producer alone updates `head`; consumer alone updates `tail`.
+
+- Producer observes available space, writes the slot, then publishes `head`.
+- Consumer observes published `head`, reads the slot, then publishes `tail`.
+- For C++ thread concurrency: producer release-stores `head`, consumer acquire-loads `head`; consumer release-stores `tail`, producer acquire-loads `tail` before reusing a slot. Loads of the index owned by the current context can be relaxed.
+- These two directions protect both publication and slot reuse. `volatile` alone does not establish either ordering. For ISR use, verify that atomics are suitable/lock-free on the target or use the platform's ISR-safe primitives.

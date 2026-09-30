@@ -32,7 +32,8 @@ int longestSubarray(const std::vector<int>& nums, int limit)
         maxDeque.push_back(right);
         minDeque.push_back(right);
 
-        while (nums[maxDeque.front()] - nums[minDeque.front()] > limit)
+        while (static_cast<long long>(nums[maxDeque.front()]) -
+               nums[minDeque.front()] > limit) // > is the invalid boundary
         {
             if (maxDeque.front() == left) maxDeque.pop_front();
             if (minDeque.front() == left) minDeque.pop_front();
@@ -50,3 +51,11 @@ int longestSubarray(const std::vector<int>& nums, int limit)
   candidates.
 - Store indices, not only values, so expired elements can be removed.
 - Each index enters and leaves each deque at most once: O(n) time, O(n) space.
+
+## Common mistakes from this session
+
+- `deque` uses `front()`/`back()`, not `top()` (that belongs to a stack/heap).
+- Write the comparison operator `> limit` and call `nums.size()` with parentheses.
+- Declare the global result (`best` here) outside the loop; update after shrinking and return it.
+- Remove a front only if `front() == left`; monotonic maintenance removes from the back.
+- Input assumption: `limit >= 0`. Cast before subtracting to avoid signed overflow for extreme integer values.

@@ -12,7 +12,7 @@ This is the same monotonic-stack family as Daily Temperatures:
 For a popped height at index `bar`:
 
 - current index `i` is the first smaller bar on the right;
-- after popping, `st.top()` is the first smaller bar on the left;
+- after popping, `st.top()` is the left boundary (smaller or equal with the strict `>` pop condition below);
 - width is `i - st.top() - 1`, or `i` when the stack is empty;
 - area is `heights[bar] * width`.
 
@@ -34,7 +34,7 @@ int largestRectangleArea(const std::vector<int>& heights)
         {
             const int height = heights[st.top()];
             st.pop();
-            const int width = st.empty() ? i : i - st.top() - 1;
+            const int width = st.empty() ? i : i - st.top() - 1; // exclude both boundary bars
             best = std::max(best, height * width);
         }
         st.push(i);
@@ -49,3 +49,5 @@ Container height is limited by two chosen endpoints, which supports a
 two-pointer argument. A histogram rectangle must fit under every bar in its
 span, so its height is the minimum across the span. Endpoint-only max/min logic
 misses interior limiting bars.
+
+Equal-height detail: the `>` comparison keeps a nondecreasing stack of heights. An equal left boundary can limit this particular popped bar, but the earlier equal bar later recovers the full plateau width. A shorter current bar means a popped taller bar cannot extend farther right. The usual strict-smaller-left explanation assumes equal heights are consolidated; keep the tie rule consistent with the code.

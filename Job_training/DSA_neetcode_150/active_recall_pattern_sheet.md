@@ -790,7 +790,7 @@ Source notes: [[../cpp/cpp#Active recall: bit-packed index pool]],
 [[bit_manipulation/bit_manipulation#Big-endian non-byte-aligned 32-bit pattern search]],
 and [[../DSA_theory/linked_list#Active recall: push/pop front with `Node**`]].
 
-## Tomorrow: remaining weak areas
+## Recurring weak areas
 
 - Exact bit-position mapping: derive `byteIndex = id / 8`,
   `bitIndex = id % 8`, and MSB-first shift `7 - bitIndex` without hints.
@@ -806,9 +806,29 @@ and [[../DSA_theory/linked_list#Active recall: push/pop front with `Node**`]].
   APIs, and returned value.
 
 Also recall [[bit_manipulation/bit_manipulation#Binary gap|Binary Gap]],
-[[bit_manipulation/bit_manipulation#Reverse bits|Reverse Bits]], and optional
-[[graphs/filesystem_dfs|filesystem DFS]]. Kernel-driver basics remain
-optional/deprioritized; the target preparation stays RTOS-focused.
+[[bit_manipulation/bit_manipulation#Reverse bits|Reverse Bits]], only as existing bit practice. Kernel-driver and filesystem topics remain
+deprioritized; the target preparation stays RTOS-focused.
+
+## October 1 session: targeted recall
+
+- **Syntax before submitting:** `vector`/`deque`: `push_back()`; deque/queue: `front()` (deque also `back()`); stack/heap: `top()`; call `size()`. Write a named function with `const vector<int>&`, declare `result` in the correct scope, and check statement/class semicolons. See [[../cpp/cpp]].
+- **Windows:** add right -> update counts/sum -> while invalid shrink left -> maximise result. At most k zeroes rejects `zeroCount > k`: [[sliding_window/max_consecutive_ones_k_flips]]. Character Replacement rejects `(right-left+1)-maxFreq > k`: [[sliding_window/longest_repeating_character_replacement]].
+- **Objective:** longest sum <= k over non-negative values uses `max`: [[sliding_window/longest_subarray_sum_at_most_k]]. Minimum size >= target records `min` while valid, uses sentinel `n+1`, returns 0 if unchanged: [[sliding_window/shortest_contiguous_subarray]].
+- **Prefix initialisation:** `seen[0]=1`, `currentSum=0`, start at index 0, query `currentSum-k` before incrementing its prefix count: [[sliding_window/sub_array_sum_equals_k]]. Negatives break ordinary sum windows; this counting problem is not Kadane.
+- **Equal 0/1:** +1/-1 balance, `firstSeen[0]=-1`, preserve earliest index: [[arrays/longest_equal_zero_one_subarray]].
+- **Current state vs global answer:** Kadane extends/restarts with `currentSum=max(nums[i],currentSum+nums[i])`, then updates `maxSum`; initialise both from the first element for all-negative input: [[arrays/madSubArray]].
+- **Deques:** decreasing max, increasing min; shrink on `nums[max.front()]-nums[min.front()] > limit`; expire front only when its index == left. Recall today's `top()`, missing `>`, missing result, and `nums.size()` mistakes: [[sliding_window/longest_subarray_absolute_difference_limit]].
+- **Histogram:** popped height cannot extend past the smaller right bar; exclude boundaries with `st.empty()?i:i-st.top()-1`. Explain equal-height handling and contrast Daily Temperatures / Container: [[stack/largest_rectangle_histogram]].
+- **Top-K:** `bucket[count].push_back(value)`; iterate values inside each bucket, stop exactly at k: [[arrays/top_k_frequent_elements]]. Heap comparator: `return a->val > b->val;`: [[linked lists/merge_k_sorted_linked_lists]].
+- **Product Except Self:** prefix in output, suffix scalar, O(n)/O(1) extra excluding output. Today's algorithm was correct; function name was missing: [[arrays/product_of_array_excuding_self]].
+- **Trees:** ancestor min/max bounds, not just parent-child comparison: [[trees/validate_bst]]. Snapshot `levelSize=q.size()` before appending next-level children: [[trees/binary_tree_level_order_traversal]].
+- **Pointers:** say `head` / `*head` / `**head` for a `Node**` parameter; why does assigning `*head` replace the caller's pointer? [[linked lists/push_pop_node_double_pointer]]. Array storage vs pointer size vs pointed-to type: [[../embedded_questions/differences_c_questions]].
+- **Move:** `std::move` casts to xvalue; actual operation may move or copy. Standard moved-from state is valid but unspecified. Throwing move + available copy can make vector copy on reallocation; `noexcept` matters: [[../cpp/cpp#Active recall: copy vs move]].
+- **Atomic != lock:** indivisible operations, ordering chosen explicitly; no claim of locking other threads. Volatile observable/MMIO/target-specific ISR accesses do not synchronise: [[../cpp/cpp#Active recall: volatile vs atomic]].
+- **MSB-first:** `byteIndex=bitPosition/8`, `bitIndex=bitPosition%8`, `(data[byteIndex] >> (7-bitIndex)) & 1U`: [[bit_manipulation/bit_manipulation#Big-endian non-byte-aligned 32-bit pattern search]].
+- **RTOS:** mutex ownership; binary semaphore event; counting semaphore N resources (take decrements/give increments); queue payload + sync; notification single-task event/counter. All critical tasks report progress; only supervisor kicks after safely checking/clearing indicators: [[../embedded_questions/rtos]].
+- **Backpressure:** DMA reduces CPU transfer work; throughput mismatch still needs higher baud, batching, bounded buffers, permitted stale-data drops, flow control, or storage for required samples: [[../embedded_questions/rtos#Queue backpressure and throughput]].
+- **SPSC:** producer owns head, consumer owns tail; write data then publish head, observe head/read then publish tail. Volatile alone is insufficient: [[../embedded_questions/coding_questions_asked_interview/circular_buffer#SPSC publication order]].
 
 ## Personal mistakes to check before submitting
 

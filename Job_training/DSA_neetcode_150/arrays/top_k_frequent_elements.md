@@ -127,7 +127,7 @@ public:
             int value = entry.first;
             int frequency = entry.second;
 
-            buckets[frequency].push_back(value);
+            buckets[frequency].push_back(value); // bucket[count].push_back(value), not push
         }
 
         vector<int> result;
@@ -140,7 +140,7 @@ public:
             {
                 result.push_back(value);
 
-                if(result.size() == k)
+                if(result.size() == k) // stop inside the nested loop, exactly at k
                 {
                     return result;
                 }

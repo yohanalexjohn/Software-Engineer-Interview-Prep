@@ -47,7 +47,7 @@ is being transferred or protected.
 2. Mutex - ownership lock for shared data/resources; only the owner should
    unlock it, and RTOS mutexes may support priority inheritance.
 3. Binary semaphore - 0/1 signal, often used to wake a task from an event.
-4. Counting semaphore - count represents repeated events/resources.
+4. Counting semaphore - tracks N available resources or pending events. A successful take decrements the count; give increments it up to the configured maximum.
 5. Direct task notification - lightweight one-to-one task signal, optionally
    counting, when no payload copy is needed.
 6. Event group - multiple boolean state/event bits; wait for ANY or ALL bits.
@@ -253,7 +253,8 @@ Design checklist:
 - The supervisor periodically checks all required health signals.
 - Refresh the hardware watchdog only if every required task made progress in
   the supervision window.
-- Reset the health state for the next window.
+- Safely snapshot/check and clear progress indicators for each supervision window; use atomic exchange or an RTOS primitive so reports are not lost during reset.
+- Independent task kicks can mask a dead critical task: only the supervisor kicks after all required tasks report meaningful progress within their expected deadlines.
 - The watchdog task does not need to be the absolute highest priority; it needs
   enough priority and timing margin to meet the supervision interval.
 - Watchdog reset is recovery. It is not root-cause diagnosis; still preserve
@@ -289,6 +290,7 @@ Options:
 - Use DMA to reduce CPU/interruption overhead. DMA does not fix a sustained
   producer-rate greater than the physical UART throughput.
 - Batch samples.
+- Use a bounded queue/ring with an explicit full policy; drop stale noncritical data if requirements permit.
 - Reduce protocol overhead.
 - Add flow control.
 - Buffer outages in external RAM/flash if the requirement needs it.

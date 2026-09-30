@@ -14,6 +14,13 @@ the caller's variable, `*headRef` is the first-node pointer, and
 `(*headRef)->next` is the second-node pointer. Call a mutating function with
 `push_front(&head, value)`.
 
+Inside a function whose parameter is `Node** head`:
+
+- `head`: address of the caller's head-pointer variable.
+- `*head`: caller's `Node*`, pointing to the first node (or null).
+- `**head`: first `Node` object; only valid when both pointer levels are non-null.
+- Assigning `*head` changes the caller's head; assigning a local `Node*` parameter does not.
+
 ## Key invariant
 
 After each successful operation, `*head` is the first live node (or null), and every remaining node is reachable exactly once from it.

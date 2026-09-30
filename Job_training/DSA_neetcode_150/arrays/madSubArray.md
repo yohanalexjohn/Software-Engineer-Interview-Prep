@@ -29,7 +29,7 @@ or start a new subarray from the current position
 
 class Solution {
 public:
-    int maxSubArray(vector<int>& nums) {
+    int maxSubArray(const vector<int>& nums) {
         //  use nums[0] in case of any negative numbers
         int currentSum (nums[0]);
         int maxSum(nums[0]);
@@ -38,7 +38,7 @@ public:
         {
             int num = nums[i];
             currentSum = std::max(num, currentSum + num );
-            maxSum = std::max(maxSum, currentSum );
+            maxSum = std::max(maxSum, currentSum ); // global best differs from ending-here state
         }
 
         return maxSum;

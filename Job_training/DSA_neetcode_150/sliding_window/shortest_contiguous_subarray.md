@@ -33,11 +33,11 @@ has sum 7.
 ```cpp 
 class Solution {
 public:
-    int minSubArrayLen(int target, vector<int>& nums) {
+    int minSubArrayLen(int target, const vector<int>& nums) {
         int left{0};
         int currentSum{0};
 
-        // Record to Max First
+        // n + 1 means no valid window found; minimise, not maximise
         int minLength{static_cast<int>(nums.size()) + 1};
 
         for (int right{0}; right < nums.size(); right++) {

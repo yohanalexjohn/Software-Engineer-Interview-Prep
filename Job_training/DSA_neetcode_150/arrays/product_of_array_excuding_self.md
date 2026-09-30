@@ -78,7 +78,7 @@ print(solution([-1, 0, 1, 2, 3]))
 ```cpp 
 class Solution {
 public:
-    vector<int> productExceptSelf(vector<int>& nums) {
+    vector<int> productExceptSelf(const vector<int>& nums) {
         vector<int> output(nums.size(), 1);
 
         // Calculate the prefix products
@@ -91,9 +91,9 @@ public:
         // right to left here as we got the most out of
         // bound suffix at 1
         int suffix = 1;
-        for(int j(nums.size() - 1); j >= 0; j--)
+        for(int j = static_cast<int>(nums.size()) - 1; j >= 0; j--)
         {
-            output[j] *= suffix;
+            output[j] *= suffix; // use right-only product before including nums[j]
             suffix *= nums[j];
         }
 
@@ -102,3 +102,5 @@ public:
 };
 
 ```
+
+Session learning: the prefix/suffix algorithm was correct; the missing function name was the mistake. Recall the full signature `vector<int> productExceptSelf(const vector<int>& nums)` and `public:` for a judge-facing `Solution` class. Prefix pass starts at 1; suffix pass starts at `n - 1`. This uses O(n) time and O(1) extra space excluding output. Assume prefix/suffix products fit the chosen integer type.
