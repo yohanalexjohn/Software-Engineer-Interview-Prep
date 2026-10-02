@@ -75,3 +75,7 @@ public:
     }
 };
 ```
+
+## October 1 weak point
+
+Today's errors were mainly reversed inequalities and boundary logic. Say the range aloud before writing it: left sorted -> `nums[left] <= target && target < nums[mid]`; right sorted -> `nums[mid] < target && target <= nums[right]`. Use `left <= right` and return immediately on a match. These O(log n) rules assume distinct values; duplicates can hide which half is sorted.

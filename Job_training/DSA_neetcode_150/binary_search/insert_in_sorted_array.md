@@ -39,25 +39,3 @@ target = 7
 output = 4
 ```
 
-```cpp
-class Solution {
-public:
-    int searchInsert(vector<int>& nums, int target) {
-        int left{0};
-        int right{static_cast<int>(nums.size())};
-
-        while (left < right) {
-            int middle = left + (right - left)/2;
-
-            if (nums[middle] >= target) {
-                right = middle;
-            }
-            else {
-                left = middle + 1;
-            }
-        }
-
-        return left;
-    }
-};
-```

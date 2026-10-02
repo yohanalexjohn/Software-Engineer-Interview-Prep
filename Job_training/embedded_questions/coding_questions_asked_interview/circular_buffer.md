@@ -62,7 +62,7 @@ bool push_data_buffer(circular_buffer_t *buffer, uint8_t data)
 
     // Load the data and then move
     buffer->buffer[buffer->head] = data;
-    // Head to the next data offset
+    // Publish head only AFTER writing data; never publish a free/unwritten slot.
     buffer->head = next;
 
     return true;
@@ -85,7 +85,7 @@ bool pop_data_buffer(circular_buffer_t *buffer, uint8_t *data)
     
     // Read the data then move the tail
     *data = buffer->buffer[buffer->tail];
-    // Tail to the next offset
+    // Publish tail only AFTER reading, so the producer cannot reuse early.
     buffer->tail = next;
 
     return true;
@@ -159,7 +159,7 @@ For a bare-metal single-producer/single-consumer buffer:
   breaks the clean ownership model unless synchronised.
 - `volatile` can force memory accesses, but it does not make a multi-byte index
   atomic and does not provide inter-core/thread ordering or synchronization.
-- Check whether index reads/writes are naturally atomic on the MCU and use a
+- Check index width/alignment and whether reads/writes are naturally atomic on the MCU and use a
   short critical section or platform atomic operations when needed.
 - Under an RTOS, prefer an ISR-safe queue/stream-buffer API or proper atomics.
   Do not describe `volatile` as "volatile atomic."
@@ -168,7 +168,7 @@ For a bare-metal single-producer/single-consumer buffer:
 
 Producer alone updates `head`; consumer alone updates `tail`.
 
-- Producer observes available space, writes the slot, then publishes `head`.
-- Consumer observes published `head`, reads the slot, then publishes `tail`.
+- Producer: compute next -> check full -> write buffer[head] -> publish head. Never advance/publish head before checking space or writing.
+- Consumer: check nonempty -> read buffer[tail] -> publish tail.
 - For C++ thread concurrency: producer release-stores `head`, consumer acquire-loads `head`; consumer release-stores `tail`, producer acquire-loads `tail` before reusing a slot. Loads of the index owned by the current context can be relaxed.
 - These two directions protect both publication and slot reuse. `volatile` alone does not establish either ordering. For ISR use, verify that atomics are suitable/lock-free on the target or use the platform's ISR-safe primitives.

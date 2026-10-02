@@ -74,3 +74,9 @@ public:
     }
 };
 ```
+
+## October 1 mistake and invariant
+
+- Today's mistake: comparing the current value with a raw stack index. Always dereference the candidate: `days[stack.top()]`.
+- Waiting indices are increasing; their temperatures are non-increasing. Equal temperatures do not resolve a warmer-day query.
+- Time O(n), space O(n). See [[next_greater_element]] for the same stack with a different output.

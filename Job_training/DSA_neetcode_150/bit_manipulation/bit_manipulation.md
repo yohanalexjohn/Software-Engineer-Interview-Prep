@@ -141,3 +141,29 @@ uint32_t reverseBits(uint32_t value)
 
 Invariant: after `i` iterations, `result` contains the reverse of the `i`
 least-significant input bits. Time O(32), extra space O(1).
+
+## 16-bit register field extraction
+
+Bits 15..12 = mode, 11..8 = error, 7 = overTemp, 6 = lowBattery, 5..3 = retry. Bits 2..0 are unused here.
+
+```cpp
+#include <cstdint>
+struct RegisterFields {
+    std::uint8_t mode, error;
+    bool overTemp, lowBattery;
+    std::uint8_t retry;
+};
+RegisterFields decodeRegister(std::uint16_t value) {
+    return {
+        static_cast<std::uint8_t>((value >> 12) & 0x0Fu), // FOUR bits, not 0x07.
+        static_cast<std::uint8_t>((value >> 8) & 0x0Fu),
+        (value & (1u << 7)) != 0, // normalise a single-bit test to bool.
+        (value & (1u << 6)) != 0,
+        static_cast<std::uint8_t>((value >> 3) & 0x07u) // retry is THREE bits.
+    };
+}
+```
+
+Worked example: `0xA5C8 = 1010 0101 1100 1000`: mode **10**, error **5**, overTemp **true**, lowBattery **true**, retry **1** (`bits 5..3 = 001`). O(1) time/space.
+
+Active recall: width = highBit - lowBit + 1. Today's only logic mistake was a 3-bit mask for a 4-bit field; derive width before choosing `0x0F` vs `0x07`.

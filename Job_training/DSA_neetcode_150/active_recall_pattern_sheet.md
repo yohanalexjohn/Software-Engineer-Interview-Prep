@@ -888,3 +888,18 @@ deprioritized; the target preparation stays RTOS-focused.
 - [[binary_search/searchRange]]
 - [circular_buffer](../embedded_questions/coding_questions_asked_interview/circular_buffer.md)
 - [parse_16_bit_little_endian](bit_manipulation/parse_16_bit_little_endian.md)
+
+## October 1: latest coding and experience weak points
+
+- **Stack index vs value:** compare `days[i] > days[stack.top()]`. Daily Temperatures outputs `i-index`; Next Greater outputs `nums[i]`: [[stack/daily_temperatures]], [[stack/next_greater_element]].
+- **Binary search:** inclusive `[left,right]` -> `left <= right`. Save match, continue left for first / right for last: [[binary_search/searchRange]].
+- **Rotated boundaries:** left sorted -> `nums[left] <= target && target < nums[mid]`; right sorted -> `nums[mid] < target && target <= nums[right]`. Return on match. Today's weakness: reversed inequalities/boundaries: [[binary_search/search_in_rotated_sorted_array]].
+- **Packet spec:** minimum 4, total `len+4`, byte XOR of CMD/LEN/payload only; clear stale payload. No runtime VLA. Stream state, bounds and reset/resync: [[../embedded_questions/coding_questions_asked_interview/packet_validation]].
+- **Ownership/publication:** producer compute next -> full check -> write -> publish head; consumer nonempty -> read -> publish tail. Verify index width/alignment and ordering; `volatile` != synchronization: [[../embedded_questions/coding_questions_asked_interview/circular_buffer#SPSC publication order]].
+- **Field width:** 4-bit fields use `0x0F`, retry's 3 bits use `0x07`; single-bit test `!=0`. `0xA5C8` -> 10, 5, true, true, 1: [[bit_manipulation/bit_manipulation#16-bit register field extraction]].
+- **Compile-ready:** exact container APIs, types/headers, scoped variables, function signature, missing semicolons; do one syntax pass before submitting.
+- **Main vs ISR:** main prepares/starts, ISR services peripheral/advances state, main verifies/handles completion. Busy flag requires ownership and synchronization, not just a boolean.
+- **Evidence gaps:** verify exact SPI LED timeout/overflow/error mechanism and frame counts from source; STS post-fix factory metric and UIB impact metric if remembered; FreeRTOS primitives/priorities only if genuinely remembered; e-paper completion/BUSY handling remains to tighten. Never fill uncertain memory with invented detail.
+- **LP rehearsal:** strongest 4–5 reusable stories; STS = Dive Deep/Ownership/Results/Standards; touch-sense wrong first fix = strongest failure/lesson; UIB = Invent and Simplify; SPI = verification/ownership; recovery = Bias for Action/Customer Obsession. [[../../Behaviour_company_questions/Amazon#October 1 story selection and preparation status]].
+
+**Current status:** breadth largely complete. Prioritise concise execution, interview simulation, stack/binary-search boundary discipline, embedded spec translation/debugging, and follow-up probing of strongest stories. Kernel-driver/filesystem topics remain deprioritized.

@@ -615,3 +615,17 @@ Recall prompt:
 
 - Who owns the state, what may each ISR do, and when is a pedestrian request
   safe to service?
+
+## Recalled Dyson FreeRTOS OTA flow
+
+Evidence boundary: these are recalled experience details, not a source-code verification.
+
+- RTOS embedded communications used queues between components.
+- Linux controller's OTA command was acknowledged; an OTA task/notified context set the mailbox to OTA-in-progress and reset.
+- After restart, the bootloader read the mailbox, entered update flow, signalled ready, and received the new application payload.
+- State exact queue/notification API names and task priorities only if genuinely remembered; verify them from source later. Do not invent task count, timing, or validation details.
+- Scheduler wording: a preemptive RTOS can run the highest-priority ready task; it does not wait for the previously running task to “finish”. A task can block, yield, or be preempted.
+
+## nRF / Zephyr e-paper project status
+
+Work in progress: SPI async/DMA project exists. The TX buffer belongs to the SPI path while active and must not be changed/reused before completion. Verify exact completion handling and display BUSY-pin handling from code before making stronger claims. SPI transfer completion and display-ready status need distinct explanations. Do not present this as a finished production outcome.

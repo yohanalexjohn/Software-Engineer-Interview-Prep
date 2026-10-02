@@ -66,3 +66,9 @@ public:
     }
 };
 ```
+
+## Boundary discipline
+
+- Inclusive candidate interval `[left, right]` requires `left <= right`; a single remaining element still needs checking.
+- On equality, save result before biasing left (`right = mid - 1`) or right (`left = mid + 1`). Ordinary comparisons remain `nums[mid] < target` -> move left up; otherwise move right down.
+- Two searches are O(log n) time, O(1) extra space. Check absent target, one element, and target repeated at either edge.

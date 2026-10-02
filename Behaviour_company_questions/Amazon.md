@@ -280,3 +280,72 @@ JTAG breakpoints or watchpoints where possible, but I would be careful because b
 After identifying the root cause, I would make the smallest safe fix and then confirm it under the same conditions that reproduced the issue. 
 I would also add a regression test orrhardware-in-the-loop test if possible, and document the evidence so the team can trust that the fix 
 addresses the actual cause rather than just hiding the symptom.
+
+## October 1 story selection and preparation status
+
+Reuse the strongest 4–5 stories across several LPs. Every answer must withstand: **Situation -> problem -> my action -> why -> result -> lesson**. Separate observed facts, remembered implementation, and details to verify. Do not invent numbers or mechanisms.
+
+- **STS factory failure:** Dive Deep, Ownership, Deliver Results, Highest Standards.
+- **Touch-sense wrong first fix:** Learn and Be Curious, Dive Deep, Ownership, Highest Standards. Strongest failure/lesson story.
+- **UIB:** Invent and Simplify, Ownership, Deliver Results.
+- **SPI LED interrupts/loopback:** Dive Deep, Highest Standards, Ownership.
+- **Recovery/reprogramming factory containment:** Bias for Action, Ownership, Deliver Results, Customer Obsession. Reuse [[#Story: Field-device recovery tool for corrupted configuration]] and the documented factory unlock story; retain each story's actual context.
+
+Breadth is largely complete. Remaining value: concise execution, interview simulation, binary-search/stack boundary discipline, embedded spec translation/debugging, and probing the strongest LP stories. Kernel-driver/filesystem topics remain deprioritized.
+
+### Story: STS factory calibration failure
+
+- **Situation/problem:** approximately 5% factory calibration failures on the skin-tone sensor (STS). Initial hypothesis was comms/test-machine retries or buffering.
+- **My action/why:** built test firmware, used diagnostic tooling on the factory floor, captured samples, and compared historical factory logs to isolate the cause and rule out comms/buffering.
+- **Root cause:** LED did not turn on when expected during calibration. Indexing/integer underflow produced a negative value that became a huge `uint16_t`, corrupting the calibration average. Verify the exact arithmetic/types from code before describing the conversion more precisely.
+- **Fix:** replaced simple accumulating averaging with sliding/settling-window logic; skipped zero/problem samples and continued until a settled reading. New sample had to be within the agreed range of the previous/old value (recalled roughly 3–4 points; exact reference/range to verify).
+- **Validation/result:** reproduced the failure condition; forced a zero-buffer scenario in integration tests and checked that the function skipped zeros and continued until settle status. **Post-fix factory failure rate: [capture if known; not yet supplied].**
+- **Lesson:** instrument and reproduce before accepting the initial comms explanation; make invalid samples and settling criteria explicit.
+- **Probe:** Which arithmetic wrapped? Why was LED late? Why this window/range? How did evidence exclude comms? Which regression cases and production metric prove the result?
+
+### Story: Touch-sense startup drift — first fix was wrong
+
+- **Situation/problem:** startup threshold drift was missed; initial hypothesis was that periodic drift compensation ran too infrequently.
+- **First action:** ran compensation on every sample for the first approximately 5 seconds. This first fix was wrong/incomplete.
+- **Evidence/why change:** higher-rate streaming (approximately 10 ms) plus JTAG showed the threshold drop occurred at boot and could continue beyond that window.
+- **Revised fix:** rolling/sliding buffer followed startup threshold drops until stable, using the same percentage/range concept as the drift algorithm to define stability.
+- **Result:** revised approach addressed the observed behavior; **quantified outcome and exact stability parameters: [confirm if remembered].** Do not invent a reduction rate.
+- **Lesson:** replace a fixed timing assumption with evidence-based stability detection; own the failed first hypothesis.
+- **Probe:** What did the first fix miss? What changed your mind? How did streaming/JTAG affect timing? How did you validate stability and prevent endless settling?
+
+### Story: UIB manufacturing tooling
+
+- **Situation/problem:** manufacturing across Cyden IPL products involved different device protocols and operator complexity.
+- **My action/why:** Universal Interface Board (UIB) provided a common middle layer, framing factory messages into the correct known device protocol and supporting unlocking/configuration.
+- **Result:** simplified the operator process and manufacturing complexity across products. **Concrete impact metric: [capture if remembered; no number supplied].**
+- **Lesson/probe:** common tooling can simplify repeatable workflows; explain protocol selection, validation, unsupported commands/products, and your personal contribution. Confirm a concrete lesson from experience before presenting one as a recollection.
+
+### Story: SPI LED interrupt-driven transfer and loopback
+
+- **Recalled architecture:** LED chain driven by SPI master; fixed/static TX buffer, busy gating, interrupt-driven TX, and loopback/feedback from the end of the chain for verification.
+- **Main context:** prepares the LED frame, obtains buffer ownership, starts transfer; verifies result and handles completion/errors outside the ISR.
+- **ISR:** services peripheral and advances transfer state. Recalled TX-ready interrupt sends from shared TX buffer and disables TX-ready interrupt when buffer is empty. Buffer-empty is not necessarily final-bit transfer-complete: verify hardware semantics.
+- **RX/timer/counter:** feedback used RX/timer/counter logic to recognise expected returned data. Recalled edge/count/byte figures were inconsistent; verify them from code rather than asserting a frame length.
+- **Overflow/error:** discuss SPI overflow condition and incomplete/bad loopback as distinct error cases. **Exact overflow flag, timeout mechanism/duration, and cleanup/error path: [verify from source].** Do not assert a particular timer or timeout implementation from uncertain memory.
+- **Ownership helper:** a busy flag is safe only within strict ownership and synchronized check/set/clear transitions. It is not magic race protection. TX buffer stays unchanged while transfer owns it.
+- **Result/lesson:** feedback provided a verification path; precise outcome/metric is not supplied. Explain main vs ISR responsibilities clearly and defend how incomplete transfers terminate.
+- **Probe:** Which interrupt and registers? What happens to a new update while busy? Who clears busy? Does TX empty mean complete? How are RX overflow, mismatched feedback, and timeout distinguished?
+
+### Technical follow-up: static communications buffer
+
+- Derive fixed size from **protocol maximum payload + framing overhead**, not an arbitrary “100 because I like it”. Today's HEADER/CMD/LEN/CHECKSUM frame needs `MAX_PAYLOAD + 4` bytes; other protocols may differ.
+- Known bounded size supports static allocation and predictable memory use. Ring buffer queued communications; explain message boundaries, usable capacity, full policy, and ownership.
+- Reject/flag oversize before copying; never overflow. Reject/defer/queue new work according to the actual design, and do not overwrite a buffer while transmit owns it.
+- See [[../Job_training/embedded_questions/coding_questions_asked_interview/packet_validation]] and [[../Job_training/embedded_questions/coding_questions_asked_interview/circular_buffer]].
+
+### Technical follow-ups: RTOS and project evidence
+
+- Dyson FreeRTOS OTA: use only the recalled sequence in [[../Job_training/embedded_questions/rtos#Recalled Dyson FreeRTOS OTA flow]]. Exact primitives/priorities remain to confirm; scheduler does not wait for another task to finish.
+- nRF/Zephyr e-paper is work in progress: [[../Job_training/embedded_questions/rtos#nRF / Zephyr e-paper project status]]. Verify completion/BUSY handling from source before tightening the answer.
+
+### Hardware/software debugging toolbox — experience cues
+
+- **Logic analyser:** communications waveform/protocol/timing investigation.
+- **Oscilloscope:** hardware noise/contact behavior, capacitor discharge, and ripple investigation.
+- **Diagnostic tooling/logs:** factory capture, live samples, and historical evidence, particularly STS.
+- Tie each tool to the observation and decision it enabled; do not claim an unremembered measurement or instrument setup.
